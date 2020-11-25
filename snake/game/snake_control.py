@@ -1,5 +1,5 @@
-from game_canvas import rows, columns
-from assets import snake_body_sprite, snake_head_up, snake_head_down, snake_head_left, snake_head_right, rect_length
+from snake.game.tiles import rows, columns
+from snake.assets import snake_body_sprite, snake_head_up, snake_head_down, snake_head_left, snake_head_right, rect_length
 
 class Snake():
     dist_from_origin = 5.5 + rect_length/2
@@ -24,16 +24,8 @@ class Snake():
         elif self.snake_direction == 'n':
             self.snake_pos[1] -= 1
             self.canvas.itemconfig(self.snake_head, image=snake_head_up)
-        
-        # Bound Checking
-        if self.snake_pos[0] < 0:
-            self.snake_pos[0] = columns - 1
-        elif self.snake_pos[0] > columns - 1:
-            self.snake_pos[0] = 0;
-        elif self.snake_pos[1] < 0:
-            self.snake_pos[1] = rows - 1
-        elif self.snake_pos[1] > rows - 1:
-            self.snake_pos[1] = 0
+
+        self.check_bounds(self.snake_pos)
 
         new_x = self.dist_from_origin + self.snake_pos[0]*rect_length
         new_y = self.dist_from_origin + self.snake_pos[1]*rect_length
@@ -52,6 +44,22 @@ class Snake():
             self.canvas.coords(self.snake_body[-1], (new_coords))
             self.snake_body.insert(0, self.snake_body[-1])
             self.snake_body.pop()
+
+    def check_bounds(self, snake_pos):
+        # Bound Checking
+        if snake_pos[0] < 0:
+            self.snake_pos[0] = columns - 1
+        elif snake_pos[0] > columns - 1:
+            snake_pos[0] = 0;
+        elif self.snake_pos[1] < 0:
+            snake_pos[1] = rows - 1
+        elif self.snake_pos[1] > rows - 1:
+            snake_pos[1] = 0
+
+    # Check if snake hits itself
+#    def check_intercept(self, snake_pos):
+#        for body in snake_pos:
+#            if 
 
     def create_new_body(self):
         column = self.previous_moves[len(self.snake_body) + 1][0]

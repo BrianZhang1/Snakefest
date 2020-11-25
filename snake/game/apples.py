@@ -1,5 +1,5 @@
-from game_canvas import rows, columns
-from assets import apple_sprite, rect_length
+from snake.game.tiles import rows, columns
+from snake.assets import apple_sprite, rect_length
 import random
 
 class Apple():

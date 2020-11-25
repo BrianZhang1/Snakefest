@@ -1,0 +1,4 @@
+Pillow
+tk
+pylint
+
