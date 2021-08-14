@@ -4,9 +4,7 @@ Instructions to play:
 
 1. Install requirements listed in txt, either individually with "pip3 install (package name)" or as all at once with "pip3 install -r requirements.txt" while in the pysnake directory.
 
-2. While in the pysnake directory, run "python3 -m snake" to run the game.
-
-3. Have fun!
+2. Run "start_snake.py"
 
 Note: This is a work in progress, many core game elements may not be implemented yet.
 
