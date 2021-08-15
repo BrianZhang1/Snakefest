@@ -1,3 +1,5 @@
+# game.py controls as the actual snake game. It does not include, for example, the main menu.
+
 import tkinter as tk
 from snake.game import snake_control
 from snake.game import apples

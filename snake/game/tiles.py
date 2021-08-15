@@ -1,3 +1,5 @@
+# tiles.py creates and renders tiles.
+
 from snake import assets
 rows = 17
 columns = 17

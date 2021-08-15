@@ -1,3 +1,5 @@
+# apples.py creates and renders apples.
+
 from snake.game.tiles import rows, columns
 from snake.assets import apple_sprite, rect_length
 import random

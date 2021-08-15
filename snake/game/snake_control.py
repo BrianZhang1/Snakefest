@@ -1,3 +1,6 @@
+# snake_control.py creates and controls the snake (head and body)
+# It manages movement, growth, and rendering
+
 from snake.game.tiles import rows, columns
 from snake.assets import snake_body_sprite, snake_head_up, snake_head_down, snake_head_left, snake_head_right, rect_length
 
