@@ -9,12 +9,14 @@ class Game(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.master = master
-        self.master.bind("<Key>", self.key_handler)
+        self.bind("<Key>", self.key_handler)
 
         # Create Canvas
         canvas_width = master.winfo_screenwidth()
         canvas_height = master.winfo_screenheight()
-        self.canvas = tk.Canvas(master, width=canvas_width, height=canvas_height)
+        self.canvas = tk.Canvas(master, width=canvas_width, height=canvas_height-30)
+        # I subtracted 30 from the height above due to some weird tkinter behaviour.
+        # https://stackoverflow.com/questions/68795789/is-this-a-bug-in-tkinter
         self.canvas.pack()
 
         # Create Objects

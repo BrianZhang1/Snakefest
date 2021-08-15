@@ -7,13 +7,16 @@ import time
 from snake.game import game as game_    # trailing _ to avoid name conflicts
 
 def run():
-    # Initialize important objects
+    # Initialize game (usually would start at main menu, but that is todo)
     game = game_.Game(root)
+    game.pack()
 
     # Event loop
     start_time = time.time()
     while True:
         if time.time() - start_time > 0.12:
+            game.focus_set()
+            print(root.focus_get())
             start_time = time.time()
             game.snake.move_snake()
             if tuple(game.snake.snake_pos) == game.apple.apple_pos:
