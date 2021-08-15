@@ -11,9 +11,7 @@ def run():
         def __init__(self, master):
             tk.Frame.__init__(self, master)
             self.master = master
-            self.master.bind("<Key>", self.key)
-    #        self.listener = keyboard.Listener(on_press=self.on_press)
-    #        self.listener.start()
+            self.master.bind("<Key>", self.key_handler)
 
             # Create Canvas
             canvas_width = root.winfo_screenwidth()
@@ -27,7 +25,7 @@ def run():
             self.apple = apples.Apple(self.canvas)
 
         # Input Handler
-        def key(self, event):
+        def key_handler(self, event):
             if event.char == 'w':
                 self.snake.snake_direction = 'n'
             elif event.char == 'a':
@@ -36,22 +34,6 @@ def run():
                 self.snake.snake_direction = 's'
             elif event.char == 'd':
                 self.snake.snake_direction = 'e'
-
-        
-    #    # Create Keyboard Listener
-    #    def on_press(self, key):
-    #        try:
-    #            if key.char == 'w':
-    #                self.snake.snake_direction = 'n'
-    #            elif key.char == 'a':
-    #                self.snake.snake_direction = 'w'
-    #            elif key.char == 's':
-    #                self.snake.snake_direction = 's'
-    #            elif key.char == 'd':
-    #                self.snake.snake_direction = 'e'
-    #        except AttributeError:
-    #            pass
-
 
 
     app = App(root)

@@ -6,12 +6,13 @@ class Snake():
     def __init__(self, canvas):
         self.canvas = canvas
         self.snake_head = self.canvas.create_image((self.dist_from_origin, self.dist_from_origin), image=snake_head_right)
-        self.snake_pos = [0, 0]
-        self.snake_direction = 'e'
+        self.snake_pos = [0, 0]         # [x, y]
+        self.snake_direction = 'e'      # north, east, south, west
         self.previous_moves = []
         self.snake_body = []
 
     def move_snake(self):
+        # Move one tile in the direction the snake faces
         if self.snake_direction == 'w':
             self.snake_pos[0] -= 1
             self.canvas.itemconfig(self.snake_head, image=snake_head_left)
@@ -25,8 +26,17 @@ class Snake():
             self.snake_pos[1] -= 1
             self.canvas.itemconfig(self.snake_head, image=snake_head_up)
 
-        self.check_bounds(self.snake_pos)
+        # Check bounds. If out of bounds, teleport to opposite side.
+        if self.snake_pos[0] < 0:
+            self.snake_pos[0] = columns - 1
+        elif self.snake_pos[0] > columns - 1:
+            self.snake_pos[0] = 0;
+        elif self.snake_pos[1] < 0:
+            self.snake_pos[1] = rows - 1
+        elif self.snake_pos[1] > rows - 1:
+            self.snake_pos[1] = 0
 
+        # Draw snake head
         new_x = self.dist_from_origin + self.snake_pos[0]*rect_length
         new_y = self.dist_from_origin + self.snake_pos[1]*rect_length
 
@@ -44,22 +54,6 @@ class Snake():
             self.canvas.coords(self.snake_body[-1], (new_coords))
             self.snake_body.insert(0, self.snake_body[-1])
             self.snake_body.pop()
-
-    def check_bounds(self, snake_pos):
-        # Bound Checking
-        if snake_pos[0] < 0:
-            self.snake_pos[0] = columns - 1
-        elif snake_pos[0] > columns - 1:
-            snake_pos[0] = 0;
-        elif self.snake_pos[1] < 0:
-            snake_pos[1] = rows - 1
-        elif self.snake_pos[1] > rows - 1:
-            snake_pos[1] = 0
-
-    # Check if snake hits itself
-#    def check_intercept(self, snake_pos):
-#        for body in snake_pos:
-#            if 
 
     def create_new_body(self):
         column = self.previous_moves[len(self.snake_body) + 1][0]
