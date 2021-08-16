@@ -22,7 +22,7 @@ class Game(tk.Frame):
         # Create Objects
         self.tiles = tiles.tiles(self.canvas)
         self.snake = snake_handler.Snake(self.canvas)
-        self.apple = apple_handler.Apple(self.canvas)
+        self.apple_handler = apple_handler.Apple_Handler(self.canvas)
 
     # Input Handler
     def key_handler(self, event):
@@ -36,11 +36,10 @@ class Game(tk.Frame):
             self.snake.snake_direction = 'e'
 
     def update_snake(self):
-        self.snake.move_snake()
+        self.snake.move()
 
-        # Check if snake is on apple
-        if self.snake.snake_pos == self.apple.apple_pos:
-            self.apple.apple_pos = self.apple.rand_apple_pos()
+        if self.snake.snake_pos == self.apple_handler.apple_pos:
+            self.apple_handler.randomize_apple_pos()
             self.snake.create_new_body()
 
         # Loop

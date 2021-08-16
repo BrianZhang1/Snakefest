@@ -17,8 +17,10 @@ class Snake():
         self.previous_moves = []
         self.snake_body = []
 
-    def move_snake(self):
+    def move(self):
         self.previous_moves.insert(0, self.snake_pos)
+        if len(self.previous_moves) - len(self.snake_body) > 1:
+            self.previous_moves.pop()
 
         # Move one tile in the direction the snake faces
         if self.snake_direction == 'w':
@@ -41,10 +43,8 @@ class Snake():
 
         self.check_bounds()
 
-        self.draw_snake_head()
 
-        if len(self.previous_moves) - len(self.snake_body) > 1:
-            self.previous_moves.pop()
+        self.draw_snake_head()
 
         # Move last snake body part to front of snake body.
         if len(self.snake_body) > 0:
