@@ -14,13 +14,9 @@ def run():
 
     # Event loop
     start_time = time.time()
-    x = 0
     while True:
         if time.time() - start_time > 0.12:
-            x += 1
             start_time = time.time()
-            if x < 5:
-                game.snake.move_snake()
             if tuple(game.snake.snake_pos) == game.apple.apple_pos:
                 game.apple.apple_pos = game.apple.rand_apple_pos()
                 game.snake.create_new_body()
