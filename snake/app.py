@@ -3,13 +3,13 @@
 
 import tkinter as tk
 root = tk.Tk()
-import time
+root.geometry("1280x720")
 from snake.game import game as game_    # trailing _ to avoid name conflicts
 
 def run():
     # Initialize game (usually would start at main menu, but that is todo)
     game = game_.Game(root)
-    game.pack()
+    game.pack(expand=True)
     game.focus_set()
 
     game.update_snake()
