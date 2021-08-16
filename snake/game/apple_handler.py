@@ -9,6 +9,7 @@ class Apple():
     # Image generation is center-based, so if you give the coords (2, 2) then the
     # centre is located at (2, 2). With tiles, they are top-left based. This formula
     # aligns the tiles with the apples.
+
     def __init__(self, canvas):
         self.canvas = canvas
         self.apple = canvas.create_image((self.dist_from_origin, self.dist_from_origin), image=assets.apple_sprite)

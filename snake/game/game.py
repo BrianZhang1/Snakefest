@@ -1,8 +1,8 @@
 # game.py controls as the actual snake game. It does not include, for example, the main menu.
 
 import tkinter as tk
-from snake.game import snake_control
-from snake.game import apples
+from snake.game import snake_handler
+from snake.game import apple_handler
 from snake.game import tiles
 from snake import assets
 
@@ -21,8 +21,8 @@ class Game(tk.Frame):
 
         # Create Objects
         self.tiles = tiles.tiles(self.canvas)
-        self.snake = snake_control.Snake(self.canvas)
-        self.apple = apples.Apple(self.canvas)
+        self.snake = snake_handler.Snake(self.canvas)
+        self.apple = apple_handler.Apple(self.canvas)
 
     # Input Handler
     def key_handler(self, event):
