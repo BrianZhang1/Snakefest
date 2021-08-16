@@ -34,3 +34,14 @@ class Game(tk.Frame):
             self.snake.snake_direction = 's'
         elif event.char == 'd':
             self.snake.snake_direction = 'e'
+
+    def update_snake(self):
+        self.snake.move_snake()
+
+        # Check if snake is on apple
+        if tuple(self.snake.snake_pos) == self.apple.apple_pos:
+            self.apple.apple_pos = self.apple.rand_apple_pos()
+            self.snake.create_new_body()
+
+        # Loop
+        self.after(120, self.update_snake)
