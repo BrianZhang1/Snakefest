@@ -12,7 +12,7 @@ class Snake():
     def __init__(self, canvas):
         self.canvas = canvas
         self.snake_head = self.canvas.create_image((self.dist_from_origin, self.dist_from_origin), image=assets.snake_head_right)
-        self.snake_pos = [0, 0]         # [x, y]
+        self.snake_pos = (0, 0)         # (x, y)
         self.snake_direction = 'e'      # north, east, south, west
         self.previous_moves = []
         self.snake_body = []
@@ -20,35 +20,28 @@ class Snake():
     def move_snake(self):
         # Move one tile in the direction the snake faces
         if self.snake_direction == 'w':
-            self.snake_pos[0] -= 1
+            new_x = self.snake_pos[0] - 1
+            new_y = self.snake_pos[1]
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_left)
         elif self.snake_direction == 'e':
-            self.snake_pos[0] += 1
+            new_x = self.snake_pos[0] + 1
+            new_y = self.snake_pos[1]
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_right)
         elif self.snake_direction == 's':
-            self.snake_pos[1] += 1
+            new_x = self.snake_pos[0]
+            new_y = self.snake_pos[1] + 1
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_down)
         elif self.snake_direction == 'n':
-            self.snake_pos[1] -= 1
+            new_x = self.snake_pos[0]
+            new_y = self.snake_pos[1] - 1
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_up)
+        self.snake_pos = (new_x, new_y)
 
-        # Check bounds. If out of bounds, teleport to opposite side.
-        if self.snake_pos[0] < 0:
-            self.snake_pos[0] = tiles.columns - 1
-        elif self.snake_pos[0] > tiles.columns - 1:
-            self.snake_pos[0] = 0;
-        elif self.snake_pos[1] < 0:
-            self.snake_pos[1] = tiles.rows - 1
-        elif self.snake_pos[1] > tiles.rows - 1:
-            self.snake_pos[1] = 0
+        self.check_bounds()
 
-        # Draw snake head
-        new_x = self.dist_from_origin + self.snake_pos[0]*assets.rect_length
-        new_y = self.dist_from_origin + self.snake_pos[1]*assets.rect_length
+        self.draw_snake_head()
 
-        self.canvas.coords(self.snake_head, (new_x, new_y))
-        self.previous_moves.insert(0, tuple(self.snake_pos))
-
+        self.previous_moves.insert(0, self.snake_pos)
         if len(self.previous_moves) - len(self.snake_body) > 2:
             self.previous_moves.pop()
 
@@ -60,6 +53,31 @@ class Snake():
             self.canvas.coords(self.snake_body[-1], (new_coords))
             self.snake_body.insert(0, self.snake_body[-1])
             self.snake_body.pop()
+
+    # Check bounds. If out of bounds, teleport to opposite side.
+    def check_bounds(self):
+        if self.snake_pos[0] < 0:
+            new_x = tiles.columns - 1
+            new_y = self.snake_pos[1]
+        elif self.snake_pos[0] > tiles.columns - 1:
+            new_x = 0
+            new_y = self.snake_pos[1]
+        elif self.snake_pos[1] < 0:
+            new_x = self.snake_pos[0]
+            new_y = tiles.rows - 1
+        elif self.snake_pos[1] > tiles.rows - 1:
+            new_x = self.snake_pos[0]
+            new_y = 0
+        else:
+            return
+
+        self.snake_pos = (new_x, new_y)
+    
+    # Doesn't actually redraw, instead just updates coordinates.
+    def draw_snake_head(self):
+        new_x_coord = self.dist_from_origin + self.snake_pos[0]*assets.rect_length
+        new_y_coord = self.dist_from_origin + self.snake_pos[1]*assets.rect_length
+        self.canvas.coords(self.snake_head, (new_x_coord, new_y_coord))
 
     def create_new_body(self):
         column = self.previous_moves[len(self.snake_body) + 1][0]

@@ -39,7 +39,7 @@ class Game(tk.Frame):
         self.snake.move_snake()
 
         # Check if snake is on apple
-        if tuple(self.snake.snake_pos) == self.apple.apple_pos:
+        if self.snake.snake_pos == self.apple.apple_pos:
             self.apple.apple_pos = self.apple.rand_apple_pos()
             self.snake.create_new_body()
 
