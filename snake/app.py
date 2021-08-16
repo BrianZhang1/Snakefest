@@ -17,6 +17,7 @@ def run():
     while True:
         if time.time() - start_time > 0.12:
             start_time = time.time()
+            game.snake.move_snake()
             if tuple(game.snake.snake_pos) == game.apple.apple_pos:
                 game.apple.apple_pos = game.apple.rand_apple_pos()
                 game.snake.create_new_body()
