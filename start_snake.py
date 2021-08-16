@@ -1,3 +1,3 @@
-from snake.app import run
+from snake import app
 
-run()
+app.run()
