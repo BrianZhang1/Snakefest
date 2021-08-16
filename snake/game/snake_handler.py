@@ -18,6 +18,8 @@ class Snake():
         self.snake_body = []
 
     def move_snake(self):
+        self.previous_moves.insert(0, self.snake_pos)
+
         # Move one tile in the direction the snake faces
         if self.snake_direction == 'w':
             new_x = self.snake_pos[0] - 1
@@ -41,13 +43,13 @@ class Snake():
 
         self.draw_snake_head()
 
-        self.previous_moves.insert(0, self.snake_pos)
-        if len(self.previous_moves) - len(self.snake_body) > 2:
+        if len(self.previous_moves) - len(self.snake_body) > 1:
             self.previous_moves.pop()
 
+        # Move last snake body part to front of snake body.
         if len(self.snake_body) > 0:
-            new_coords_x = self.previous_moves[1][0]*assets.rect_length + self.dist_from_origin
-            new_coords_y = self.previous_moves[1][1]*assets.rect_length + self.dist_from_origin
+            new_coords_x = self.previous_moves[0][0]*assets.rect_length + self.dist_from_origin
+            new_coords_y = self.previous_moves[0][1]*assets.rect_length + self.dist_from_origin
             new_coords = (new_coords_x, new_coords_y)
 
             self.canvas.coords(self.snake_body[-1], (new_coords))
@@ -73,15 +75,15 @@ class Snake():
 
         self.snake_pos = (new_x, new_y)
     
-    # Doesn't actually redraw, instead just updates coordinates.
+    # Doesn't actually redraw, it just changes coords.
     def draw_snake_head(self):
         new_x_coord = self.dist_from_origin + self.snake_pos[0]*assets.rect_length
         new_y_coord = self.dist_from_origin + self.snake_pos[1]*assets.rect_length
         self.canvas.coords(self.snake_head, (new_x_coord, new_y_coord))
 
     def create_new_body(self):
-        column = self.previous_moves[len(self.snake_body) + 1][0]
-        row = self.previous_moves[len(self.snake_body) + 1][1]
+        column = self.previous_moves[len(self.snake_body)][0]
+        row = self.previous_moves[len(self.snake_body)][1]
         new_coords_x = self.dist_from_origin + column*assets.rect_length
         new_coords_y = self.dist_from_origin + row*assets.rect_length
         new_coords = (new_coords_x, new_coords_y)
