@@ -1,11 +1,15 @@
 # snake_control.py creates and controls the snake (head and body)
 # It manages movement, growth, and rendering
 
+import snake
 from snake.game.tiles import rows, columns
-from snake.assets import snake_body_sprite, snake_head_up, snake_head_down, snake_head_left, snake_head_right, rect_length
+from snake.assets import snake_body_sprite, snake_head_up, snake_head_down, snake_head_left, snake_head_right, rect_length, snake_head_length
 
 class Snake():
-    dist_from_origin = 5.5 + rect_length/2
+    dist_from_origin = snake_head_length/2 + (rect_length - snake_head_length)/2 + 3
+    # Image generation is center-based, so if you give the coords (2, 2) then the
+    # centre is located at (2, 2). With tiles, they are top-left based. This formula
+    # aligns the tiles with the snake.
     def __init__(self, canvas):
         self.canvas = canvas
         self.snake_head = self.canvas.create_image((self.dist_from_origin, self.dist_from_origin), image=snake_head_right)

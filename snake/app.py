@@ -10,15 +10,17 @@ def run():
     # Initialize game (usually would start at main menu, but that is todo)
     game = game_.Game(root)
     game.pack()
+    game.focus_set()
 
     # Event loop
     start_time = time.time()
+    x = 0
     while True:
         if time.time() - start_time > 0.12:
-            game.focus_set()
-            print(root.focus_get())
+            x += 1
             start_time = time.time()
-            game.snake.move_snake()
+            if x < 5:
+                game.snake.move_snake()
             if tuple(game.snake.snake_pos) == game.apple.apple_pos:
                 game.apple.apple_pos = game.apple.rand_apple_pos()
                 game.snake.create_new_body()

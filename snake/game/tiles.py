@@ -9,12 +9,10 @@ class tiles():
         # Create grid
         tile_colour = "khaki"
         for rect_row in range(rows):
-            row_coord = 5 + rect_row*(assets.rect_length)
+            row_coord = rect_row*(assets.rect_length) + 2
+            # +2 is to show border. Without it, top and left borders are cut off.
             for rect_column in range(columns):
-                column_coord = 5 + rect_column*(assets.rect_length)
+                column_coord = rect_column*(assets.rect_length) + 2
+                # +2 is to show border. Without it, top and left borders are cut off.
                 canvas.create_rectangle(column_coord, row_coord, column_coord + assets.rect_length, row_coord + assets.rect_length, fill=tile_colour)
-                #if tile_colour == "khaki":
-                #    tile_colour = "ivory"
-                #else:
-                #    tile_colour = "khaki"
 

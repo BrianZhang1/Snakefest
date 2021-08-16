@@ -4,16 +4,18 @@ import tkinter as tk
 from snake.game import snake_control
 from snake.game import apples
 from snake.game import tiles
+from snake import assets
 
 class Game(tk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        super().__init__(master)
         self.master = master
         self.bind("<Key>", self.key_handler)
 
         # Create Canvas
-        canvas_width = master.winfo_screenwidth()
-        canvas_height = master.winfo_screenheight()
+        canvas_width = assets.rect_length * tiles.rows + 1
+        canvas_height = assets.rect_length * tiles.columns + 1
+        # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack()
 
