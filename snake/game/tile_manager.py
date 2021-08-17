@@ -4,7 +4,7 @@ from snake import assets
 rows = 17
 columns = 17
 
-class tile_manager():
+class Tile_Manager():
     def __init__(self, canvas):
         # Create grid
         tile_colour = "khaki"
