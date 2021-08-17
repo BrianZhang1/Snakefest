@@ -57,7 +57,9 @@ class Game(tk.Frame):
                 self.snake.snake_direction = 'e'
 
     def update_snake(self):
-        self.snake.move()
+        if not self.snake.move():   # if dead
+            self.snake_death_handler()
+            return
 
         if self.snake.snake_pos == self.apple_handler.apple_pos:
             self.apple_handler.randomize_apple_pos()
@@ -65,3 +67,6 @@ class Game(tk.Frame):
 
         # Loop
         self.after(120, self.update_snake)
+
+    def snake_death_handler(self):
+        pass

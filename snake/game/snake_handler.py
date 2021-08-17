@@ -3,19 +3,15 @@
 
 from snake.game import tiles
 from snake import assets
+from snake.game import coord_converter
 
 class Snake():
-    dist_from_origin = assets.snake_head_length/2 + (assets.rect_length - assets.snake_head_length)/2 + 3
-    # Image generation is center-based, so if you give the coords (2, 2) then the
-    # centre is located at (2, 2). With tiles, they are top-left based. This formula
-    # aligns the tiles with the snake.
     def __init__(self, canvas):
         self.canvas = canvas
         self.snake_pos = (5, 5)         # (x, y)
+        self.converter = coord_converter.Coord_Converter()
 
-        initial_x = self.dist_from_origin + assets.rect_length*self.snake_pos[0]
-        initial_y = self.dist_from_origin + assets.rect_length*self.snake_pos[1]
-        inital_coords = (initial_x, initial_y)
+        inital_coords = self.converter.to_raw(self.snake_pos)
 
         self.snake_direction = 's'      # north, east, south, west
         initial_image = assets.snake_head_down
@@ -56,18 +52,20 @@ class Snake():
 
         self.check_bounds()
 
+        if self.check_dead():
+            return False    # Dead, exit function
 
         self.draw_snake_head()
 
         # Move last snake body part to front of snake body.
         if len(self.snake_body) > 0:
-            new_coords_x = self.previous_moves[0][0]*assets.rect_length + self.dist_from_origin
-            new_coords_y = self.previous_moves[0][1]*assets.rect_length + self.dist_from_origin
-            new_coords = (new_coords_x, new_coords_y)
+            raw_coords = self.converter.to_raw(self.previous_moves[0])
 
-            self.canvas.coords(self.snake_body[-1], (new_coords))
+            self.canvas.coords(self.snake_body[-1], raw_coords)
             self.snake_body.insert(0, self.snake_body[-1])
             self.snake_body.pop()
+        
+        return True     # Didn't die.
 
     # Check bounds. If out of bounds, teleport to opposite side.
     def check_bounds(self):
@@ -90,15 +88,15 @@ class Snake():
     
     # Doesn't actually redraw, it just changes coords.
     def draw_snake_head(self):
-        new_x_coord = self.dist_from_origin + self.snake_pos[0]*assets.rect_length
-        new_y_coord = self.dist_from_origin + self.snake_pos[1]*assets.rect_length
-        self.canvas.coords(self.snake_head, (new_x_coord, new_y_coord))
+        self.canvas.coords(self.snake_head, self.converter.to_raw(self.snake_pos))
 
     def create_new_body(self):
-        column = self.previous_moves[len(self.snake_body)][0]
-        row = self.previous_moves[len(self.snake_body)][1]
-        new_coords_x = self.dist_from_origin + column*assets.rect_length
-        new_coords_y = self.dist_from_origin + row*assets.rect_length
-        new_coords = (new_coords_x, new_coords_y)
-        self.snake_body.append(self.canvas.create_image(new_coords, image=assets.snake_body_sprite))
-
+        coords = self.previous_moves[len(self.snake_body)]
+        raw_coords = self.converter.to_raw(coords)
+        self.snake_body.append(self.canvas.create_image(raw_coords, image=assets.snake_body_sprite))
+    
+    def check_dead(self):
+        for snake_part in self.snake_body:
+            if tuple(self.canvas.coords(snake_part)) == self.converter.to_raw(self.snake_pos):
+                return True
+        return False
