@@ -13,6 +13,8 @@ class Snake():
         inital_coords = self.converter.to_raw(self.snake_pos)
 
         self.direction = 's'      # north, east, south, west
+        self.new_direction = 's'
+
         initial_image = assets.snake_head_down
         if self.direction == 'w':
             initial_image = assets.snake_head_left
@@ -31,19 +33,23 @@ class Snake():
             self.previous_moves.pop()
 
         # Move one tile in the direction the snake faces
-        if self.direction == 'w':
+        if self.new_direction == 'w':
+            self.direction = 'w'
             new_x = self.snake_pos[0] - 1
             new_y = self.snake_pos[1]
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_left)
-        elif self.direction == 'e':
+        elif self.new_direction == 'e':
+            self.direction = 'e'
             new_x = self.snake_pos[0] + 1
             new_y = self.snake_pos[1]
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_right)
-        elif self.direction == 's':
+        elif self.new_direction == 's':
+            self.direction = 's'
             new_x = self.snake_pos[0]
             new_y = self.snake_pos[1] + 1
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_down)
-        elif self.direction == 'n':
+        elif self.new_direction == 'n':
+            self.direction = 'n'
             new_x = self.snake_pos[0]
             new_y = self.snake_pos[1] - 1
             self.canvas.itemconfig(self.snake_head, image=assets.snake_head_up)

@@ -32,13 +32,13 @@ class Game(tk.Frame):
     def key_handler(self, event):
         if not self.started:
             if event.char == 'w' and self.snake.direction != 's':
-                self.snake.direction = 'n'
+                self.snake.new_direction = 'n'
             elif event.char == 'a' and self.snake.direction != 'e':
-                self.snake.direction = 'w'
+                self.snake.new_direction = 'w'
             elif event.char == 's' and self.snake.direction != 'n':
-                self.snake.direction = 's'
+                self.snake.new_direction = 's'
             elif event.char == 'd' and self.snake.direction != 'w':
-                self.snake.direction = 'e'
+                self.snake.new_direction = 'e'
 
             self.started = True
             self.canvas.delete(self.wasd_to_start_label)
@@ -46,13 +46,13 @@ class Game(tk.Frame):
             
         elif self.started:
             if event.char == 'w' and self.snake.direction != 's':
-                self.snake.direction = 'n'
+                self.snake.new_direction = 'n'
             elif event.char == 'a' and self.snake.direction != 'e':
-                self.snake.direction = 'w'
+                self.snake.new_direction = 'w'
             elif event.char == 's' and self.snake.direction != 'n':
-                self.snake.direction = 's'
+                self.snake.new_direction = 's'
             elif event.char == 'd' and self.snake.direction != 'w':
-                self.snake.direction = 'e'
+                self.snake.new_direction = 'e'
 
     def update_snake(self):
         if not self.snake.move():   # if dead
