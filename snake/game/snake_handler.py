@@ -11,9 +11,22 @@ class Snake():
     # aligns the tiles with the snake.
     def __init__(self, canvas):
         self.canvas = canvas
-        self.snake_head = self.canvas.create_image((self.dist_from_origin, self.dist_from_origin), image=assets.snake_head_right)
-        self.snake_pos = (0, 0)         # (x, y)
-        self.snake_direction = 'e'      # north, east, south, west
+        self.snake_pos = (5, 5)         # (x, y)
+
+        initial_x = self.dist_from_origin + assets.rect_length*self.snake_pos[0]
+        initial_y = self.dist_from_origin + assets.rect_length*self.snake_pos[1]
+        inital_coords = (initial_x, initial_y)
+
+        self.snake_direction = 's'      # north, east, south, west
+        initial_image = assets.snake_head_down
+        if self.snake_direction == 'w':
+            initial_image = assets.snake_head_left
+        elif self.snake_direction == 'n':
+            initial_image = assets.snake_head_up
+        elif self.snake_direction == 'e':
+            initial_image = assets.snake_head_right
+
+        self.snake_head = self.canvas.create_image(inital_coords, image=initial_image)
         self.previous_moves = []
         self.snake_body = []
 

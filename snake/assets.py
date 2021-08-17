@@ -25,3 +25,9 @@ snake_head_right = ImageTk.PhotoImage(snake_head_right)
 snake_body_sprite = Image.open("snake/assets/snake_body.png").resize((snake_head_length, snake_head_length))
 snake_body_sprite = ImageTk.PhotoImage(snake_body_sprite)
 
+wasd_to_start_label = Image.open("snake/assets/wasd_to_start_label.png")
+wasd_to_start_label_aspect_ratio = wasd_to_start_label.size[0]/wasd_to_start_label.size[1]
+wasd_to_start_label_height = 50
+wasd_to_start_label_width = int(wasd_to_start_label_height * wasd_to_start_label_aspect_ratio)
+wasd_to_start_label_resized = wasd_to_start_label.resize((wasd_to_start_label_width, wasd_to_start_label_height))
+wasd_to_start_label = ImageTk.PhotoImage(wasd_to_start_label_resized)

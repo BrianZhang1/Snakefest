@@ -12,5 +12,4 @@ def run():
     game.pack(expand=True)
     game.focus_set()
 
-    game.update_snake()
     root.mainloop()

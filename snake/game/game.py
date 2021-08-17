@@ -11,6 +11,7 @@ class Game(tk.Frame):
         super().__init__(master)
         self.master = master
         self.bind("<Key>", self.key_handler)
+        self.started = False
 
         # Create Canvas
         canvas_width = assets.rect_length * tiles.rows + 1
@@ -24,16 +25,36 @@ class Game(tk.Frame):
         self.snake = snake_handler.Snake(self.canvas)
         self.apple_handler = apple_handler.Apple_Handler(self.canvas)
 
+        # WASD TO START label
+        self.wasd_to_start_label = self.canvas.create_image(
+            (canvas_width/2, assets.wasd_to_start_label_height/2 + 10), 
+            image=assets.wasd_to_start_label)
+
     # Input Handler
     def key_handler(self, event):
-        if event.char == 'w':
-            self.snake.snake_direction = 'n'
-        elif event.char == 'a':
-            self.snake.snake_direction = 'w'
-        elif event.char == 's':
-            self.snake.snake_direction = 's'
-        elif event.char == 'd':
-            self.snake.snake_direction = 'e'
+        if not self.started:
+            if event.char == 'w':
+                self.snake.snake_direction = 'n'
+            elif event.char == 'a':
+                self.snake.snake_direction = 'w'
+            elif event.char == 's':
+                self.snake.snake_direction = 's'
+            elif event.char == 'd':
+                self.snake.snake_direction = 'e'
+
+            self.started = True
+            self.canvas.delete(self.wasd_to_start_label)
+            self.update_snake()
+            
+        elif self.started:
+            if event.char == 'w':
+                self.snake.snake_direction = 'n'
+            elif event.char == 'a':
+                self.snake.snake_direction = 'w'
+            elif event.char == 's':
+                self.snake.snake_direction = 's'
+            elif event.char == 'd':
+                self.snake.snake_direction = 'e'
 
     def update_snake(self):
         self.snake.move()
