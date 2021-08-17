@@ -1,9 +1,8 @@
 # snake_control.py creates and controls the snake (head and body)
 # It manages movement, growth, and rendering
 
-from snake.game import tiles
+from snake.game import tiles, coord_converter
 from snake import assets
-from snake.game import coord_converter
 
 class Snake():
     def __init__(self, canvas):

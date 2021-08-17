@@ -1,9 +1,7 @@
 # game.py controls as the actual snake game. It does not include, for example, the main menu.
 
 import tkinter as tk
-from snake.game import snake_handler
-from snake.game import apple_handler
-from snake.game import tiles
+from snake.game import snake_handler, apple_handler, tiles
 from snake import assets
 
 class Game(tk.Frame):
