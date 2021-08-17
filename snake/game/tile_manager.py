@@ -1,10 +1,10 @@
-# tiles.py creates and renders tiles.
+# tile_manager.py creates and renders tiles.
 
 from snake import assets
 rows = 17
 columns = 17
 
-class tiles():
+class tile_manager():
     def __init__(self, canvas):
         # Create grid
         tile_colour = "khaki"

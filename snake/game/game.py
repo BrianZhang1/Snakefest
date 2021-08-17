@@ -19,7 +19,7 @@ class Game(tk.Frame):
         self.canvas.pack()
 
         # Create Objects
-        self.tile_manager = tile_manager.tiles(self.canvas)
+        self.tile_manager = tile_manager.tile_manager(self.canvas)
         self.snake = snake_handler.Snake(self.canvas)
         self.apple_handler = apple_handler.Apple_Handler(self.canvas)
 
