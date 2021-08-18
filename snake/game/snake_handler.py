@@ -1,14 +1,16 @@
 # snake_control.py creates and controls the snake (head and body)
 # It manages movement, growth, and rendering
 
-from snake.game import tile_manager, coord_converter
+from snake.game import coord_converter
 from snake import assets
 
 class Snake():
-    def __init__(self, canvas):
+    def __init__(self, canvas, grid_rows, grid_columns):
         self.canvas = canvas
-        self.snake_pos = (10, 10)         # (x, y)
+        self.grid_rows = grid_rows
+        self.grid_columns = grid_columns
         self.converter = coord_converter.Coord_Converter()
+        self.snake_pos = (10, 10)         # (x, y)
 
         inital_coords = self.converter.to_raw(self.snake_pos)
 
@@ -61,15 +63,15 @@ class Snake():
     # Check bounds. If out of bounds, teleport to opposite side.
     def check_bounds(self):
         if self.snake_pos[0] < 0:
-            new_x = tile_manager.columns - 1
+            new_x = self.grid_columns - 1
             new_y = self.snake_pos[1]
-        elif self.snake_pos[0] > tile_manager.columns - 1:
+        elif self.snake_pos[0] > self.grid_columns - 1:
             new_x = 0
             new_y = self.snake_pos[1]
         elif self.snake_pos[1] < 0:
             new_x = self.snake_pos[0]
-            new_y = tile_manager.rows - 1
-        elif self.snake_pos[1] > tile_manager.rows - 1:
+            new_y = self.grid_rows - 1
+        elif self.snake_pos[1] > self.grid_rows - 1:
             new_x = self.snake_pos[0]
             new_y = 0
         else:

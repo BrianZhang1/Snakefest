@@ -23,7 +23,7 @@ class Game(tk.Frame):
         # Create Objects
         self.tile_manager = tile_manager.Tile_Manager(self.canvas)
         self.tile_manager.draw_grid()
-        self.snake = snake_handler.Snake(self.canvas)
+        self.snake = snake_handler.Snake(self.canvas, tile_manager.rows, tile_manager.columns)
 
 
         # WASD TO START label
