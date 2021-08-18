@@ -13,7 +13,7 @@ class Tile_Manager():
         self.converter = coord_converter.Coord_Converter()
 
         # Test tile array
-        self.tile_array = maps.plain(canvas, ROWS, COLUMNS)
+        self.tile_array = maps.default(canvas, ROWS, COLUMNS)
     
     def draw_grid(self):
         current_row = 0
