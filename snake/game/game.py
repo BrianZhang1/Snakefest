@@ -1,8 +1,9 @@
 # game.py controls as the actual snake game. It does not include, for example, the main menu.
 
 import tkinter as tk
-from snake.game import snake_handler, apple_handler, tile_manager, coord_converter
+from snake.game import snake_handler, apple, tile_manager, coord_converter
 from snake import assets
+import random
 
 class Game(tk.Frame):
     def __init__(self, master):
@@ -23,7 +24,6 @@ class Game(tk.Frame):
         self.tile_manager = tile_manager.Tile_Manager(self.canvas)
         self.tile_manager.draw_grid()
         self.snake = snake_handler.Snake(self.canvas)
-        self.apple_handler = apple_handler.Apple_Handler(self.canvas)
 
 
         # WASD TO START label
@@ -45,6 +45,7 @@ class Game(tk.Frame):
 
             self.started = True
             self.canvas.delete(self.wasd_to_start_label)
+            self.create_new_apple()
             self.update_snake()
             
         elif self.started:
@@ -66,12 +67,24 @@ class Game(tk.Frame):
         else:
             self.snake.draw_snake()
 
-        if self.snake.snake_pos == self.apple_handler.apple_pos:
-            self.apple_handler.randomize_apple_pos()
+        snake_x = self.snake.snake_pos[0]
+        snake_y = self.snake.snake_pos[1]
+        tile = self.tile_manager.tile_array[snake_x][snake_y]
+        apple_index = tile.is_holding(apple.Apple)
+        if apple_index != None:
+            tile.drop(apple_index)
+            self.create_new_apple()
             self.snake.create_new_body()
 
         # Loop
         self.after(120, self.update_snake)
+    
+    def create_new_apple(self):
+        x = random.randint(0, tile_manager.columns - 1)
+        y = random.randint(0, tile_manager.rows - 1)
+        new_apple = apple.Apple(self.canvas)
+        self.tile_manager.tile_array[x][y].holding.append(new_apple)
+        self.tile_manager.tile_array[x][y].render()
 
     def snake_is_dead(self):
 
