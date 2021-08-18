@@ -14,8 +14,8 @@ class Game(tk.Frame):
         self.converter = coord_converter.Coord_Converter()
 
         # Create Canvas
-        canvas_width = assets.rect_length * tile_manager.rows
-        canvas_height = assets.rect_length * tile_manager.columns
+        canvas_width = assets.rect_length * tile_manager.ROWS
+        canvas_height = assets.rect_length * tile_manager.COLUMNS
         # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack()
@@ -23,7 +23,7 @@ class Game(tk.Frame):
         # Create Objects
         self.tile_manager = tile_manager.Tile_Manager(self.canvas)
         self.tile_manager.draw_grid()
-        self.snake = snake_handler.Snake(self.canvas, tile_manager.rows, tile_manager.columns)
+        self.snake = snake_handler.Snake(self.canvas, tile_manager.ROWS, tile_manager.COLUMNS)
 
 
         # WASD TO START label
@@ -80,8 +80,8 @@ class Game(tk.Frame):
         self.after(120, self.update_snake)
     
     def create_new_apple(self):
-        x = random.randint(0, tile_manager.columns - 1)
-        y = random.randint(0, tile_manager.rows - 1)
+        x = random.randint(0, tile_manager.COLUMNS - 1)
+        y = random.randint(0, tile_manager.ROWS - 1)
         new_apple = apple.Apple(self.canvas)
         self.tile_manager.tile_array[x][y].holding.append(new_apple)
         self.tile_manager.tile_array[x][y].render()
