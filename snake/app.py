@@ -1,4 +1,4 @@
-# app.py manages the entire game from the highest level.
+# app.py manages the entire app from the highest level.
 # It manages the tkinter event loop and different pages (swapping between main menu, game, etc.)
 
 import tkinter as tk
