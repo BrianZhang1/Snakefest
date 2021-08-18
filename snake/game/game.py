@@ -45,6 +45,7 @@ class Game(tk.Frame):
 
             self.started = True
             self.canvas.delete(self.wasd_to_start_label)
+            del self.wasd_to_start_label
             self.create_new_apple()
             self.update_snake()
             
@@ -67,6 +68,7 @@ class Game(tk.Frame):
         else:
             self.snake.draw_snake()
 
+        # Checking if snake hit apple
         snake_x = self.snake.snake_pos[0]
         snake_y = self.snake.snake_pos[1]
         tile = self.tile_manager.tile_array[snake_x][snake_y]
