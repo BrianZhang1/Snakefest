@@ -2,6 +2,7 @@
 # It does not include, for example, the main menu or tile rendering.
 
 import tkinter as tk
+from typing import final
 from snake.game import snake_handler, apple, tile_manager, coord_converter
 from snake import assets
 import random
@@ -19,7 +20,7 @@ class Game(tk.Frame):
         canvas_height = assets.TILE_LENGTH * tile_manager.COLUMNS
         # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
-        self.canvas.pack()
+        self.canvas.pack(side=tk.BOTTOM)
 
         self.tile_manager = tile_manager.Tile_Manager(self.canvas)
         self.tile_manager.draw_grid()
@@ -30,6 +31,13 @@ class Game(tk.Frame):
         self.wasd_to_start_label = self.canvas.create_image(
             (canvas_width/2, assets.wasd_to_start_label_height/2 + 10), 
             image=assets.wasd_to_start_label)
+
+        # Score label
+        self.score_label_text = tk.StringVar()
+        self.score_label_text.set("Score: " + str(len(self.snake.body)))
+        self.score_label = tk.Label(self, textvariable=self.score_label_text,
+            font="Times 20")
+        self.score_label.pack(anchor=tk.NW)
 
     # Input Handler
     def key_handler(self, event):
@@ -77,6 +85,7 @@ class Game(tk.Frame):
             tile.drop(apple_index)
             self.create_new_apple()
             self.snake.create_new_body()
+            self.score_label_text.set("Score: " + str(len(self.snake.body)))
 
         # Loop
         self.after(120, self.update_snake)
@@ -105,4 +114,7 @@ class Game(tk.Frame):
         return False
 
     def snake_death_handler(self):
-        pass
+        final_score = tk.StringVar()
+        final_score.set("Score: " + str(len(self.snake.body)))
+        self.score_label = tk.Label(self, textvariable=final_score)
+        self.score_label.pack(anchor=tk.NW)
