@@ -2,7 +2,6 @@
 # It does not include, for example, the main menu or tile rendering.
 
 import tkinter as tk
-from typing import final
 from snake.game import snake_handler, apple, tile_manager, coord_converter
 from snake import assets
 import random
