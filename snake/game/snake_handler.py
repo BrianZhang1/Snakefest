@@ -1,5 +1,6 @@
 # snake_control.py creates and controls the snake (head and body)
-# It manages movement, growth, and rendering
+# It manages movement, growth, and rendering of snake.
+# It does not manage collisions of the snake with other objects, those are managed in game.py
 
 from snake.game import coord_converter
 from snake import assets
