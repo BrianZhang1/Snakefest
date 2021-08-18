@@ -4,7 +4,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
 
-rect_length = 32
+tile_length = 32
 snake_head_length = 24
 
 apple_sprite = Image.open("snake/assets/apple.png").resize((snake_head_length, snake_head_length))
@@ -32,7 +32,7 @@ wasd_to_start_label_width = int(wasd_to_start_label_height * wasd_to_start_label
 wasd_to_start_label_resized = wasd_to_start_label.resize((wasd_to_start_label_width, wasd_to_start_label_height))
 wasd_to_start_label = ImageTk.PhotoImage(wasd_to_start_label_resized)
 
-land_tile = Image.open("snake/assets/land_tile.png").resize((rect_length, rect_length))
+land_tile = Image.open("snake/assets/land_tile.png").resize((tile_length, tile_length))
 land_tile = ImageTk.PhotoImage(land_tile)
-barrier_tile = Image.open("snake/assets/barrier_tile.png").resize((rect_length, rect_length))
+barrier_tile = Image.open("snake/assets/barrier_tile.png").resize((tile_length, tile_length))
 barrier_tile = ImageTk.PhotoImage(barrier_tile)
