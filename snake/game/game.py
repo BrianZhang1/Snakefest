@@ -1,7 +1,7 @@
 # game.py controls as the actual snake game. It does not include, for example, the main menu.
 
 import tkinter as tk
-from snake.game import snake_handler, apple_handler, tile_manager
+from snake.game import snake_handler, apple_handler, tile_manager, coord_converter
 from snake import assets
 
 class Game(tk.Frame):
@@ -10,18 +10,21 @@ class Game(tk.Frame):
         self.master = master
         self.bind("<Key>", self.key_handler)
         self.started = False
+        self.converter = coord_converter.Coord_Converter()
 
         # Create Canvas
-        canvas_width = assets.rect_length * tile_manager.rows + 1
-        canvas_height = assets.rect_length * tile_manager.columns + 1
+        canvas_width = assets.rect_length * tile_manager.rows
+        canvas_height = assets.rect_length * tile_manager.columns
         # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack()
 
         # Create Objects
         self.tile_manager = tile_manager.Tile_Manager(self.canvas)
+        self.tile_manager.draw_grid()
         self.snake = snake_handler.Snake(self.canvas)
         self.apple_handler = apple_handler.Apple_Handler(self.canvas)
+
 
         # WASD TO START label
         self.wasd_to_start_label = self.canvas.create_image(
@@ -55,9 +58,13 @@ class Game(tk.Frame):
                 self.snake.new_direction = 'e'
 
     def update_snake(self):
-        if not self.snake.move():   # if dead
+        self.snake.update_position()
+
+        if self.snake_is_dead():   # if dead
             self.snake_death_handler()
             return
+        else:
+            self.snake.draw_snake()
 
         if self.snake.snake_pos == self.apple_handler.apple_pos:
             self.apple_handler.randomize_apple_pos()
@@ -65,6 +72,22 @@ class Game(tk.Frame):
 
         # Loop
         self.after(120, self.update_snake)
+
+    def snake_is_dead(self):
+
+        raw_snake_pos = self.converter.to_raw(self.snake.snake_pos)
+
+        # Check if snake hit itself
+        for snake_part in self.snake.body:
+            if tuple(self.canvas.coords(snake_part)) == raw_snake_pos:
+                return True
+
+        # Check if snake hit barrier
+        snake_pos = self.snake.snake_pos
+        if self.tile_manager.tile_array[snake_pos[0]][snake_pos[1]].type == "barrier":
+            return True
+
+        return False
 
     def snake_death_handler(self):
         pass

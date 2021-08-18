@@ -7,7 +7,7 @@ from snake import assets
 class Snake():
     def __init__(self, canvas):
         self.canvas = canvas
-        self.snake_pos = (5, 5)         # (x, y)
+        self.snake_pos = (10, 10)         # (x, y)
         self.converter = coord_converter.Coord_Converter()
 
         inital_coords = self.converter.to_raw(self.snake_pos)
@@ -25,11 +25,11 @@ class Snake():
 
         self.snake_head = self.canvas.create_image(inital_coords, image=initial_image)
         self.previous_moves = []
-        self.snake_body = []
+        self.body = []
 
-    def move(self):
+    def update_position(self):
         self.previous_moves.insert(0, self.snake_pos)
-        if len(self.previous_moves) - len(self.snake_body) > 1:
+        if len(self.previous_moves) - len(self.body) > 1:
             self.previous_moves.pop()
 
         # Move one tile in the direction the snake faces
@@ -57,20 +57,6 @@ class Snake():
 
         self.check_bounds()
 
-        if self.check_dead():
-            return False    # Dead, exit function
-
-        self.draw_snake_head()
-
-        # Move last snake body part to front of snake body.
-        if len(self.snake_body) > 0:
-            raw_coords = self.converter.to_raw(self.previous_moves[0])
-
-            self.canvas.coords(self.snake_body[-1], raw_coords)
-            self.snake_body.insert(0, self.snake_body[-1])
-            self.snake_body.pop()
-        
-        return True     # Didn't die.
 
     # Check bounds. If out of bounds, teleport to opposite side.
     def check_bounds(self):
@@ -92,16 +78,20 @@ class Snake():
         self.snake_pos = (new_x, new_y)
     
     # Doesn't actually redraw, it just changes coords.
-    def draw_snake_head(self):
+    def draw_snake(self):
+        # Draw snake head
         self.canvas.coords(self.snake_head, self.converter.to_raw(self.snake_pos))
 
+        # Move last snake body part to front of snake body.
+        if len(self.body) > 0:
+            raw_coords = self.converter.to_raw(self.previous_moves[0])
+
+            self.canvas.coords(self.body[-1], raw_coords)
+            self.body.insert(0, self.body[-1])
+            self.body.pop()
+
     def create_new_body(self):
-        coords = self.previous_moves[len(self.snake_body)]
+        coords = self.previous_moves[len(self.body)]
         raw_coords = self.converter.to_raw(coords)
-        self.snake_body.append(self.canvas.create_image(raw_coords, image=assets.snake_body_sprite))
+        self.body.append(self.canvas.create_image(raw_coords, image=assets.snake_body_sprite))
     
-    def check_dead(self):
-        for snake_part in self.snake_body:
-            if tuple(self.canvas.coords(snake_part)) == self.converter.to_raw(self.snake_pos):
-                return True
-        return False
