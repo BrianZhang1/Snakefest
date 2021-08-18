@@ -11,9 +11,17 @@ class Tile_Manager():
         # Create grid
         self.canvas = canvas
         self.converter = coord_converter.Coord_Converter()
+        self.map = "default"
+        self.tile_array = None
+        self.land_tiles = None
 
-        # Test tile array
-        self.tile_array = maps.default(canvas, ROWS, COLUMNS)
+        map_return_value = None
+        if self.map == "default":
+            map_return_value = maps.default(canvas, ROWS, COLUMNS)
+        if self.map == "plain":
+            map_return_value = maps.plain(canvas, ROWS, COLUMNS)
+        self.tile_array = map_return_value[0]
+        self.land_tiles = map_return_value[1]
     
     def draw_grid(self):
         current_row = 0

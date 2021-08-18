@@ -91,11 +91,15 @@ class Game(tk.Frame):
         self.after(120, self.update_snake)
     
     def create_new_apple(self):
-        x = random.randint(0, tile_manager.COLUMNS - 1)
-        y = random.randint(0, tile_manager.ROWS - 1)
+        # Choose one of the land tiles to spawn an apple on
+        land_tiles = self.tile_manager.land_tiles
+        random_tile_index = random.randint(0, len(land_tiles)-1)
+        random_tile = land_tiles[random_tile_index]
+
+        # Create apple and assign to chosen tile
         new_apple = apple.Apple(self.canvas)
-        self.tile_manager.tile_array[x][y].holding.append(new_apple)
-        self.tile_manager.tile_array[x][y].render()
+        random_tile.holding.append(new_apple)
+        random_tile.render()
 
     def snake_is_dead(self):
 
@@ -114,7 +118,4 @@ class Game(tk.Frame):
         return False
 
     def snake_death_handler(self):
-        final_score = tk.StringVar()
-        final_score.set("Score: " + str(len(self.snake.body)))
-        self.score_label = tk.Label(self, textvariable=final_score)
-        self.score_label.pack(anchor=tk.NW)
+        pass

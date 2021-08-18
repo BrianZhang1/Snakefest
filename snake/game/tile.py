@@ -10,6 +10,7 @@ class Tile():
         self.type = type
         self.holding = []
         self.rendered = False
+        self.id = None
         self.converter = coord_converter.Coord_Converter()
     
     # Returns index if holding, and None if not holding
@@ -28,9 +29,9 @@ class Tile():
             tile_coords = self.converter.to_raw(self.position)
 
             if self.type == "land":
-                self.canvas.create_image(tile_coords, image=assets.land_tile)
+                self.id = self.canvas.create_image(tile_coords, image=assets.land_tile)
             elif self.type == "barrier":
-                self.canvas.create_image(tile_coords, image=assets.barrier_tile)
+                self.id = self.canvas.create_image(tile_coords, image=assets.barrier_tile)
             
             self.rendered = True
         else:
