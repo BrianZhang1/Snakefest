@@ -15,8 +15,8 @@ class Game(tk.Frame):
         self.converter = coord_converter.Coord_Converter()
 
         # Create Canvas
-        canvas_width = assets.tile_length * tile_manager.ROWS
-        canvas_height = assets.tile_length * tile_manager.COLUMNS
+        canvas_width = assets.TILE_LENGTH * tile_manager.ROWS
+        canvas_height = assets.TILE_LENGTH * tile_manager.COLUMNS
         # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack()
