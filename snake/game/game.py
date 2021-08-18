@@ -16,8 +16,9 @@ class Game(tk.Frame):
         self.converter = coord_converter.Coord_Converter()
 
         # Create Canvas
-        canvas_width = assets.TILE_LENGTH * tile_manager.ROWS
-        canvas_height = assets.TILE_LENGTH * tile_manager.COLUMNS
+        canvas_width = assets.TILE_LENGTH * tile_manager.COLUMNS
+        canvas_height = assets.TILE_LENGTH * tile_manager.ROWS
+        self.canvas_dimensions = (canvas_width, canvas_height)
         # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack(side=tk.BOTTOM)
@@ -29,7 +30,7 @@ class Game(tk.Frame):
 
         # WASD TO START label
         self.wasd_to_start_label = self.canvas.create_image(
-            (canvas_width/2, assets.wasd_to_start_label_height/2 + 10), 
+            (self.canvas_dimensions[0]/2, assets.wasd_to_start_label_height/2 + 40), 
             image=assets.wasd_to_start_label)
 
         # Score label
@@ -42,13 +43,13 @@ class Game(tk.Frame):
     # Input Handler
     def key_handler(self, event):
         if not self.started:
-            if event.char == 'w' and self.snake.direction != 's':
+            if event.char == 'w':
                 self.snake.new_direction = 'n'
-            elif event.char == 'a' and self.snake.direction != 'e':
+            elif event.char == 'a':
                 self.snake.new_direction = 'w'
-            elif event.char == 's' and self.snake.direction != 'n':
+            elif event.char == 's':
                 self.snake.new_direction = 's'
-            elif event.char == 'd' and self.snake.direction != 'w':
+            elif event.char == 'd':
                 self.snake.new_direction = 'e'
 
             self.started = True
@@ -77,9 +78,9 @@ class Game(tk.Frame):
             self.snake.draw_snake()
 
         # Checking if snake hit apple
-        snake_x = self.snake.snake_pos[0]
-        snake_y = self.snake.snake_pos[1]
-        tile = self.tile_manager.tile_array[snake_x][snake_y]
+        snake_column = self.snake.snake_pos[0]
+        snake_row = self.snake.snake_pos[1]
+        tile = self.tile_manager.tile_array[snake_row][snake_column]
         apple_index = tile.is_holding(apple.Apple)
         if apple_index != None:
             tile.drop(apple_index)
@@ -111,11 +112,55 @@ class Game(tk.Frame):
                 return True
 
         # Check if snake hit barrier
-        snake_pos = self.snake.snake_pos
-        if self.tile_manager.tile_array[snake_pos[0]][snake_pos[1]].type == "barrier":
+        snake_column = self.snake.snake_pos[0]
+        snake_row = self.snake.snake_pos[1]
+        tile = self.tile_manager.tile_array[snake_row][snake_column]
+        if tile.type == "barrier":
             return True
 
         return False
 
     def snake_death_handler(self):
-        pass
+        distance_from_top = 100
+        distance_between = 30
+        def display_you_died_label(self):
+            self.you_died_label = self.canvas.create_image(
+                (self.canvas_dimensions[0]/2, assets.you_died_label_height/2 + distance_from_top), 
+                image=assets.you_died_label)
+            self.after(1000, lambda: display_the_rest(self))
+
+        def display_the_rest(self):
+            self.play_again_button = self.canvas.create_image(self.canvas_dimensions[0]/2,
+                assets.you_died_label_height + assets.play_again_button_height/2 + distance_from_top + distance_between,
+                image = assets.play_again_button)
+
+            self.main_menu_button = self.canvas.create_image(self.canvas_dimensions[0]/2,
+                assets.you_died_label_height + assets.play_again_button_height + assets.main_menu_button_height/2 + distance_from_top + distance_between*2,
+                image = assets.main_menu_button)
+            
+            def play_again_button_on_click(self):
+                pass
+
+            def play_again_button_on_enter(self):
+                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted)
+
+            def play_again_button_on_leave(self):
+                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button)
+
+            def main_menu_button_on_click(self):
+                pass
+
+            def main_menu_button_on_enter(self):
+                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button_highlighted)
+
+            def main_menu_button_on_leave(self):
+                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button)
+
+            self.canvas.tag_bind(self.play_again_button, "<Button-1>", lambda _: play_again_button_on_click(self))
+            self.canvas.tag_bind(self.play_again_button, "<Enter>", lambda _: play_again_button_on_enter(self))
+            self.canvas.tag_bind(self.play_again_button, "<Leave>", lambda _: play_again_button_on_leave(self))
+            self.canvas.tag_bind(self.main_menu_button, "<Button-1>", lambda _: main_menu_button_on_click(self))
+            self.canvas.tag_bind(self.main_menu_button, "<Enter>", lambda _: main_menu_button_on_enter(self))
+            self.canvas.tag_bind(self.main_menu_button, "<Leave>", lambda _: main_menu_button_on_leave(self))
+
+        self.after(1000, lambda: display_you_died_label(self))

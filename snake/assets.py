@@ -32,6 +32,41 @@ wasd_to_start_label_width = int(wasd_to_start_label_height * wasd_to_start_label
 wasd_to_start_label_resized = wasd_to_start_label.resize((wasd_to_start_label_width, wasd_to_start_label_height))
 wasd_to_start_label = ImageTk.PhotoImage(wasd_to_start_label_resized)
 
+you_died_label = Image.open("snake/assets/you_died_label.png")
+you_died_label_aspect_ratio = you_died_label.size[0]/you_died_label.size[1]
+you_died_label_height = 50
+you_died_label_width = int(you_died_label_height * you_died_label_aspect_ratio)
+you_died_label_resized = you_died_label.resize((you_died_label_width, you_died_label_height))
+you_died_label = ImageTk.PhotoImage(you_died_label_resized)
+
+play_again_button = Image.open("snake/assets/play_again_button.png")
+play_again_button_aspect_ratio = play_again_button.size[0]/play_again_button.size[1]
+play_again_button_height = 75
+play_again_button_width = int(play_again_button_height * play_again_button_aspect_ratio)
+play_again_button_resized = play_again_button.resize((play_again_button_width, play_again_button_height))
+play_again_button = ImageTk.PhotoImage(play_again_button_resized)
+
+play_again_button_highlighted = Image.open("snake/assets/play_again_button_highlighted.png")
+play_again_button_highlighted_aspect_ratio = play_again_button_highlighted.size[0]/play_again_button_highlighted.size[1]
+play_again_button_highlighted_height = 75
+play_again_button_highlighted_width = int(play_again_button_highlighted_height * play_again_button_highlighted_aspect_ratio)
+play_again_button_highlighted_resized = play_again_button_highlighted.resize((play_again_button_highlighted_width, play_again_button_highlighted_height))
+play_again_button_highlighted = ImageTk.PhotoImage(play_again_button_highlighted_resized)
+
+main_menu_button = Image.open("snake/assets/main_menu_button.png")
+main_menu_button_aspect_ratio = main_menu_button.size[0]/main_menu_button.size[1]
+main_menu_button_height = 75
+main_menu_button_width = int(main_menu_button_height * main_menu_button_aspect_ratio)
+main_menu_button_resized = main_menu_button.resize((main_menu_button_width, main_menu_button_height))
+main_menu_button = ImageTk.PhotoImage(main_menu_button_resized)
+
+main_menu_button_highlighted = Image.open("snake/assets/main_menu_button_highlighted.png")
+main_menu_button_highlighted_aspect_ratio = main_menu_button_highlighted.size[0]/main_menu_button_highlighted.size[1]
+main_menu_button_highlighted_height = 75
+main_menu_button_highlighted_width = int(main_menu_button_highlighted_height * main_menu_button_highlighted_aspect_ratio)
+main_menu_button_highlighted_resized = main_menu_button_highlighted.resize((main_menu_button_highlighted_width, main_menu_button_highlighted_height))
+main_menu_button_highlighted = ImageTk.PhotoImage(main_menu_button_highlighted_resized)
+
 land_tile = Image.open("snake/assets/land_tile.png").resize((TILE_LENGTH, TILE_LENGTH))
 land_tile = ImageTk.PhotoImage(land_tile)
 barrier_tile = Image.open("snake/assets/barrier_tile.png").resize((TILE_LENGTH, TILE_LENGTH))

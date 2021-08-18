@@ -7,12 +7,12 @@ def default(canvas, rows, columns):
     land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
     for row_num in range(rows):
         row = []
-        for column in range(columns):
-            if row_num == 0 or row_num == rows - 1 or column == 0 or column == columns - 1:
-                tile = Tile((row_num, column), "barrier", canvas)
+        for column_num in range(columns):
+            if row_num == 0 or row_num == rows - 1 or column_num == 0 or column_num == columns - 1:
+                tile = Tile((column_num, row_num), "barrier", canvas)
                 row.append(tile)
             else:
-                tile = Tile((row_num, column), "land", canvas)
+                tile = Tile((column_num, row_num), "land", canvas)
                 row.append(tile)
                 land_tiles.append(tile)
 
@@ -26,7 +26,7 @@ def plain(canvas, rows, columns):
     for row_num in range(rows):
         row = []
         for column_num in range(columns):
-            tile = Tile((row_num, column_num), "land", canvas)
+            tile = Tile((column_num, row_num), "land", canvas)
             row.append(tile)
             land_tiles.append(tile)
 

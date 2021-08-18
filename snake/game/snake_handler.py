@@ -2,7 +2,7 @@
 # It manages movement, growth, and rendering of snake.
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
-from snake.game import coord_converter
+from snake.game import coord_converter, tile_manager
 from snake import assets
 
 class Snake():
@@ -11,7 +11,7 @@ class Snake():
         self.grid_rows = grid_rows
         self.grid_columns = grid_columns
         self.converter = coord_converter.Coord_Converter()
-        self.snake_pos = (10, 10)         # (x, y)
+        self.snake_pos = (int(tile_manager.COLUMNS/2), int(tile_manager.ROWS/2))         # (column, row)/(x, y)
 
         inital_coords = self.converter.to_raw(self.snake_pos)
 
