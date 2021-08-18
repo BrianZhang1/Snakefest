@@ -2,9 +2,8 @@
 
 from snake.game.tile import Tile
 
-# Flexible size
-def generate_default_map(canvas, rows, columns):
-    default_map = []
+def default(canvas, rows, columns):
+    map = []
     for row_num in range(rows):
         row = []
         for column in range(columns):
@@ -12,6 +11,16 @@ def generate_default_map(canvas, rows, columns):
                 row.append(Tile((row_num, column), "barrier", canvas))
             else:
                 row.append(Tile((row_num, column), "land", canvas))
-        default_map.append(row)
+        map.append(row)
     
-    return default_map
+    return map
+
+def plain(canvas, rows, columns):
+    map = []
+    for row_num in range(rows):
+        row = []
+        for column_num in range(columns):
+            row.append(Tile((row_num, column_num), "land", canvas))
+        map.append(row)
+    
+    return map
