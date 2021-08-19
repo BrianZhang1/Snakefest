@@ -5,3 +5,4 @@ import tkinter as tk
 class Main_Menu(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
+        self.canvas = tk.Canvas(master)

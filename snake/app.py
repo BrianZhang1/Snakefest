@@ -28,6 +28,7 @@ class App():
 
         self.state = "main_menu"
         self.main_menu = main_menu.Main_Menu(self.root)
+        self.main_menu.pack(expand=True)
 
     def load_new_game(self):
         self.clear_state()

@@ -20,7 +20,6 @@ class Game(tk.Frame):
         canvas_width = assets.TILE_LENGTH * tile_manager.COLUMNS
         canvas_height = assets.TILE_LENGTH * tile_manager.ROWS
         self.canvas_dimensions = (canvas_width, canvas_height)
-        # +1 so tile borders aren't cut off.
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack(side=tk.BOTTOM)
 
@@ -107,38 +106,38 @@ class Game(tk.Frame):
         random_tile.holding.append(new_apple)
         random_tile.render()
 
-    def snake_death_handler(self):
-        distance_from_top = 100
-        distance_between = 30
-        def display_you_died_label(self):
-            self.you_died_label = self.canvas.create_image(
-                (self.canvas_dimensions[0]/2, assets.you_died_label_height/2 + distance_from_top), 
-                image=assets.you_died_label)
-            self.after(1000, lambda: display_buttons(self))
+    def snake_death_handler(self, is_first_call=True):
 
-        def display_buttons(self):
-            self.play_again_button = self.canvas.create_image(self.canvas_dimensions[0]/2,
-                assets.you_died_label_height + assets.play_again_button_height/2 + distance_from_top + distance_between,
-                image = assets.play_again_button)
+        if is_first_call:
+            self.after(750, lambda: self.snake_death_handler(is_first_call=False))
 
-            self.main_menu_button = self.canvas.create_image(self.canvas_dimensions[0]/2,
-                assets.you_died_label_height + assets.play_again_button_height + assets.main_menu_button_height/2 + distance_from_top + distance_between*2,
-                image = assets.main_menu_button)
-            
-            self.canvas.tag_bind(self.play_again_button, "<Button-1>", lambda _: self.load_new_game())
+        else:
+            bg_color = "lightcyan2"
+            self.death_frame = tk.Frame(self.canvas, bg=bg_color, pady=30, padx=10)
 
-            self.canvas.tag_bind(self.play_again_button, "<Enter>", lambda _: 
-                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted))
+            self.you_died_label = tk.Label(self.death_frame, image=assets.you_died_label, bg=bg_color)
 
-            self.canvas.tag_bind(self.play_again_button, "<Leave>", lambda _: 
-                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button))
+            final_score_label_text = tk.StringVar()
+            final_score_label_text.set("Final Score: " + str(len(self.snake.body)))
+            self.final_score_label = tk.Label(self.death_frame, textvariable=final_score_label_text, font="Times 22", bg=bg_color)
 
-            self.canvas.tag_bind(self.main_menu_button, "<Button-1>", lambda _: self.load_main_menu())
+            self.play_again_button = tk.Label(self.death_frame, image=assets.play_again_button, bg=bg_color)
+            self.play_again_button.bind("<Button-1>", lambda _: self.load_new_game())
+            self.play_again_button.bind("<Enter>", lambda _: 
+                self.play_again_button.configure(image=assets.play_again_button_highlighted))
+            self.play_again_button.bind("<Leave>", lambda _: 
+                self.play_again_button.configure(image=assets.play_again_button))
 
-            self.canvas.tag_bind(self.main_menu_button, "<Enter>", lambda _:
-                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button_highlighted))
+            self.main_menu_button = tk.Label(self.death_frame, image=assets.main_menu_button, bg=bg_color)
+            self.main_menu_button.bind("<Button-1>", lambda _: self.load_main_menu())
+            self.main_menu_button.bind("<Enter>", lambda _: 
+                self.main_menu_button.configure(image=assets.main_menu_button_highlighted))
+            self.main_menu_button.bind("<Leave>", lambda _: 
+                self.main_menu_button.configure(image=assets.main_menu_button))
 
-            self.canvas.tag_bind(self.main_menu_button, "<Leave>", lambda _: 
-                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button))
+            self.you_died_label.pack()
+            self.final_score_label.pack(pady=(0, 30))
+            self.play_again_button.pack()
+            self.main_menu_button.pack()
 
-        self.after(1000, lambda: display_you_died_label(self))
+            self.death_frame.place(anchor=tk.CENTER, relx=0.5, rely=0.5)
