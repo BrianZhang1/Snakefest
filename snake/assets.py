@@ -37,3 +37,5 @@ main_menu_button_highlighted = load_image("snake/assets/main_menu_button_highlig
 land_tile = load_image("snake/assets/land_tile.png", TILE_LENGTH)
 barrier_tile = load_image("snake/assets/barrier_tile.png", TILE_LENGTH)
 
+start_new_game_button = load_image("snake/assets/start_new_game_button.png", 100)
+start_new_game_button_highlighted = load_image("snake/assets/start_new_game_button_highlighted.png", 100)

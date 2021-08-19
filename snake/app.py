@@ -2,15 +2,25 @@
 # It manages the tkinter event loop and different pages (swapping between main menu, game, etc.)
 
 import tkinter as tk
+
+from PIL.Image import init
 root = tk.Tk()
 root.geometry("1280x720")
 from snake.game import game
 from snake import main_menu
 
 class App():
-    def __init__(self):
+    def __init__(self, inital_state):
         self.root = root
         self.state = None
+
+        if inital_state == "main_menu":
+            self.load_main_menu()
+            root.mainloop()
+
+        if inital_state == "game":
+            self.load_new_game()
+            root.mainloop()
 
     def clear_state(self):
         if self.state == "game":
@@ -27,7 +37,7 @@ class App():
         self.clear_state()
 
         self.state = "main_menu"
-        self.main_menu = main_menu.Main_Menu(self.root)
+        self.main_menu = main_menu.Main_Menu(self.root, self.load_new_game)
         self.main_menu.pack(expand=True)
 
     def load_new_game(self):
@@ -38,4 +48,3 @@ class App():
         self.game.pack(expand=True)
         self.game.focus_set()
 
-        root.mainloop()
