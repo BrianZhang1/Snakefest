@@ -1,7 +1,6 @@
 # assets.py allows all assets to be represented as python objects.
 # They can be imported into other modules and used from there.
 
-from tkinter import *
 from PIL import Image, ImageTk
 
 TILE_LENGTH = 32

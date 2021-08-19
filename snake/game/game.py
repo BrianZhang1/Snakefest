@@ -139,7 +139,7 @@ class Game(tk.Frame):
                 assets.you_died_label_height + assets.play_again_button_height + assets.main_menu_button_height/2 + distance_from_top + distance_between*2,
                 image = assets.main_menu_button)
             
-            self.canvas.tag_bind(self.play_again_button, "<Button-1>", self.start_new_game)
+            self.canvas.tag_bind(self.play_again_button, "<Button-1>", lambda _: self.start_new_game())
 
             self.canvas.tag_bind(self.play_again_button, "<Enter>", lambda _: 
                 self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted))
@@ -147,7 +147,7 @@ class Game(tk.Frame):
             self.canvas.tag_bind(self.play_again_button, "<Leave>", lambda _: 
                 self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button))
 
-            self.canvas.tag_bind(self.main_menu_button, "<Button-1>", self.load_main_menu)
+            self.canvas.tag_bind(self.main_menu_button, "<Button-1>", lambda _: self.load_main_menu())
 
             self.canvas.tag_bind(self.main_menu_button, "<Enter>", lambda _:
                 self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button_highlighted))
