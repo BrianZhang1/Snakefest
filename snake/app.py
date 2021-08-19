@@ -6,10 +6,17 @@ root = tk.Tk()
 root.geometry("1280x720")
 from snake.game import game as game_    # trailing _ to avoid name conflicts
 
-def run():
-    # Initialize game (usually would start at main menu, but that is todo)
-    game = game_.Game(root)
-    game.pack(expand=True)
-    game.focus_set()
+class App():
+    def __init__(self):
+        self.root = root
+        self.game = None
 
-    root.mainloop()
+    def start_new_game(self):
+        if self.game != None:
+            self.game.destroy()
+
+        self.game = game_.Game(self.root, self.start_new_game)
+        self.game.pack(expand=True)
+        self.game.focus_set()
+
+        root.mainloop()

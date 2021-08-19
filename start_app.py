@@ -1,3 +1,4 @@
-from snake import app
+from snake.app import App
 
-app.run()
+app = App()
+app.start_new_game()

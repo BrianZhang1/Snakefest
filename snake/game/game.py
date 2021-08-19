@@ -7,9 +7,10 @@ from snake import assets
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, start_new_game):
         super().__init__(master)
         self.master = master
+        self.start_new_game = start_new_game
         self.bind("<Key>", self.key_handler)
         self.started = False
         self.converter = coord_converter.Coord_Converter()
@@ -138,7 +139,7 @@ class Game(tk.Frame):
                 image = assets.main_menu_button)
             
             def play_again_button_on_click(self):
-                pass
+                self.start_new_game()
 
             def play_again_button_on_enter(self):
                 self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted)
