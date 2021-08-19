@@ -1,6 +1,6 @@
 # tile.py holds the Tile class
 
-from snake.game import coord_converter, apple
+from snake.game import coord_converter, apple, snake_part
 from snake import assets
 
 class Tile():
@@ -35,13 +35,13 @@ class Tile():
             
             self.rendered = True
         else:
-            apple_index = self.is_holding(apple.Apple)
-            if apple_index != None:
-                self.holding[apple_index].render(self.position)
+            for item in self.holding:
+                item.render(self.position)
     
     # Removes item from holding and deletes on canvas
     def drop(self, item_index):
         item = self.holding[item_index]
         if item.rendered:
             self.canvas.delete(item.id)
+            item.rendered = False
         self.holding.pop(item_index)

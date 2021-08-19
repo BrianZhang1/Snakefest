@@ -2,14 +2,13 @@
 # It manages movement, growth, and rendering of snake.
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
-from snake.game import coord_converter, tile_manager
+from snake.game import coord_converter, snake_part
 from snake import assets
 
 class Snake():
-    def __init__(self, canvas, grid_rows, grid_columns):
+    def __init__(self, canvas, tile_manager):
         self.canvas = canvas
-        self.grid_rows = grid_rows
-        self.grid_columns = grid_columns
+        self.tile_manager = tile_manager
         self.converter = coord_converter.Coord_Converter()
         self.snake_pos = (int(tile_manager.COLUMNS/2), int(tile_manager.ROWS/2))         # (column, row)/(x, y)
 
@@ -29,6 +28,8 @@ class Snake():
         self.snake_head = self.canvas.create_image(inital_coords, image=initial_image)
         self.previous_moves = []
         self.body = []
+        # Index (in self.body) of the last body part of the snake
+        self.body_last_index = None
 
     def update_position(self):
         self.previous_moves.insert(0, self.snake_pos)
@@ -64,15 +65,15 @@ class Snake():
     # Check bounds. If out of bounds, teleport to opposite side.
     def check_bounds(self):
         if self.snake_pos[0] < 0:
-            new_x = self.grid_columns - 1
+            new_x = self.tile_manager.COLUMNS - 1
             new_y = self.snake_pos[1]
-        elif self.snake_pos[0] > self.grid_columns - 1:
+        elif self.snake_pos[0] > self.tile_manager.COLUMNS - 1:
             new_x = 0
             new_y = self.snake_pos[1]
         elif self.snake_pos[1] < 0:
             new_x = self.snake_pos[0]
-            new_y = self.grid_rows - 1
-        elif self.snake_pos[1] > self.grid_rows - 1:
+            new_y = self.tile_manager.ROWS - 1
+        elif self.snake_pos[1] > self.tile_manager.ROWS - 1:
             new_x = self.snake_pos[0]
             new_y = 0
         else:
@@ -87,14 +88,41 @@ class Snake():
 
         # Move last snake body part to front of snake body.
         if len(self.body) > 0:
-            raw_coords = self.converter.to_raw(self.previous_moves[0])
+            # Delete from last tile
+            tile_array = self.tile_manager.tile_array
+            last_snake_part = self.body[self.body_last_index]
+            last_snake_part_position = self.converter.to_coord(self.canvas.coords(last_snake_part.id))
+            last_snake_part_tile = tile_array[last_snake_part_position[1]][last_snake_part_position[0]]
+            last_snake_part_index = last_snake_part_tile.is_holding(snake_part.Snake_Part)
+            last_snake_part_tile.drop(last_snake_part_index)
 
-            self.canvas.coords(self.body[-1], raw_coords)
-            self.body.insert(0, self.body[-1])
-            self.body.pop()
+            # Spawn on new tile
+            new_tile_coords = self.previous_moves[0]
+            new_tile = tile_array[new_tile_coords[1]][new_tile_coords[0]]
+            new_tile.holding.append(last_snake_part)
+            new_tile.render()
+
+            
+            if self.body_last_index == 0:
+                self.body_last_index = len(self.body) - 1
+            else:
+                self.body_last_index -= 1
+
+
 
     def create_new_body(self):
+        # body_last is the index of the last snake part in the body.
+        # A new snake part is inserted after the last snake part, and becomes the last snake part.
         coords = self.previous_moves[len(self.body)]
-        raw_coords = self.converter.to_raw(coords)
-        self.body.append(self.canvas.create_image(raw_coords, image=assets.snake_body_sprite))
+        new_snake_part = snake_part.Snake_Part(self.canvas)
+        if self.body_last_index != None:
+            self.body.insert(self.body_last_index+1, new_snake_part)
+            self.body_last_index += 1
+        else:
+            self.body.append(new_snake_part)
+            self.body_last_index = 0
+        tile = self.tile_manager.tile_array[coords[1]][coords[0]]
+        tile.holding.append(new_snake_part)
+        tile.render()
+        
     

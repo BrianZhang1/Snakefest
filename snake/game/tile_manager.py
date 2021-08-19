@@ -8,12 +8,13 @@ COLUMNS = 17
 
 class Tile_Manager():
     def __init__(self, canvas):
-        # Create grid
         self.canvas = canvas
         self.converter = coord_converter.Coord_Converter()
         self.map = "default"
         self.tile_array = None
         self.land_tiles = None
+        self.ROWS = 17
+        self.COLUMNS = 17
 
         map_return_value = None
         if self.map == "default":

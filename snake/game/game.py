@@ -2,7 +2,7 @@
 # It does not include, for example, the main menu or tile rendering.
 
 import tkinter as tk
-from snake.game import snake_handler, apple, tile_manager, coord_converter
+from snake.game import snake_handler, apple, snake_part, tile_manager, coord_converter
 from snake import assets
 import random
 
@@ -27,7 +27,7 @@ class Game(tk.Frame):
         self.tile_manager = tile_manager.Tile_Manager(self.canvas)
         self.tile_manager.draw_grid()
 
-        self.snake = snake_handler.Snake(self.canvas, tile_manager.ROWS, tile_manager.COLUMNS)
+        self.snake = snake_handler.Snake(self.canvas, self.tile_manager)
 
         # WASD TO START label
         self.wasd_to_start_label = self.canvas.create_image(
@@ -69,19 +69,23 @@ class Game(tk.Frame):
             elif event.char == 'd' and self.snake.direction != 'w':
                 self.snake.new_direction = 'e'
 
+    # This loop manages the snake, collisions, and basically the whole playing part of the game
     def update_snake(self):
         self.snake.update_position()
 
-        if self.snake_is_dead():   # if dead
-            self.snake_death_handler()
-            return
-        else:
-            self.snake.draw_snake()
-
-        # Checking if snake hit apple
+        # Finds the tile object the snake is currently on
         snake_column = self.snake.snake_pos[0]
         snake_row = self.snake.snake_pos[1]
         tile = self.tile_manager.tile_array[snake_row][snake_column]
+
+        # Check if snake hit barrier tile
+        if tile.type == "barrier" or tile.is_holding(snake_part.Snake_Part) != None:
+            self.snake_death_handler()
+            return
+
+        self.snake.draw_snake()
+
+        # Checking if snake hit apple
         apple_index = tile.is_holding(apple.Apple)
         if apple_index != None:
             tile.drop(apple_index)
@@ -102,24 +106,6 @@ class Game(tk.Frame):
         new_apple = apple.Apple(self.canvas)
         random_tile.holding.append(new_apple)
         random_tile.render()
-
-    def snake_is_dead(self):
-
-        raw_snake_pos = self.converter.to_raw(self.snake.snake_pos)
-
-        # Check if snake hit itself
-        for snake_part in self.snake.body:
-            if tuple(self.canvas.coords(snake_part)) == raw_snake_pos:
-                return True
-
-        # Check if snake hit barrier
-        snake_column = self.snake.snake_pos[0]
-        snake_row = self.snake.snake_pos[1]
-        tile = self.tile_manager.tile_array[snake_row][snake_column]
-        if tile.type == "barrier":
-            return True
-
-        return False
 
     def snake_death_handler(self):
         distance_from_top = 100

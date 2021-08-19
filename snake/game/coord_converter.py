@@ -14,7 +14,7 @@ class Coord_Converter():
         return raw_coord
     
     def to_coord(self, raw):
-        new_x = (raw[0] - self.margin) / assets.TILE_LENGTH
-        new_y = (raw[1] - self.margin) / assets.TILE_LENGTH
+        new_x = int((raw[0] - self.margin) / assets.TILE_LENGTH)
+        new_y = int((raw[1] - self.margin) / assets.TILE_LENGTH)
         new_coord = (new_x , new_y)
         return new_coord
