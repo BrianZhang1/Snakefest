@@ -7,10 +7,11 @@ from snake import assets
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master, start_new_game):
+    def __init__(self, master, start_new_game, load_main_menu):
         super().__init__(master)
         self.master = master
         self.start_new_game = start_new_game
+        self.load_main_menu = load_main_menu
         self.bind("<Key>", self.key_handler)
         self.started = False
         self.converter = coord_converter.Coord_Converter()
@@ -127,9 +128,9 @@ class Game(tk.Frame):
             self.you_died_label = self.canvas.create_image(
                 (self.canvas_dimensions[0]/2, assets.you_died_label_height/2 + distance_from_top), 
                 image=assets.you_died_label)
-            self.after(1000, lambda: display_the_rest(self))
+            self.after(1000, lambda: display_buttons(self))
 
-        def display_the_rest(self):
+        def display_buttons(self):
             self.play_again_button = self.canvas.create_image(self.canvas_dimensions[0]/2,
                 assets.you_died_label_height + assets.play_again_button_height/2 + distance_from_top + distance_between,
                 image = assets.play_again_button)
@@ -138,29 +139,20 @@ class Game(tk.Frame):
                 assets.you_died_label_height + assets.play_again_button_height + assets.main_menu_button_height/2 + distance_from_top + distance_between*2,
                 image = assets.main_menu_button)
             
-            def play_again_button_on_click(self):
-                self.start_new_game()
+            self.canvas.tag_bind(self.play_again_button, "<Button-1>", self.start_new_game)
 
-            def play_again_button_on_enter(self):
-                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted)
+            self.canvas.tag_bind(self.play_again_button, "<Enter>", lambda _: 
+                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted))
 
-            def play_again_button_on_leave(self):
-                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button)
+            self.canvas.tag_bind(self.play_again_button, "<Leave>", lambda _: 
+                self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button))
 
-            def main_menu_button_on_click(self):
-                pass
+            self.canvas.tag_bind(self.main_menu_button, "<Button-1>", self.load_main_menu)
 
-            def main_menu_button_on_enter(self):
-                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button_highlighted)
+            self.canvas.tag_bind(self.main_menu_button, "<Enter>", lambda _:
+                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button_highlighted))
 
-            def main_menu_button_on_leave(self):
-                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button)
-
-            self.canvas.tag_bind(self.play_again_button, "<Button-1>", lambda _: play_again_button_on_click(self))
-            self.canvas.tag_bind(self.play_again_button, "<Enter>", lambda _: play_again_button_on_enter(self))
-            self.canvas.tag_bind(self.play_again_button, "<Leave>", lambda _: play_again_button_on_leave(self))
-            self.canvas.tag_bind(self.main_menu_button, "<Button-1>", lambda _: main_menu_button_on_click(self))
-            self.canvas.tag_bind(self.main_menu_button, "<Enter>", lambda _: main_menu_button_on_enter(self))
-            self.canvas.tag_bind(self.main_menu_button, "<Leave>", lambda _: main_menu_button_on_leave(self))
+            self.canvas.tag_bind(self.main_menu_button, "<Leave>", lambda _: 
+                self.canvas.itemconfig(self.main_menu_button, image=assets.main_menu_button))
 
         self.after(1000, lambda: display_you_died_label(self))
