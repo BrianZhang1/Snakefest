@@ -30,7 +30,7 @@ class Game(tk.Frame):
 
         # WASD TO START label
         self.wasd_to_start_label = self.canvas.create_image(
-            (self.canvas_dimensions[0]/2, assets.wasd_to_start_label_height/2 + 40), 
+            (self.canvas_dimensions[0]/2, assets.wasd_to_start_label.height()/2 + 40), 
             image=assets.wasd_to_start_label)
 
         # Score label
