@@ -3,4 +3,5 @@
 import tkinter as tk
 
 class Main_Menu(tk.Frame):
-    pass
+    def __init__(self, master):
+        super().__init__(master)

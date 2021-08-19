@@ -7,10 +7,10 @@ from snake import assets
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master, start_new_game, load_main_menu):
+    def __init__(self, master, load_new_game, load_main_menu):
         super().__init__(master)
         self.master = master
-        self.start_new_game = start_new_game
+        self.load_new_game = load_new_game
         self.load_main_menu = load_main_menu
         self.bind("<Key>", self.key_handler)
         self.started = False
@@ -139,7 +139,7 @@ class Game(tk.Frame):
                 assets.you_died_label_height + assets.play_again_button_height + assets.main_menu_button_height/2 + distance_from_top + distance_between*2,
                 image = assets.main_menu_button)
             
-            self.canvas.tag_bind(self.play_again_button, "<Button-1>", lambda _: self.start_new_game())
+            self.canvas.tag_bind(self.play_again_button, "<Button-1>", lambda _: self.load_new_game())
 
             self.canvas.tag_bind(self.play_again_button, "<Enter>", lambda _: 
                 self.canvas.itemconfig(self.play_again_button, image=assets.play_again_button_highlighted))

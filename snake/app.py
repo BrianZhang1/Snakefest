@@ -4,21 +4,36 @@
 import tkinter as tk
 root = tk.Tk()
 root.geometry("1280x720")
-from snake.game import game as game_    # trailing _ to avoid name conflicts
+from snake.game import game
+from snake import main_menu
 
 class App():
     def __init__(self):
         self.root = root
-        self.game = None
+        self.state = None
+
+    def clear_state(self):
+        if self.state == "game":
+            self.game.destroy()
+            del self.game
+
+        elif self.state == "main_menu":
+            self.main_menu.destroy()
+            del self.main_menu
+        
+        self.state = None
 
     def load_main_menu(self):
-        pass
+        self.clear_state()
 
-    def start_new_game(self):
-        if self.game != None:
-            self.game.destroy()
+        self.state = "main_menu"
+        self.main_menu = main_menu.Main_Menu(self.root)
 
-        self.game = game_.Game(self.root, self.start_new_game, self.load_main_menu)
+    def load_new_game(self):
+        self.clear_state()
+
+        self.state = "game"
+        self.game = game.Game(self.root, self.load_new_game, self.load_main_menu)
         self.game.pack(expand=True)
         self.game.focus_set()
 
