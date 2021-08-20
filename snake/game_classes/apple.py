@@ -1,6 +1,6 @@
 # apple.py holds the Apple class.
 
-from snake.game import coord_converter
+from snake.game_classes import coord_converter
 from snake import assets
 
 class Apple():

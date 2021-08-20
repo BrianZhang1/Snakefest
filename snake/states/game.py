@@ -2,7 +2,7 @@
 # It does not include, for example, the main menu or tile rendering.
 
 import tkinter as tk
-from snake.game import snake, apple, snake_part, coord_converter, maps
+from snake.game_classes import snake, apple, snake_part, coord_converter, maps
 from snake import assets
 import random
 

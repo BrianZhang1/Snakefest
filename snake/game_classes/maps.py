@@ -1,6 +1,6 @@
 # maps.py is a list of maps that can be used and rendered by other files.
 
-from snake.game.tile import Tile
+from snake.game_classes.tile import Tile
 
 def default(canvas, rows, columns):
     map = []

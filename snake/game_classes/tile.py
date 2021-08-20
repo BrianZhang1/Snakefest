@@ -1,7 +1,7 @@
 # tile.py holds the Tile class
 # the map is comprised of many Tile objects
 
-from snake.game import coord_converter, apple, snake_part
+from snake.game_classes import coord_converter, apple, snake_part
 from snake import assets
 
 class Tile():

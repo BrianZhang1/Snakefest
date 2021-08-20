@@ -2,7 +2,7 @@
 # It manages movement, growth, and rendering of snake.
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
-from snake.game import coord_converter, snake_part
+from snake.game_classes import coord_converter, snake_part
 from snake import assets
 
 class Snake():
