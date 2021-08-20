@@ -1,10 +1,12 @@
-This project is for me to get familiar with Python and Object Oriented Programming in general. I hope you enjoy!
+## About
+The best Python Snake! Soon to be implemented map selector and map creator. Created with Tkinter.  
+The `explanation.md` file explains the structure of the project and roles of all files/directories.
 
-Instructions to play:
+## Instructions to play 
 
-1. Install requirements listed in txt, either individually with "pip install (package name)" or as all at once with "pip install -r requirements.txt" while in the pysnake directory.
+1. Clone this project and enter the `pysnake\` directory.  
 
-2. Run `start_app.py` with `python start_app.py` while in the `pysnake` directory.
+2. Install requirements by running `pip install -r requirements.txt`.  
+    * Creating a virtual environment at this stage is optional.  
 
-Note: This is a work in progress, many core game elements may not be implemented yet.
-
+3. Run `python start_app.py`.
