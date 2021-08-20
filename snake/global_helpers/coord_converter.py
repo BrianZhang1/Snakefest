@@ -1,6 +1,6 @@
 # Converts raw coordinates to grid coordinates and vice versa.
 
-from snake import assets
+from snake.global_helpers import assets
 
 class Coord_Converter():
     def __init__(self):

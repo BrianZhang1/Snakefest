@@ -6,7 +6,7 @@ import tkinter as tk
 from PIL.Image import init
 root = tk.Tk()
 root.geometry("1280x720")
-from snake.states import game, main_menu
+from snake.states import game, main_menu, map_select
 
 class App():
     def __init__(self, inital_state):
@@ -29,6 +29,10 @@ class App():
         elif self.state == "main_menu":
             self.main_menu.destroy()
             del self.main_menu
+
+        elif self.state == "map_select":
+            self.map_select.destroy()
+            del self.map_select
         
         self.state = None
 
@@ -46,4 +50,11 @@ class App():
         self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, "default")
         self.game.pack(expand=True)
         self.game.focus_set()
+
+    def load_map_select(self):
+        self.clear_state()
+
+        self.state = "map_select"
+        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu)
+        self.map_select.pack(expand=True)
 

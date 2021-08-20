@@ -1,8 +1,7 @@
 # snake_part.py holds the class for Snake_Part.
 # Snake.body[] is filled with these Snake_Parts.
 
-from snake.game_classes import coord_converter
-from snake import assets
+from snake.global_helpers import assets, coord_converter
 
 class Snake_Part():
     def __init__(self, canvas):

@@ -1,7 +1,7 @@
 # main_menu.py holds the class for the main menu
 
 import tkinter as tk
-from snake import assets
+from snake.global_helpers import assets
 
 class Main_Menu(tk.Frame):
     def __init__(self, master, load_new_game):

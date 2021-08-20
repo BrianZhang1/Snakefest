@@ -1,8 +1,7 @@
 # tile.py holds the Tile class
 # the map is comprised of many Tile objects
 
-from snake.game_classes import coord_converter
-from snake import assets
+from snake.global_helpers import assets, coord_converter
 
 class Tile():
     def __init__(self, position, type, canvas):
