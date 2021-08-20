@@ -31,7 +31,7 @@ Contains all assets (mostly images that act as sprites), sources for images when
 Contains all classes that are used in `states\\game.py`, which is the game part of the app (where you actually play snake).
 
 ### [global_helpers\\](snake\\global_helpers\\)
-Helpers that are global (duh). For example, `assets.py` can be found here, which processes all images in [assets\\](assets\\) into PhotoImage objects which can be used and rendered by other files. At the top of each file is a description that explains what the file
+Helpers that are global (duh). For example, `assets.py` can be found here, which processes all images in `assets\\` into PhotoImage objects which can be used and rendered by other files. At the top of each file is a description that explains what the file
 
 ### [states\\](snake\\states\\)
 Contains all the states. A state is like a page. Examples include `main_menu.py`, `game.py`, `map_select.py`.
