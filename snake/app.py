@@ -6,8 +6,7 @@ import tkinter as tk
 from PIL.Image import init
 root = tk.Tk()
 root.geometry("1280x720")
-from snake.game import game
-from snake import main_menu
+from snake.states import game, main_menu
 
 class App():
     def __init__(self, inital_state):
