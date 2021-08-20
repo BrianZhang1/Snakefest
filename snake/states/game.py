@@ -8,7 +8,7 @@ from snake.global_helpers import assets, coord_converter
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, map):
+    def __init__(self, master, load_new_game, load_main_menu, settings):
         super().__init__(master)
         self.master = master
         self.load_new_game = load_new_game
@@ -17,11 +17,7 @@ class Game(tk.Frame):
         self.started = False
         self.converter = coord_converter.Coord_Converter()
 
-        self.settings = {
-            "rows": 17,
-            "columns": 17,
-            "map": map
-        }
+        self.settings = settings
 
         # Create Canvas
         canvas_width = assets.TILE_LENGTH * self.settings["columns"]
@@ -32,10 +28,12 @@ class Game(tk.Frame):
 
         # Create map tiles
         map_return_value = None
-        if map == "default":
+        if self.settings["map"] == "default":
             map_return_value = maps.default(self.canvas, self.settings["rows"], self.settings["columns"])
-        if map == "plain":
+        elif self.settings["map"] == "plain":
             map_return_value = maps.plain(self.canvas, self.settings["rows"], self.settings["columns"])
+        else:
+            print("Game: no map set")
         self.tile_array = map_return_value[0]
         self.land_tiles = map_return_value[1]
 

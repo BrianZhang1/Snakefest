@@ -47,7 +47,12 @@ class App():
         self.clear_state()
 
         self.state = "game"
-        self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, "default")
+        settings = {
+            "rows": 17,
+            "columns": 17,
+            "map": "default"
+        }
+        self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, settings)
         self.game.pack(expand=True)
         self.game.focus_set()
 
