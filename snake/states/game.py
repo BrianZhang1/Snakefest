@@ -1,5 +1,6 @@
 # game.py controls as the actual snake game.
 # It does not include, for example, the main menu or tile rendering.
+# all classes that help game.py can be found under the snake/game_classes directory
 
 import tkinter as tk
 from snake.game_classes import snake, apple, snake_part, coord_converter, maps
