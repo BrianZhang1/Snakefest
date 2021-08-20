@@ -2,7 +2,7 @@
 # It does not include, for example, the main menu or tile rendering.
 
 import tkinter as tk
-from snake.game import snake_handler, apple, snake_part, tile_manager, coord_converter
+from snake.game import snake, apple, snake_part, coord_converter, maps
 from snake import assets
 import random
 
@@ -16,17 +16,39 @@ class Game(tk.Frame):
         self.started = False
         self.converter = coord_converter.Coord_Converter()
 
+        self.settings = {
+            "rows": 17,
+            "columns": 17,
+            "map": map
+        }
+
         # Create Canvas
-        canvas_width = assets.TILE_LENGTH * tile_manager.COLUMNS
-        canvas_height = assets.TILE_LENGTH * tile_manager.ROWS
+        canvas_width = assets.TILE_LENGTH * self.settings["columns"]
+        canvas_height = assets.TILE_LENGTH * self.settings["rows"]
         self.canvas_dimensions = (canvas_width, canvas_height)
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack(side=tk.BOTTOM)
 
-        self.tile_manager = tile_manager.Tile_Manager(self.canvas, map)
-        self.tile_manager.draw_grid()
+        # Create map tiles
+        map_return_value = None
+        if map == "default":
+            map_return_value = maps.default(self.canvas, self.settings["rows"], self.settings["columns"])
+        if map == "plain":
+            map_return_value = maps.plain(self.canvas, self.settings["rows"], self.settings["columns"])
+        self.tile_array = map_return_value[0]
+        self.land_tiles = map_return_value[1]
 
-        self.snake = snake_handler.Snake(self.canvas, self.tile_manager)
+        # Render (draw) map tiles
+        current_row = 0
+        for row in self.tile_array:
+            current_column = 0
+            for tile in row:
+                tile.render()
+                current_column += 1
+            current_row += 1
+
+
+        self.snake = snake.Snake(self.canvas, self.settings, self.tile_array)
 
         # WASD TO START label
         self.wasd_to_start_label = self.canvas.create_image(
@@ -75,7 +97,7 @@ class Game(tk.Frame):
         # Finds the tile object the snake is currently on
         snake_column = self.snake.snake_pos[0]
         snake_row = self.snake.snake_pos[1]
-        tile = self.tile_manager.tile_array[snake_row][snake_column]
+        tile = self.tile_array[snake_row][snake_column]
 
         # Check if snake hit barrier tile
         if tile.type == "barrier" or tile.is_holding(snake_part.Snake_Part) != None:
@@ -97,7 +119,7 @@ class Game(tk.Frame):
     
     def create_new_apple(self):
         # Choose one of the land tiles to spawn an apple on
-        land_tiles = self.tile_manager.land_tiles
+        land_tiles = self.land_tiles
         random_tile_index = random.randint(0, len(land_tiles)-1)
         random_tile = land_tiles[random_tile_index]
 
