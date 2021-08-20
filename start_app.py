@@ -1,3 +1,3 @@
 from snake.app import App
 
-app = App("main_menu")
+app = App()

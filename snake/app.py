@@ -2,24 +2,18 @@
 # It manages the tkinter event loop and different pages (swapping between main menu, game, etc.)
 
 import tkinter as tk
-
-from PIL.Image import init
 root = tk.Tk()
 root.geometry("1280x720")
+
 from snake.states import game, main_menu, map_select
 
 class App():
-    def __init__(self, inital_state):
+    def __init__(self):
         self.root = root
         self.state = None
 
-        if inital_state == "main_menu":
-            self.load_main_menu()
-            root.mainloop()
-
-        if inital_state == "game":
-            self.load_new_game()
-            root.mainloop()
+        self.load_main_menu()
+        root.mainloop()
 
     def clear_state(self):
         if self.state == "game":
@@ -40,18 +34,13 @@ class App():
         self.clear_state()
 
         self.state = "main_menu"
-        self.main_menu = main_menu.Main_Menu(self.root, self.load_new_game)
+        self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select)
         self.main_menu.pack(expand=True)
 
-    def load_new_game(self):
+    def load_new_game(self, settings):
         self.clear_state()
 
         self.state = "game"
-        settings = {
-            "rows": 17,
-            "columns": 17,
-            "map": "default"
-        }
         self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, settings)
         self.game.pack(expand=True)
         self.game.focus_set()
@@ -61,5 +50,4 @@ class App():
 
         self.state = "map_select"
         self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu)
-        self.map_select.pack(expand=True)
 

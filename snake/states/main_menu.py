@@ -4,14 +4,14 @@ import tkinter as tk
 from snake.global_helpers import assets
 
 class Main_Menu(tk.Frame):
-    def __init__(self, master, load_new_game):
+    def __init__(self, master, load_map_select):
         bg_color = "AntiqueWhite1"
         super().__init__(master, bg=bg_color)
 
         self.button_panel = tk.Frame(self)
 
         self.start_new_game_button = tk.Label(self, image=assets.start_new_game_button, bg=bg_color)
-        self.start_new_game_button.bind("<Button-1>", lambda _: load_new_game())
+        self.start_new_game_button.bind("<Button-1>", lambda _: load_map_select())
         self.start_new_game_button.bind("<Enter>", lambda _: self.start_new_game_button.configure(image=assets.start_new_game_button_highlighted))
         self.start_new_game_button.bind("<Leave>", lambda _: self.start_new_game_button.configure(image=assets.start_new_game_button))
         self.start_new_game_button.pack()

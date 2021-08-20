@@ -3,8 +3,8 @@
 # all classes that help game.py can be found under the snake/game_classes directory
 
 import tkinter as tk
-from snake.game_classes import snake, apple, snake_part, maps
-from snake.global_helpers import assets, coord_converter
+from snake.game_classes import snake, apple, snake_part
+from snake.global_helpers import assets, coord_converter, maps
 import random
 
 class Game(tk.Frame):
@@ -143,7 +143,7 @@ class Game(tk.Frame):
             self.final_score_label = tk.Label(self.death_frame, textvariable=final_score_label_text, font="Times 22", bg=bg_color)
 
             self.play_again_button = tk.Label(self.death_frame, image=assets.play_again_button, bg=bg_color)
-            self.play_again_button.bind("<Button-1>", lambda _: self.load_new_game())
+            self.play_again_button.bind("<Button-1>", lambda _: self.load_new_game(self.settings))
             self.play_again_button.bind("<Enter>", lambda _: 
                 self.play_again_button.configure(image=assets.play_again_button_highlighted))
             self.play_again_button.bind("<Leave>", lambda _: 
