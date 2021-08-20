@@ -7,19 +7,18 @@ COLUMNS = 17
 
 
 class Tile_Manager():
-    def __init__(self, canvas):
+    def __init__(self, canvas, map):
         self.canvas = canvas
         self.converter = coord_converter.Coord_Converter()
-        self.map = "default"
         self.tile_array = None
         self.land_tiles = None
         self.ROWS = 17
         self.COLUMNS = 17
 
         map_return_value = None
-        if self.map == "default":
+        if map == "default":
             map_return_value = maps.default(canvas, ROWS, COLUMNS)
-        if self.map == "plain":
+        if map == "plain":
             map_return_value = maps.plain(canvas, ROWS, COLUMNS)
         self.tile_array = map_return_value[0]
         self.land_tiles = map_return_value[1]

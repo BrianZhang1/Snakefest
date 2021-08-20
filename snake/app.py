@@ -44,7 +44,7 @@ class App():
         self.clear_state()
 
         self.state = "game"
-        self.game = game.Game(self.root, self.load_new_game, self.load_main_menu)
+        self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, "default")
         self.game.pack(expand=True)
         self.game.focus_set()
 

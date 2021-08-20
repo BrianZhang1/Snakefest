@@ -7,7 +7,7 @@ from snake import assets
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu):
+    def __init__(self, master, load_new_game, load_main_menu, map):
         super().__init__(master)
         self.master = master
         self.load_new_game = load_new_game
@@ -23,7 +23,7 @@ class Game(tk.Frame):
         self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
         self.canvas.pack(side=tk.BOTTOM)
 
-        self.tile_manager = tile_manager.Tile_Manager(self.canvas)
+        self.tile_manager = tile_manager.Tile_Manager(self.canvas, map)
         self.tile_manager.draw_grid()
 
         self.snake = snake_handler.Snake(self.canvas, self.tile_manager)
