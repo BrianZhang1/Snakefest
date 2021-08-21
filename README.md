@@ -33,3 +33,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
     * Creating a virtual environment at this stage is optional.  
 
 3. Run `python start_app.py`.
+
+## TODO Ideas
+
+* Add ice tiles which you can't turn on
+* Snake skins, hats, aesthetics
+* Add map with lots of barriers dotted throughout the map
+* Add highscore
+* Map creator
