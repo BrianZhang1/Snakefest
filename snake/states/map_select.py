@@ -11,9 +11,18 @@
 #       content_frame_right
 #           content_frame_right_top
 #               control_panel
-#                   map_select_menubutton
-#                   rows_select_entry
-#                   columns_select_entry
+#                   map_select_menubutton_wrapper
+#                       map_select_label
+#                       map_select_menubutton
+#                   length_limit_label
+#                   row_select_wrapper
+#                       row_select_label
+#                       row_select_entry
+#                       row_select_set_button
+#                   column_select_wrapper
+#                       column_select_label
+#                       column_select_entry
+#                       column_select_set_button
 #           content_frame_right_bottom
 #               play_button
 
