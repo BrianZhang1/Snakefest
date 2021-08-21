@@ -4,6 +4,8 @@
 
 The following explains the file structure of the `pysnake\` project and the role of all files/folders. It acts as an introduction and a quick way to understand the project.
 
+At the top of each file under the copyright notice, there is a short description that details the purpose of the file.
+
 ## Copying
 
 Pysnake is an extended version of the popular Snake game.
