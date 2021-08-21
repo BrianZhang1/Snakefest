@@ -32,8 +32,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
         * [states\\](snake\\states\\)
         * [app.py](snake\\app.py)
     * [.gitignore](.gitignore)
+    * [COPYING](COPYING)
     * [explanation.md](explanation.md)
-    * [LICENSE](LICENSE)
     * [README.md](README.md)
     * [requirements.txt](requirements.txt)
     * [start_app.py](start_app.py)
@@ -64,8 +64,8 @@ List of files/directories to ignore when making commits/pushes.
 ## [explanation.md](explanation.md)
 Hey, that's the file you're on right now!
 
-## [LICENSE](LICENSE)
-A license. Tells others what they are allowed to do with this code.
+## [COPYING](COPYING)
+GNU GPL v3 license. Tells others what they are allowed to do with this code.
 
 ## [README.md](README.md)
 Describes the project and other relevant topics.
