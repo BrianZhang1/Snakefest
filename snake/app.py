@@ -28,6 +28,13 @@ class App():
         self.root = root
         self.state = None
 
+        self.settings = {
+            "rows": 15,
+            "columns": 15,
+            "map": "default",
+            "speed_modifier": 1
+        }
+
         self.load_main_menu()
         root.mainloop()
 
@@ -56,6 +63,8 @@ class App():
     def load_new_game(self, settings):
         self.clear_state()
 
+        self.settings = settings
+
         self.state = "game"
         self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, settings)
         self.game.pack(expand=True)
@@ -65,5 +74,5 @@ class App():
         self.clear_state()
 
         self.state = "map_select"
-        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu)
+        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings)
 

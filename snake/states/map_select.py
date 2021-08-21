@@ -48,15 +48,10 @@ import tkinter as tk
 from snake.global_helpers import maps, assets
 
 class Map_Select(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu):
+    def __init__(self, master, load_new_game, load_main_menu, settings):
         super().__init__(master)
 
-        self.settings = {
-            "rows": 15,
-            "columns": 15,
-            "map": "default",
-            "speed_modifier": 1
-        }
+        self.settings = settings
 
         self.min_map_rows = 11
         self.max_map_rows = 20
@@ -104,13 +99,13 @@ class Map_Select(tk.Frame):
         self.content_frame_right_bottom.pack(side="bottom", fill="x")
 
         # Control panel
-        self.control_panel_frame_bg = self.content_frame_right_bg
+        self.control_panel_frame_bg = "gray80"
         self.control_panel_frame = tk.Frame(self.content_frame_right_top, bg=self.control_panel_frame_bg)
         self.control_panel_frame.place(anchor="center", relx=0.5, rely=0.5)
         
         # Map select
         self.map_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.map_select_wrapper.pack(pady=20)
+        self.map_select_wrapper.pack(pady=20, padx=20)
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
@@ -121,6 +116,7 @@ class Map_Select(tk.Frame):
         self.map_select_menubutton.configure(menu=self.map_select_menu)
         def update_map_menu(new_map):
             self.settings["map"] = new_map
+            self.map_select_menubutton_var.set(new_map)
             self.update_map()
         for map in maps.map_list:
             self.map_select_menu.add_command(label=map, command=lambda map=map: update_map_menu(map))
@@ -139,7 +135,7 @@ class Map_Select(tk.Frame):
 
         # Row select
         self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.row_select_wrapper.pack(pady=10)
+        self.row_select_wrapper.pack(pady=10, padx=20)
         self.row_limit_label_var = tk.StringVar()
         self.row_limit_label_var.set(
             "Minimum row value is " + str(self.min_map_rows) + "\nMaximum row value is " + str(self.max_map_rows))
@@ -150,6 +146,7 @@ class Map_Select(tk.Frame):
         validate_row_column_command = self.register(validate_row_column)
         self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
+        self.row_select_entry.insert(tk.END, str(self.settings["rows"]))
         self.row_select_entry.pack(side="left", padx=(0, 15))
         def set_rows(rows):
             if rows == "":
@@ -164,7 +161,7 @@ class Map_Select(tk.Frame):
 
         # Column select
         self.column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.column_select_wrapper.pack(pady=10)
+        self.column_select_wrapper.pack(pady=10, padx=20)
         self.column_limit_label_var = tk.StringVar()
         self.column_limit_label_var.set(
             "Minimum column value is " + str(self.min_map_columns) + "\nMaximum column value is " + str(self.max_map_columns))
@@ -174,6 +171,7 @@ class Map_Select(tk.Frame):
         self.column_select_label.pack(side="left")
         self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
+        self.column_select_entry.insert(tk.END, str(self.settings["columns"]))
         self.column_select_entry.pack(side="left", padx=(0, 15))
         def set_columns(columns):
             if columns == "":
@@ -199,7 +197,7 @@ class Map_Select(tk.Frame):
 
         # Speed modifier
         self.speed_modifier_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.speed_modifier_wrapper.pack(pady=15)
+        self.speed_modifier_wrapper.pack(pady=15, padx=20)
         self.speed_modifier_limit_label_var = tk.StringVar()
         self.speed_modifier_limit_label_var.set(
             "Minimum speed modifier: " + str(self.min_speed_modifier) + "\nMaximum speed modifier: " + str(self.max_speed_modifier))
@@ -215,7 +213,7 @@ class Map_Select(tk.Frame):
         self.speed_modifier_entry = tk.Entry(self.speed_modifier_wrapper, validate="key", width=3, 
             validatecommand=(validate_speed_modifer_command, "%P"))
         self.speed_modifier_entry.insert(tk.END, str(self.settings["speed_modifier"]))
-        self.speed_modifier_entry.pack(side="left")
+        self.speed_modifier_entry.pack(side="left", padx=(0, 15))
         def set_speed_modifier(speed_modifier):
             if speed_modifier == "":
                 return
