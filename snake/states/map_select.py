@@ -1,3 +1,19 @@
+#    Pysnake is an extended version of the popular Snake game.
+#    Copyright (C) 2021  Brian Zhang
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>
+
 # map_select.py is holds the Map_Select class
 # this class is the map selection screen
 
@@ -186,7 +202,7 @@ class Map_Select(tk.Frame):
         self.speed_modifier_wrapper.pack(pady=15)
         self.speed_modifier_limit_label_var = tk.StringVar()
         self.speed_modifier_limit_label_var.set(
-            "Minimum speed modifier: " + str(self.min_speed_modifier) + "\nMaximum speed modifier:" + str(self.max_speed_modifier))
+            "Minimum speed modifier: " + str(self.min_speed_modifier) + "\nMaximum speed modifier: " + str(self.max_speed_modifier))
         self.speed_modifier_limit_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_limit_label_var)
         self.speed_modifier_limit_label.pack(side="top")
         self.speed_modifier_current_label_var = tk.StringVar()
