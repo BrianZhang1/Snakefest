@@ -14,12 +14,13 @@
 #                   map_select_menubutton_wrapper
 #                       map_select_label
 #                       map_select_menubutton
-#                   length_limit_label
 #                   row_select_wrapper
+#                       row_limit_label
 #                       row_select_label
 #                       row_select_entry
 #                       row_select_set_button
 #                   column_select_wrapper
+#                       column_limit_label
 #                       column_select_label
 #                       column_select_entry
 #                       column_select_set_button
@@ -89,16 +90,13 @@ class Map_Select(tk.Frame):
 
         # Not to be confused with the screen
         self.map_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.map_select_wrapper.pack()
-
+        self.map_select_wrapper.pack(pady=20)
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
-
         self.map_select_menubutton_var = tk.StringVar()
         self.map_select_menubutton_var.set(maps.map_list[0])
         self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
-
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
         self.map_select_menubutton.configure(menu=self.map_select_menu)
         def update_map_menu(new_map):
@@ -109,16 +107,13 @@ class Map_Select(tk.Frame):
         
         self.map_select_menubutton.pack(side="left")
 
-        self.length_limit_label_var = tk.StringVar()
-        self.length_limit_label_var.set(
-            "Minimum row value is " + str(self.min_map_rows) + "\nMinimum column value is " + str(self.min_map_columns)
-            + "\nMaximum row value is " + str(self.max_map_rows) + "\nMaximum column value is " + str(self.max_map_columns))
-        self.length_limit_label = tk.Label(self.control_panel_frame, bg=self.control_panel_frame_bg, textvariable=self.length_limit_label_var)
-        self.length_limit_label.pack(pady=(20, 0))
-        
-
         self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.row_select_wrapper.pack(pady=10)
+        self.row_limit_label_var = tk.StringVar()
+        self.row_limit_label_var.set(
+            "Minimum row value is " + str(self.min_map_rows) + "\nMaximum row value is " + str(self.max_map_rows))
+        self.row_limit_label = tk.Label(self.row_select_wrapper, bg=self.control_panel_frame_bg, textvariable=self.row_limit_label_var)
+        self.row_limit_label.pack(side="top")
         self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
         self.row_select_label.pack(side="left", padx=(0, 20))
         validate_command = self.register(self.validate_row_column)
@@ -138,6 +133,11 @@ class Map_Select(tk.Frame):
 
         self.column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.column_select_wrapper.pack(pady=10)
+        self.column_limit_label_var = tk.StringVar()
+        self.column_limit_label_var.set(
+            "Minimum column value is " + str(self.min_map_columns) + "\nMaximum column value is " + str(self.max_map_columns))
+        self.column_limit_label = tk.Label(self.column_select_wrapper, bg=self.control_panel_frame_bg, textvariable=self.column_limit_label_var)
+        self.column_limit_label.pack(side="top")
         self.column_select_label = tk.Label(self.column_select_wrapper, text="# of Columns: ", bg=self.control_panel_frame_bg)
         self.column_select_label.pack(side="left")
         self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
