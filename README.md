@@ -5,7 +5,7 @@
 The best python snake with map editing (and soon, creation/random generation) and lots of customization!  
 Feel free to make changes and forks as it is allowed under COPYING.  
 
-The `explanation.md` file roughly explains the structure of the project and roles of all files/directories.  
+The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly explains the structure of the project and roles of all files/directories.  
 
 ## Copying
 
