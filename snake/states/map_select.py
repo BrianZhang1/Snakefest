@@ -52,8 +52,29 @@ class Map_Select(tk.Frame):
         self.content_frame_right_bottom = tk.Frame(self.content_frame_right, bg=self.content_frame_right_bg, height="200")
         self.content_frame_right_bottom.pack(side="bottom", fill="x")
 
-        self.control_panel_frame = tk.Frame(self.content_frame_right_top)
+        self.control_panel_frame_bg = self.content_frame_right_bg
+        self.control_panel_frame = tk.Frame(self.content_frame_right_top, bg=self.control_panel_frame_bg)
         self.control_panel_frame.place(anchor="center", relx=0.5, rely=0.5)
+
+        # Not to be confused with the screen
+        self.map_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.map_select_wrapper.pack()
+
+        self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
+        self.map_select_label.pack(side="left")
+
+        self.map_select_menu_button_var = tk.StringVar()
+        self.map_select_menu_button_var.set(maps.map_list[0])
+        
+        self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menu_button_var, 
+        indicatoron=True, bg=self.control_panel_frame_bg)
+        self.map_select_menu = tk.Menu(self.map_select_menubutton)
+        self.map_select_menubutton.configure(menu=self.map_select_menu)
+
+        for map in maps.map_list:
+            self.map_select_menu.add_command(label=map, command=lambda map=map: self.update_map_menu(map))
+        
+        self.map_select_menubutton.pack(side="left")
 
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
@@ -83,3 +104,7 @@ class Map_Select(tk.Frame):
         for row in tile_array:
             for tile in row:
                 tile.render(display=True)
+    
+    def update_map_menu(self, new_map):
+        self.settings["map"] = new_map
+        self.update_map()

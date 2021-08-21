@@ -4,6 +4,8 @@
 
 from snake.global_helpers import assets, coord_converter
 
+map_list = ["default", "plain"]
+
 class Tile():
     def __init__(self, position, type, canvas):
         self.canvas = canvas
