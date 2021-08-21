@@ -38,13 +38,9 @@ class Game(tk.Frame):
         self.land_tiles = map_return_value[1]
 
         # Render (draw) map tiles
-        current_row = 0
         for row in self.tile_array:
-            current_column = 0
             for tile in row:
                 tile.render()
-                current_column += 1
-            current_row += 1
 
 
         self.snake = snake.Snake(self.canvas, self.settings, self.tile_array)

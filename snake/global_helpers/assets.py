@@ -3,8 +3,10 @@
 
 from PIL import Image, ImageTk
 
+SCREEN_GEOMETRY = (1280, 720)
 TILE_LENGTH = 32
 SNAKE_HEAD_LENGTH = 24
+DISPLAY_SHRINK = 3/4        # ratio to shrink when displaying in map select
 
 def load_image(path, height):
     raw_image = Image.open(path)
@@ -36,6 +38,9 @@ main_menu_button_highlighted = load_image("snake/assets/main_menu_button_highlig
 
 land_tile = load_image("snake/assets/land_tile.png", TILE_LENGTH)
 barrier_tile = load_image("snake/assets/barrier_tile.png", TILE_LENGTH)
+
+land_tile_display = load_image("snake/assets/land_tile.png", int(TILE_LENGTH*DISPLAY_SHRINK))
+barrier_tile_display = load_image("snake/assets/barrier_tile.png", int(TILE_LENGTH*DISPLAY_SHRINK))
 
 start_new_game_button = load_image("snake/assets/start_new_game_button.png", 100)
 start_new_game_button_highlighted = load_image("snake/assets/start_new_game_button_highlighted.png", 100)

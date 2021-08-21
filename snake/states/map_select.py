@@ -14,10 +14,11 @@ class Map_Select(tk.Frame):
             "map": "default"
         }
 
+
         # Header frame is just the title
         self.header_frame_bg = "lavender"
         self.header_frame = tk.Frame(self, bg=self.header_frame_bg)
-        self.header_frame.pack(side="top", fill="x")
+        self.header_frame.pack(side="top", expand=True, fill="both")
 
         self.title_label = tk.Label(self.header_frame, text="Map Selection", font="Arial, 25", bg=self.header_frame_bg)
         self.title_label.pack(anchor="nw", side="top", padx=50, pady=(30, 15))
@@ -27,12 +28,15 @@ class Map_Select(tk.Frame):
 
         # Content frame is further split into left and right
         self.content_frame = tk.Frame(self)
-        self.content_frame.pack(side="bottom", expand=True, fill="both")
+        self.content_frame.pack(side="bottom", fill="both")
 
         # Content frame left holds the map display
         self.content_frame_left_bg = "gray90"
-        self.content_frame_left = tk.Frame(self.content_frame, bg=self.content_frame_left_bg)
-        self.content_frame_left.pack(side="left", expand=True, fill="both")
+        content_frame_left_width = assets.SCREEN_GEOMETRY[0] * assets.DISPLAY_SHRINK
+        content_frame_left_height = assets.SCREEN_GEOMETRY[1] * assets.DISPLAY_SHRINK
+        self.content_frame_left = tk.Frame(self.content_frame, bg=self.content_frame_left_bg, 
+            width=content_frame_left_width, height=content_frame_left_height)
+        self.content_frame_left.pack(side="left")
 
         self.map_display = tk.Canvas(self.content_frame_left, width=300, height=300)
         self.update_map()
@@ -41,9 +45,9 @@ class Map_Select(tk.Frame):
         # Content frame right holds the control panel and the play button
         self.content_frame_right_bg = "gray70"
         self.content_frame_right = tk.Frame(self.content_frame, bg=self.content_frame_right_bg)
-        self.content_frame_right.pack(side="right", fill="both")
+        self.content_frame_right.pack(side="right", expand=True, fill="both")
 
-        self.content_frame_right_top = tk.Frame(self.content_frame_right, bg=self.content_frame_right_bg, width=350)
+        self.content_frame_right_top = tk.Frame(self.content_frame_right, bg=self.content_frame_right_bg)
         self.content_frame_right_top.pack(side="top", expand=True, fill="both")
         self.content_frame_right_bottom = tk.Frame(self.content_frame_right, bg=self.content_frame_right_bg, height="200")
         self.content_frame_right_bottom.pack(side="bottom", fill="x")
@@ -61,11 +65,15 @@ class Map_Select(tk.Frame):
     
     def update_map(self):
         self.map_display.delete("all")
+
         settings = self.settings
         rows = settings["rows"]
         columns = settings["columns"]
         map = settings["map"]
-        self.map_display.configure(width=columns*assets.TILE_LENGTH, height=rows*assets.TILE_LENGTH)
+
+        map_display_width = columns * assets.TILE_LENGTH * assets.DISPLAY_SHRINK
+        map_display_height = rows * assets.TILE_LENGTH * assets.DISPLAY_SHRINK
+        self.map_display.configure(width=map_display_width, height=map_display_height)
         tile_array = None
         if map == "default":
             tile_array = maps.default(self.map_display, rows, columns)[0]
@@ -74,4 +82,4 @@ class Map_Select(tk.Frame):
         
         for row in tile_array:
             for tile in row:
-                tile.render()
+                tile.render(display=True)

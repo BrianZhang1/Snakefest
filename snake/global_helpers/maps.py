@@ -25,17 +25,29 @@ class Tile():
         return None
     
     # Renders tile
-    def render(self):
+    def render(self, display=False):
         if not self.rendered:
-            tile_coords = self.converter.to_raw(self.position)
+            tile_coords = None
+            land_tile = None
+            barrier_tile = None
+            if not display:
+                tile_coords = self.converter.to_raw(self.position)
+                land_tile = assets.land_tile
+                barrier_tile = assets.barrier_tile
+            else:
+                display_converter = coord_converter.Coord_Converter(display=True)
+                tile_coords = display_converter.to_raw(self.position)
+                land_tile = assets.land_tile_display
+                barrier_tile = assets.barrier_tile_display
+
 
             if self.type == "land":
-                self.id = self.canvas.create_image(tile_coords, image=assets.land_tile)
+                self.id = self.canvas.create_image(tile_coords, image=land_tile)
             elif self.type == "barrier":
-                self.id = self.canvas.create_image(tile_coords, image=assets.barrier_tile)
+                self.id = self.canvas.create_image(tile_coords, image=barrier_tile)
             
             self.rendered = True
-        else:
+        elif self.rendered and not display:
             for item in self.holding:
                 item.render(self.position)
     
