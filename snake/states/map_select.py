@@ -45,20 +45,59 @@
 
 
 import tkinter as tk
+import sys
 from snake.global_helpers import maps, assets
 
 class Map_Select(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu, settings):
         super().__init__(master)
 
-        self.settings = settings
-
+        # Limits for settings
         self.min_map_rows = 11
         self.max_map_rows = 20
         self.min_map_columns = 11
         self.max_map_columns = 35
         self.max_speed_modifier = 2
         self.min_speed_modifier = 0.5
+
+        # Validation functions for settings
+        def validate_map(map):
+            if map in maps.map_list:
+                return True
+            return False
+
+        def validate_rows(rows):
+            try:
+                num = int(rows)
+            except ValueError:
+                return False
+            if self.min_map_rows <= num <= self.max_map_rows:
+                return True
+            return False
+
+        def validate_columns(columns):
+            try:
+                num = int(columns)
+            except ValueError:
+                return False
+            if self.min_map_columns <= num <= self.max_map_columns:
+                return True
+            return False
+        
+        def validate_speed_modifier(speed_modifier):
+            try:
+                num = float(speed_modifier)
+            except ValueError:
+                return False
+            if self.min_speed_modifier <= num <= self.max_speed_modifier:
+                return True
+            return False
+
+        if validate_columns(settings["columns"]) and validate_rows(settings["rows"]) and validate_speed_modifier(settings["speed_modifier"]) and validate_map(settings["map"]):
+            self.settings = settings
+        else:
+            print("map_select data validation: invalid data")
+            sys.exit()
 
 
         # Header frame
@@ -123,16 +162,6 @@ class Map_Select(tk.Frame):
         
         self.map_select_menubutton.pack(side="left")
 
-        # Validation function for row and column entry
-        def validate_row_column(input):
-            if input == "":
-                return True
-            try:
-                int(input)
-            except ValueError:
-                return False
-            return True
-
         # Row select
         self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.row_select_wrapper.pack(pady=10, padx=20)
@@ -143,18 +172,23 @@ class Map_Select(tk.Frame):
         self.row_limit_label.pack(side="top")
         self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
         self.row_select_label.pack(side="left", padx=(0, 20))
-        validate_row_column_command = self.register(validate_row_column)
+        def validate_rows_columns_entry(input):
+            if input == "":
+                return True
+            try:
+                int(input)
+            except ValueError:
+                return False
+            return True
+        validate_row_column_command = self.register(validate_rows_columns_entry)
         self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
         self.row_select_entry.insert(tk.END, str(self.settings["rows"]))
         self.row_select_entry.pack(side="left", padx=(0, 15))
         def set_rows(rows):
-            if rows == "":
-                return
-            num = int(rows)
-            if self.min_map_rows <= num <= self.max_map_rows:
-                self.settings["rows"] = num
-            self.update_map()
+            if validate_rows(rows):
+                self.settings["rows"] = int(rows)
+                self.update_map()
         self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
             command=lambda: set_rows(self.row_select_entry.get()))
         self.row_select_set_button.pack(side="left")
@@ -174,26 +208,13 @@ class Map_Select(tk.Frame):
         self.column_select_entry.insert(tk.END, str(self.settings["columns"]))
         self.column_select_entry.pack(side="left", padx=(0, 15))
         def set_columns(columns):
-            if columns == "":
-                return
-            num = int(columns)
-            if self.min_map_columns <= num <= self.max_map_columns:
-                self.settings["columns"] = num
-            self.update_map()
+            if validate_columns(columns):
+                self.settings["columns"] = int(columns)
+                self.update_map()
         self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
             command=lambda: set_columns(self.column_select_entry.get()))
         self.column_select_set_button.pack(side="left")
 
-
-        # Validation function for speed modifier
-        def validate_speed_modifer(input):
-            if input == "":
-                return True
-            try:
-                float(input)
-            except ValueError:
-                return False
-            return True
 
         # Speed modifier
         self.speed_modifier_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
@@ -209,16 +230,22 @@ class Map_Select(tk.Frame):
         self.speed_modifier_current_label.pack(side="top")
         self.speed_modifier_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, text="Speed Modifier:")
         self.speed_modifier_label.pack(side="left")
-        validate_speed_modifer_command = self.register(validate_speed_modifer)
+        def validate_speed_modifer_entry(input):
+            if input == "":
+                return True
+            try:
+                float(input)
+            except ValueError:
+                return False
+            return True
+        validate_speed_modifer_command = self.register(validate_speed_modifer_entry)
         self.speed_modifier_entry = tk.Entry(self.speed_modifier_wrapper, validate="key", width=3, 
             validatecommand=(validate_speed_modifer_command, "%P"))
         self.speed_modifier_entry.insert(tk.END, str(self.settings["speed_modifier"]))
         self.speed_modifier_entry.pack(side="left", padx=(0, 15))
         def set_speed_modifier(speed_modifier):
-            if speed_modifier == "":
-                return
-            num = float(speed_modifier)
-            if self.min_speed_modifier <= num <= self.max_speed_modifier:
+            if validate_speed_modifier(speed_modifier):
+                num = float(speed_modifier)
                 self.settings["speed_modifier"] = num
                 self.speed_modifier_current_label_var.set("Current speed modifier: " + str(num))
         self.speed_modifier_set_button = tk.Button(self.speed_modifier_wrapper, text="Set",

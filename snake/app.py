@@ -22,18 +22,30 @@ root = tk.Tk()
 root.geometry("1280x720")
 
 from snake.states import game, main_menu, map_select
+import json
 
 class App():
     def __init__(self):
         self.root = root
         self.state = None
 
-        self.settings = {
-            "rows": 15,
-            "columns": 15,
-            "map": "default",
-            "speed_modifier": 1
-        }
+        self.DATA_INDENT = 4
+
+        # Load settings from data.txt. Validation is done in map select
+        try:
+            with open("snake/data.txt") as file:
+                data = json.load(file)
+                self.settings = data["settings"]
+        except FileNotFoundError:
+            with open("snake/data.txt", "w") as file:
+                self.settings = {
+                    "rows": 15,
+                    "columns": 15,
+                    "map": "default",
+                    "speed_modifier": 1
+                }
+                data = {"settings": self.settings}
+                json.dump(data, file, indent=self.DATA_INDENT)
 
         self.load_main_menu()
         root.mainloop()
@@ -64,6 +76,9 @@ class App():
         self.clear_state()
 
         self.settings = settings
+        with open("snake/data.txt", "w") as file:
+            data = {"settings": settings}
+            json.dump(data, file, indent=self.DATA_INDENT)
 
         self.state = "game"
         self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, settings)
