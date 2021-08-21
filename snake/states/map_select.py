@@ -38,16 +38,19 @@ class Map_Select(tk.Frame):
         self.settings = {
             "rows": 15,
             "columns": 15,
-            "map": "default"
+            "map": "default",
+            "speed_modifier": 1
         }
 
         self.min_map_rows = 11
         self.max_map_rows = 20
         self.min_map_columns = 11
         self.max_map_columns = 35
+        self.max_speed_modifier = 2
+        self.min_speed_modifier = 0.5
 
 
-        # Header frame is just the title
+        # Header frame
         self.header_frame_bg = "lavender"
         self.header_frame = tk.Frame(self, bg=self.header_frame_bg)
         self.header_frame.pack(side="top", expand=True, fill="both")
@@ -58,11 +61,11 @@ class Map_Select(tk.Frame):
         self.main_menu_button = tk.Button(self.header_frame, text="<- Back to Main Menu", command=load_main_menu)
         self.main_menu_button.pack(anchor="nw", side="top", padx=50, pady=(0, 30))
 
-        # Content frame is further split into left and right
+        # Content frame
         self.content_frame = tk.Frame(self)
         self.content_frame.pack(side="bottom", fill="both")
 
-        # Content frame left holds the map display
+        # Content frame left
         self.content_frame_left_bg = "gray90"
         content_frame_left_width = assets.SCREEN_GEOMETRY[0] * assets.DISPLAY_SHRINK
         content_frame_left_height = assets.SCREEN_GEOMETRY[1] * assets.DISPLAY_SHRINK
@@ -74,7 +77,7 @@ class Map_Select(tk.Frame):
         self.update_map()
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
-        # Content frame right holds the control panel and the play button
+        # Content frame right
         self.content_frame_right_bg = "gray70"
         self.content_frame_right = tk.Frame(self.content_frame, bg=self.content_frame_right_bg)
         self.content_frame_right.pack(side="right", expand=True, fill="both")
@@ -84,11 +87,12 @@ class Map_Select(tk.Frame):
         self.content_frame_right_bottom = tk.Frame(self.content_frame_right, bg=self.content_frame_right_bg, height="200")
         self.content_frame_right_bottom.pack(side="bottom", fill="x")
 
+        # Control panel
         self.control_panel_frame_bg = self.content_frame_right_bg
         self.control_panel_frame = tk.Frame(self.content_frame_right_top, bg=self.control_panel_frame_bg)
         self.control_panel_frame.place(anchor="center", relx=0.5, rely=0.5)
-
-        # Not to be confused with the screen
+        
+        # Map select
         self.map_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.map_select_wrapper.pack(pady=20)
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
@@ -107,6 +111,17 @@ class Map_Select(tk.Frame):
         
         self.map_select_menubutton.pack(side="left")
 
+        # Validation function for row and column entry
+        def validate_row_column(input):
+            if input == "":
+                return True
+            try:
+                int(input)
+            except ValueError:
+                return False
+            return True
+
+        # Row select
         self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.row_select_wrapper.pack(pady=10)
         self.row_limit_label_var = tk.StringVar()
@@ -116,9 +131,9 @@ class Map_Select(tk.Frame):
         self.row_limit_label.pack(side="top")
         self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
         self.row_select_label.pack(side="left", padx=(0, 20))
-        validate_command = self.register(self.validate_row_column)
+        validate_row_column_command = self.register(validate_row_column)
         self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
-            validatecommand=(validate_command, "%P"))
+            validatecommand=(validate_row_column_command, "%P"))
         self.row_select_entry.pack(side="left", padx=(0, 15))
         def set_rows(rows):
             if rows == "":
@@ -131,6 +146,7 @@ class Map_Select(tk.Frame):
             command=lambda: set_rows(self.row_select_entry.get()))
         self.row_select_set_button.pack(side="left")
 
+        # Column select
         self.column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.column_select_wrapper.pack(pady=10)
         self.column_limit_label_var = tk.StringVar()
@@ -141,7 +157,7 @@ class Map_Select(tk.Frame):
         self.column_select_label = tk.Label(self.column_select_wrapper, text="# of Columns: ", bg=self.control_panel_frame_bg)
         self.column_select_label.pack(side="left")
         self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
-            validatecommand=(validate_command, "%P"))
+            validatecommand=(validate_row_column_command, "%P"))
         self.column_select_entry.pack(side="left", padx=(0, 15))
         def set_columns(columns):
             if columns == "":
@@ -154,6 +170,48 @@ class Map_Select(tk.Frame):
             command=lambda: set_columns(self.column_select_entry.get()))
         self.column_select_set_button.pack(side="left")
 
+
+        # Validation function for speed modifier
+        def validate_speed_modifer(input):
+            if input == "":
+                return True
+            try:
+                float(input)
+            except ValueError:
+                return False
+            return True
+
+        # Speed modifier
+        self.speed_modifier_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.speed_modifier_wrapper.pack(pady=15)
+        self.speed_modifier_limit_label_var = tk.StringVar()
+        self.speed_modifier_limit_label_var.set(
+            "Minimum speed modifier: " + str(self.min_speed_modifier) + "\nMaximum speed modifier:" + str(self.max_speed_modifier))
+        self.speed_modifier_limit_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_limit_label_var)
+        self.speed_modifier_limit_label.pack(side="top")
+        self.speed_modifier_current_label_var = tk.StringVar()
+        self.speed_modifier_current_label_var.set("Current speed modifier: " + str(self.settings["speed_modifier"]))
+        self.speed_modifier_current_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_current_label_var)
+        self.speed_modifier_current_label.pack(side="top")
+        self.speed_modifier_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, text="Speed Modifier:")
+        self.speed_modifier_label.pack(side="left")
+        validate_speed_modifer_command = self.register(validate_speed_modifer)
+        self.speed_modifier_entry = tk.Entry(self.speed_modifier_wrapper, validate="key", width=3, 
+            validatecommand=(validate_speed_modifer_command, "%P"))
+        self.speed_modifier_entry.insert(tk.END, str(self.settings["speed_modifier"]))
+        self.speed_modifier_entry.pack(side="left")
+        def set_speed_modifier(speed_modifier):
+            if speed_modifier == "":
+                return
+            num = float(speed_modifier)
+            if self.min_speed_modifier <= num <= self.max_speed_modifier:
+                self.settings["speed_modifier"] = num
+                self.speed_modifier_current_label_var.set("Current speed modifier: " + str(num))
+        self.speed_modifier_set_button = tk.Button(self.speed_modifier_wrapper, text="Set",
+            command=lambda: set_speed_modifier(self.speed_modifier_entry.get()))
+        self.speed_modifier_set_button.pack(side="left")
+
+        # Play button
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
             command=lambda: load_new_game(self.settings))
@@ -184,11 +242,3 @@ class Map_Select(tk.Frame):
                 tile.render(display=True)
     
     
-    def validate_row_column(self, input):
-        if input == "":
-            return True
-        try:
-            int(input)
-        except ValueError:
-            return False
-        return True

@@ -110,7 +110,7 @@ class Game(tk.Frame):
             self.score_label_text.set("Score: " + str(len(self.snake.body)))
 
         # Loop
-        self.after(120, self.update_snake)
+        self.after(int(120/self.settings["speed_modifier"]), self.update_snake)
     
     def create_new_apple(self):
         # Choose one of the land tiles to spawn an apple on
