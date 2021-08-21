@@ -1,6 +1,23 @@
 # map_select.py is holds the Map_Select class
 # this class is the map selection screen
 
+# Map Select Widget Structure:
+#   header_frame
+#       title_label
+#       main_menu_button
+#   content_frame
+#       content_frame_left
+#           map_display
+#       content_frame_right
+#           content_frame_right_top
+#               control_panel
+#                   map_select_menubutton
+#                   rows_select_entry
+#                   columns_select_entry
+#           content_frame_right_bottom
+#               play_button
+
+
 import tkinter as tk
 from snake.global_helpers import maps, assets
 
@@ -13,6 +30,11 @@ class Map_Select(tk.Frame):
             "columns": 15,
             "map": "default"
         }
+
+        self.min_map_rows = 11
+        self.max_map_rows = 20
+        self.min_map_columns = 11
+        self.max_map_columns = 35
 
 
         # Header frame is just the title
@@ -63,18 +85,65 @@ class Map_Select(tk.Frame):
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
 
-        self.map_select_menu_button_var = tk.StringVar()
-        self.map_select_menu_button_var.set(maps.map_list[0])
-        
-        self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menu_button_var, 
-        indicatoron=True, bg=self.control_panel_frame_bg)
+        self.map_select_menubutton_var = tk.StringVar()
+        self.map_select_menubutton_var.set(maps.map_list[0])
+        self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
+            indicatoron=True)
+
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
         self.map_select_menubutton.configure(menu=self.map_select_menu)
-
+        def update_map_menu(new_map):
+            self.settings["map"] = new_map
+            self.update_map()
         for map in maps.map_list:
-            self.map_select_menu.add_command(label=map, command=lambda map=map: self.update_map_menu(map))
+            self.map_select_menu.add_command(label=map, command=lambda map=map: update_map_menu(map))
         
         self.map_select_menubutton.pack(side="left")
+
+        self.length_limit_label_var = tk.StringVar()
+        self.length_limit_label_var.set(
+            "Minimum row value is " + str(self.min_map_rows) + "\nMinimum column value is " + str(self.min_map_columns)
+            + "\nMaximum row value is " + str(self.max_map_rows) + "\nMaximum column value is " + str(self.max_map_columns))
+        self.length_limit_label = tk.Label(self.control_panel_frame, bg=self.control_panel_frame_bg, textvariable=self.length_limit_label_var)
+        self.length_limit_label.pack(pady=(20, 0))
+        
+
+        self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.row_select_wrapper.pack(pady=10)
+        self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
+        self.row_select_label.pack(side="left", padx=(0, 20))
+        validate_command = self.register(self.validate_row_column)
+        self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
+            validatecommand=(validate_command, "%P"))
+        self.row_select_entry.pack(side="left", padx=(0, 15))
+        def set_rows(rows):
+            if rows == "":
+                return
+            num = int(rows)
+            if self.min_map_rows <= num <= self.max_map_rows:
+                self.settings["rows"] = num
+            self.update_map()
+        self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
+            command=lambda: set_rows(self.row_select_entry.get()))
+        self.row_select_set_button.pack(side="left")
+
+        self.column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.column_select_wrapper.pack(pady=10)
+        self.column_select_label = tk.Label(self.column_select_wrapper, text="# of Columns: ", bg=self.control_panel_frame_bg)
+        self.column_select_label.pack(side="left")
+        self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
+            validatecommand=(validate_command, "%P"))
+        self.column_select_entry.pack(side="left", padx=(0, 15))
+        def set_columns(columns):
+            if columns == "":
+                return
+            num = int(columns)
+            if self.min_map_columns <= num <= self.max_map_columns:
+                self.settings["columns"] = num
+            self.update_map()
+        self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
+            command=lambda: set_columns(self.column_select_entry.get()))
+        self.column_select_set_button.pack(side="left")
 
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
@@ -105,6 +174,12 @@ class Map_Select(tk.Frame):
             for tile in row:
                 tile.render(display=True)
     
-    def update_map_menu(self, new_map):
-        self.settings["map"] = new_map
-        self.update_map()
+    
+    def validate_row_column(self, input):
+        if input == "":
+            return True
+        try:
+            int(input)
+        except ValueError:
+            return False
+        return True
