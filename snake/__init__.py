@@ -1,4 +1,4 @@
-#    Pysnake is an extended version of the popular Snake game.
+#    Snakefest is an extended version of the popular Snake game.
 #    Copyright (C) 2021  Brian Zhang
 #
 #    This program is free software: you can redistribute it and/or modify
