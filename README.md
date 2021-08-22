@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 ## Instructions to play 
 
-1. Clone this project and enter the `pysnake\` directory.  
+1. Clone this project and enter the `Snakefest\` directory.  
 
 2. Install requirements by running `pip install -r requirements.txt`.  
     * Creating a virtual environment at this stage is optional.  
