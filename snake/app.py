@@ -86,8 +86,6 @@ class App():
 
         self.state = "game"
         self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, settings)
-        self.game.pack(expand=True)
-        self.game.focus_set()
 
     def load_map_select(self):
         self.clear_state()

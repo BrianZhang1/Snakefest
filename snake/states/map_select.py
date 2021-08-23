@@ -53,9 +53,9 @@ class Map_Select(tk.Frame):
         super().__init__(master)
 
         # Limits for settings
-        self.min_map_rows = 11
+        self.min_map_rows = 1
         self.max_map_rows = 20
-        self.min_map_columns = 11
+        self.min_map_columns = 1
         self.max_map_columns = 35
         self.max_speed_modifier = 2
         self.min_speed_modifier = 0.5

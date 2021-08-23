@@ -53,6 +53,9 @@ class Game(tk.Frame):
             font="Times 20")
         self.score_label.pack(anchor=tk.NW)
 
+        self.pack(expand=True, fill="both")
+        self.focus_set()
+
     # Input Handler
     def key_handler(self, event):
         if not self.started:
