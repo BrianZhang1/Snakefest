@@ -7,6 +7,23 @@ Feel free to make changes and forks as it is allowed under COPYING.
 
 The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly explains the structure of the project and roles of all files/directories.  
 
+## Instructions to play 
+
+1. Clone this project and enter the `Snakefest\` directory.  
+
+2. Install requirements by running `pip install -r requirements.txt`.  
+    * Creating a virtual environment at this stage is optional.  
+
+3. Run `python start_app.py`.
+
+## TODO Ideas
+
+* Add ice tiles which you can't turn on
+* Snake skins, hats, aesthetics
+* Add map with lots of barriers dotted throughout the map
+* Add highscore
+* Map creator
+
 ## Copying
 
 Snakefest is an extended version of the popular Snake game.  
@@ -24,20 +41,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
-
-## Instructions to play 
-
-1. Clone this project and enter the `Snakefest\` directory.  
-
-2. Install requirements by running `pip install -r requirements.txt`.  
-    * Creating a virtual environment at this stage is optional.  
-
-3. Run `python start_app.py`.
-
-## TODO Ideas
-
-* Add ice tiles which you can't turn on
-* Snake skins, hats, aesthetics
-* Add map with lots of barriers dotted throughout the map
-* Add highscore
-* Map creator
