@@ -62,9 +62,9 @@ class Map_Creator(tk.Frame):
         self.settings = DEFAULT_SETTINGS
 
         # Limits for settings
-        self.min_map_rows = 11
+        self.min_map_rows = 1
         self.max_map_rows = 20
-        self.min_map_columns = 11
+        self.min_map_columns = 1
         self.max_map_columns = 35
 
         # Validation functions for settings
@@ -110,9 +110,8 @@ class Map_Creator(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.map_display = tk.Canvas(self.content_frame_left, width=300, height=300)
-        self.settings["map"] = maps.plain(self.map_display, DEFAULT_SETTINGS["rows"], DEFAULT_SETTINGS["columns"])
-        self.set_map()
+        self.map_display = maps.Map(self.content_frame_left, self.settings, "plain")
+        self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
         # Content frame right
@@ -192,20 +191,9 @@ class Map_Creator(tk.Frame):
         self.pack(expand=True, fill="both")
     
     def set_map(self):
-        self.map_display.delete("all")
+        self.map_display.destroy()
+        del self.map_display
 
-        settings = self.settings
-        rows = settings["rows"]
-        columns = settings["columns"]
-
-        map_display_width = columns * assets.TILE_LENGTH * assets.DISPLAY_SHRINK
-        map_display_height = rows * assets.TILE_LENGTH * assets.DISPLAY_SHRINK
-        self.map_display.configure(width=map_display_width, height=map_display_height)
-        settings["map"] = maps.plain(self.map_display, rows, columns)[0]
-
-        for row in settings["map"]:
-            for tile in row:
-                tile.render(display=True)
-        
-    
-    
+        self.map_display = maps.Map(self.content_frame_left, self.settings, "plain")
+        self.map_display.render(display=True)
+        self.map_display.place(anchor="center", relx=0.5, rely=0.5)
