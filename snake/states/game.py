@@ -19,7 +19,7 @@
 # all classes that help game.py can be found under the snake/game_classes directory
 
 import tkinter as tk
-from snake.states.game_classes import snake, apple, snake_part
+from snake.states.game_classes import snake, apple
 from snake.global_helpers import assets, coord_converter, maps
 import random
 
@@ -94,7 +94,7 @@ class Game(tk.Frame):
         tile = self.map.array[snake_row][snake_column]
 
         # Check if snake hit barrier tile
-        if tile.type == "barrier" or tile.is_holding(snake_part.Snake_Part) != None:
+        if tile.type == "barrier" or tile.is_holding(snake.Snake_Part) != None:
             self.snake_death_handler()
             return
 
