@@ -43,7 +43,6 @@ class Tile():
                 land_tile = assets.land_tile_display
                 barrier_tile = assets.barrier_tile_display
 
-
             if self.type == "land":
                 self.id = self.canvas.create_image(tile_coords, image=land_tile)
             elif self.type == "barrier":
@@ -53,6 +52,21 @@ class Tile():
         elif self.rendered and not display:
             for item in self.holding:
                 item.render(self.position)
+            
+    # Only renders tile type
+    def render_type(self, display=False):
+        if not display:
+            land_tile = assets.land_tile
+            barrier_tile = assets.barrier_tile
+        else:
+            land_tile = assets.land_tile_display
+            barrier_tile = assets.barrier_tile_display
+
+        if self.type == "land":
+            self.canvas.itemconfigure(self.id, image=land_tile)
+        elif self.type == "barrier":
+            self.canvas.itemconfigure(self.id, image=barrier_tile)
+
     
     # Removes item from holding and deletes on canvas
     def drop(self, item_index):
