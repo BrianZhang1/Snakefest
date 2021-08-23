@@ -36,35 +36,15 @@ class Game(tk.Frame):
         self.settings = settings
 
         # Create Canvas
-        canvas_width = assets.TILE_LENGTH * self.settings["columns"]
-        canvas_height = assets.TILE_LENGTH * self.settings["rows"]
-        self.canvas_dimensions = (canvas_width, canvas_height)
-        self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height)
-        self.canvas.pack(side=tk.BOTTOM)
+        self.map = maps.Map(self, self.settings, self.settings["map"])
+        self.map.render()
+        self.map.pack(side=tk.BOTTOM)
 
-        # Create map tiles
-        map_return_value = None
-        if self.settings["map"] == "default":
-            map_return_value = maps.default(self.canvas, self.settings["rows"], self.settings["columns"])
-        elif self.settings["map"] == "plain":
-            map_return_value = maps.plain(self.canvas, self.settings["rows"], self.settings["columns"])
-        else:
-            print("Game: no map set")
-        self.tile_array = map_return_value[0]
-        self.land_tiles = map_return_value[1]
-
-        # Render (draw) map tiles
-        for row in self.tile_array:
-            for tile in row:
-                tile.render()
-
-
-        self.snake = snake.Snake(self.canvas, self.settings, self.tile_array)
+        self.snake = snake.Snake(self.map, self.settings, self.map.array)
 
         # WASD TO START label
-        self.wasd_to_start_label = self.canvas.create_image(
-            (self.canvas_dimensions[0]/2, assets.wasd_to_start_label.height()/2 + 40), 
-            image=assets.wasd_to_start_label)
+        self.wasd_to_start_label = tk.Label(self, image=assets.wasd_to_start_label)
+        self.wasd_to_start_label.place(anchor="center", relx=0.5, rely=0.2)
 
         # Score label
         self.score_label_text = tk.StringVar()
@@ -86,7 +66,7 @@ class Game(tk.Frame):
                 self.snake.new_direction = 'e'
 
             self.started = True
-            self.canvas.delete(self.wasd_to_start_label)
+            self.wasd_to_start_label.destroy()
             del self.wasd_to_start_label
             self.create_new_apple()
             self.update_snake()
@@ -108,7 +88,7 @@ class Game(tk.Frame):
         # Finds the tile object the snake is currently on
         snake_column = self.snake.snake_pos[0]
         snake_row = self.snake.snake_pos[1]
-        tile = self.tile_array[snake_row][snake_column]
+        tile = self.map.array[snake_row][snake_column]
 
         # Check if snake hit barrier tile
         if tile.type == "barrier" or tile.is_holding(snake_part.Snake_Part) != None:
@@ -130,12 +110,12 @@ class Game(tk.Frame):
     
     def create_new_apple(self):
         # Choose one of the land tiles to spawn an apple on
-        land_tiles = self.land_tiles
+        land_tiles = self.map.land
         random_tile_index = random.randint(0, len(land_tiles)-1)
         random_tile = land_tiles[random_tile_index]
 
         # Create apple and assign to chosen tile
-        new_apple = apple.Apple(self.canvas)
+        new_apple = apple.Apple(self.map)
         random_tile.holding.append(new_apple)
         random_tile.render()
 
@@ -146,7 +126,7 @@ class Game(tk.Frame):
 
         else:
             bg_color = "lightcyan2"
-            self.death_frame = tk.Frame(self.canvas, bg=bg_color, pady=30, padx=10)
+            self.death_frame = tk.Frame(self, bg=bg_color, pady=30, padx=10)
 
             self.you_died_label = tk.Label(self.death_frame, image=assets.you_died_label, bg=bg_color)
 

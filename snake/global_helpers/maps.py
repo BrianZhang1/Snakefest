@@ -18,6 +18,7 @@
 # It also holds the Tile class.
 # the map is comprised of many Tile objects.
 
+import tkinter as tk
 from snake.global_helpers import assets, coord_converter
 
 map_list = ["default", "plain"]
@@ -77,34 +78,61 @@ class Tile():
             item.rendered = False
         self.holding.pop(item_index)
 
-def default(canvas, rows, columns):
-    map = []
-    land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
-    for row_num in range(rows):
-        row = []
-        for column_num in range(columns):
-            if row_num == 0 or row_num == rows - 1 or column_num == 0 or column_num == columns - 1:
-                tile = Tile((column_num, row_num), "barrier", canvas)
-                row.append(tile)
-            else:
-                tile = Tile((column_num, row_num), "land", canvas)
+class Map(tk.Canvas):
+    def __init__(self, master, map_settings, map_type):
+        super().__init__(master)
+        self.array = None
+        self.land = None
+        self.rows = map_settings["rows"]
+        self.columns = map_settings["columns"]
+        if map_type == "default":
+            self.generate_default()
+        elif map_type == "plain":
+            self.generate_plain()
+
+    def render(self, display=False):
+        size_modifier = 1
+        if display:
+            size_modifier = assets.DISPLAY_SHRINK
+
+        canvas_width = assets.TILE_LENGTH * self.columns * size_modifier
+        canvas_height = assets.TILE_LENGTH * self.rows * size_modifier
+        self.configure(width=canvas_width, height=canvas_height)
+
+        for row in self.array:
+            for tile in row:
+                tile.render(display=display)
+
+    def generate_default(self):
+        map = []
+        land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
+        for row_num in range(self.rows):
+            row = []
+            for column_num in range(self.columns):
+                if row_num == 0 or row_num == self.rows - 1 or column_num == 0 or column_num == self.columns - 1:
+                    tile = Tile((column_num, row_num), "barrier", self)
+                    row.append(tile)
+                else:
+                    tile = Tile((column_num, row_num), "land", self)
+                    row.append(tile)
+                    land_tiles.append(tile)
+
+            map.append(row)
+
+        self.array = map
+        self.land = land_tiles
+
+    def generate_plain(self):
+        map = []
+        land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
+        for row_num in range(self.rows):
+            row = []
+            for column_num in range(self.columns):
+                tile = Tile((column_num, row_num), "land", self)
                 row.append(tile)
                 land_tiles.append(tile)
 
-        map.append(row)
-    
-    return (map, land_tiles)
-
-def plain(canvas, rows, columns):
-    map = []
-    land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
-    for row_num in range(rows):
-        row = []
-        for column_num in range(columns):
-            tile = Tile((column_num, row_num), "land", canvas)
-            row.append(tile)
-            land_tiles.append(tile)
-
-        map.append(row)
-    
-    return (map, land_tiles)
+            map.append(row)
+        
+        self.array = map
+        self.land = land_tiles

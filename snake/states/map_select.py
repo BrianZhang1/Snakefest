@@ -123,8 +123,8 @@ class Map_Select(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.map_display = tk.Canvas(self.content_frame_left, width=300, height=300)
-        self.update_map()
+        self.map_display = maps.Map(self.content_frame_left, self.settings, self.settings["map"])
+        self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
         # Content frame right
@@ -262,24 +262,9 @@ class Map_Select(tk.Frame):
         self.pack(expand=True, fill="both")
     
     def update_map(self):
-        self.map_display.delete("all")
+        self.map_display.destroy()
+        del self.map_display
 
-        settings = self.settings
-        rows = settings["rows"]
-        columns = settings["columns"]
-        map = settings["map"]
-
-        map_display_width = columns * assets.TILE_LENGTH * assets.DISPLAY_SHRINK
-        map_display_height = rows * assets.TILE_LENGTH * assets.DISPLAY_SHRINK
-        self.map_display.configure(width=map_display_width, height=map_display_height)
-        tile_array = None
-        if map == "default":
-            tile_array = maps.default(self.map_display, rows, columns)[0]
-        elif map == "plain":
-            tile_array = maps.plain(self.map_display, rows, columns)[0]
-        
-        for row in tile_array:
-            for tile in row:
-                tile.render(display=True)
-    
-    
+        self.map_display = maps.Map(self.content_frame_left, self.settings, self.settings["map"])
+        self.map_display.render(display=True)
+        self.map_display.place(anchor="center", relx=0.5, rely=0.5)
