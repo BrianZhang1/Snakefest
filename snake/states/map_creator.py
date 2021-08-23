@@ -45,8 +45,7 @@
 
 
 import tkinter as tk
-import sys
-from snake.global_helpers import map_class, assets
+from snake.global_helpers import map_class, assets, maps
 
 class Map_Creator(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu):
@@ -110,7 +109,11 @@ class Map_Creator(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.map_display = map_class.Map(self.content_frame_left, self.settings, "plain")
+        # Generate display map
+        map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        map_generation_array = map_generation_return_value[0]
+        map_generation_land = map_generation_return_value[1]
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -180,6 +183,14 @@ class Map_Creator(tk.Frame):
             command=lambda: set_columns(self.column_select_entry.get()))
         self.column_select_set_button.pack(side="left")
 
+        # Tile Selection Area
+        self.tile_select_frame = tk.Frame(self.control_panel_frame)
+        self.tile_select_frame.pack()
+        self.tile_select_label = tk.Label(self.tile_select_frame, text="Tiles")
+        self.tile_select_label.pack()
+        self.tile_select_buttons = tk.Frame(self.tile_select_frame)
+        self.tile_select_buttons.pack()
+
 
         # Play button
         self.play_button = tk.Button(
@@ -194,6 +205,9 @@ class Map_Creator(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        self.map_display = map_class.Map(self.content_frame_left, self.settings, "plain")
+        map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        map_generation_array = map_generation_return_value[0]
+        map_generation_land = map_generation_return_value[1]
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)

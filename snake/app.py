@@ -31,6 +31,7 @@ class App():
         self.state = None
 
         self.DATA_INDENT = 4
+        self.map_list = ["default", "plain"]
 
         # Load settings from data.txt. Validation is done in map select
         try:
@@ -81,7 +82,6 @@ class App():
             self.clear_state()
 
         if settings != None:
-            self.settings = settings
             with open("snake/data.txt", "w") as file:
                 data = {"settings": settings}
                 json.dump(data, file, indent=self.DATA_INDENT)
@@ -93,14 +93,14 @@ class App():
         self.clear_state()
 
         self.state = "map_select"
-        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings)
+        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, self.map_list)
     
     # Loads map select with play again parameter
     def play_again(self):
         self.clear_state()
 
         self.state = "map_select"
-        map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, play_again=True)
+        map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, self.map_list, play_again=True)
 
     
     def load_map_creator(self):

@@ -21,8 +21,6 @@
 import tkinter as tk
 from snake.global_helpers import assets
 
-map_list = ["default", "plain"]
-
 class Map(tk.Canvas):
     def __init__(self, master, map_array, land_tiles):
         super().__init__(master)

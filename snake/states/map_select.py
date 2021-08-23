@@ -49,11 +49,12 @@ import sys
 from snake.global_helpers import assets, map_class, maps
 
 class Map_Select(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, settings, play_again=False):
+    def __init__(self, master, load_new_game, load_main_menu, settings, map_list, play_again=False):
         super().__init__(master)
 
         self.load_new_game = load_new_game
         self.load_main_menu = load_main_menu
+        self.map_list = map_list
 
         # Limits for settings
         self.min_map_rows = 1
@@ -140,7 +141,7 @@ class Map_Select(tk.Frame):
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
-        self.map_select_menubutton_var.set(map_class.map_list[0])
+        self.map_select_menubutton_var.set(self.settings["map"])
         self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
@@ -149,7 +150,7 @@ class Map_Select(tk.Frame):
             self.settings["map"] = new_map
             self.map_select_menubutton_var.set(new_map)
             self.update_map()
-        for map in map_class.map_list:
+        for map in self.map_list:
             self.map_select_menu.add_command(label=map, command=lambda map=map: update_map_menu(map))
         
         self.map_select_menubutton.pack(side="left")
@@ -270,7 +271,7 @@ class Map_Select(tk.Frame):
 
     # Validation functions for settings
     def validate_map(self, map):
-        if map in map_class.map_list:
+        if map in self.map_list:
             return True
         return False
 
