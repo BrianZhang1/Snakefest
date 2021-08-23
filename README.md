@@ -9,7 +9,7 @@ The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly expl
 
 ## Copying
 
-Snakefest is an extended version of the popular Snake game.
+Snakefest is an extended version of the popular Snake game.  
 Copyright (C) 2021  Brian Zhang
 
 This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 ## Instructions to play 
 
-1. Clone this project and enter the `pysnake\` directory.  
+1. Clone this project and enter the `Snakefest\` directory.  
 
 2. Install requirements by running `pip install -r requirements.txt`.  
     * Creating a virtual environment at this stage is optional.  
