@@ -38,7 +38,7 @@ class Game(tk.Frame):
         # Create Canvas
         self.map = map_class.Map(self, self.settings, self.settings["map"])
         self.map.render()
-        self.map.pack(side=tk.BOTTOM)
+        self.map.place(anchor="center", relx=0.5, rely=0.5)
 
         self.snake = snake.Snake(self.map, self.settings, self.map.array)
 
