@@ -19,7 +19,7 @@
 # all classes that help game.py can be found under the snake/game_classes directory
 
 import tkinter as tk
-from snake.game_classes import snake, apple, snake_part
+from snake.states.game_classes import snake, apple, snake_part
 from snake.global_helpers import assets, coord_converter, maps
 import random
 

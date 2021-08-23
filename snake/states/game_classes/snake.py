@@ -18,7 +18,6 @@
 # It manages movement, growth, and rendering of snake.
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
-from snake.game_classes import snake_part
 from snake.global_helpers import assets, coord_converter
 
 class Snake():
@@ -109,7 +108,7 @@ class Snake():
             last_snake_part = self.body[self.body_last_index]
             last_snake_part_position = self.converter.to_coord(self.canvas.coords(last_snake_part.id))
             last_snake_part_tile = self.tile_array[last_snake_part_position[1]][last_snake_part_position[0]]
-            last_snake_part_index = last_snake_part_tile.is_holding(snake_part.Snake_Part)
+            last_snake_part_index = last_snake_part_tile.is_holding(Snake_Part)
             last_snake_part_tile.drop(last_snake_part_index)
 
             # Spawn on new tile
@@ -130,7 +129,7 @@ class Snake():
         # body_last is the index of the last snake part in the body.
         # A new snake part is inserted after the last snake part, and becomes the last snake part.
         coords = self.previous_moves[len(self.body)]
-        new_snake_part = snake_part.Snake_Part(self.canvas)
+        new_snake_part = Snake_Part(self.canvas)
         if self.body_last_index != None:
             self.body.insert(self.body_last_index+1, new_snake_part)
             self.body_last_index += 1
@@ -141,4 +140,18 @@ class Snake():
         tile.holding.append(new_snake_part)
         tile.render()
         
+class Snake_Part():
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.rendered = False
+        self.id = None
+        self.converter = coord_converter.Coord_Converter()
+
+    def render(self, position):
+        raw_position = self.converter.to_raw(position)
+        if not self.rendered:
+            self.id = self.canvas.create_image(raw_position, image=assets.snake_body_sprite)
+            self.rendered = True
+        else:
+            self.canvas.coords(self.id, raw_position)
     
