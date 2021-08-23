@@ -46,7 +46,7 @@
 
 import tkinter as tk
 import sys
-from snake.global_helpers import maps, assets
+from snake.global_helpers import assets, map_class
 
 class Map_Select(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu, settings):
@@ -62,7 +62,7 @@ class Map_Select(tk.Frame):
 
         # Validation functions for settings
         def validate_map(map):
-            if map in maps.map_list:
+            if map in map_class.map_list:
                 return True
             return False
 
@@ -123,7 +123,7 @@ class Map_Select(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.map_display = maps.Map(self.content_frame_left, self.settings, self.settings["map"])
+        self.map_display = map_class.Map(self.content_frame_left, self.settings, self.settings["map"])
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -148,7 +148,7 @@ class Map_Select(tk.Frame):
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
-        self.map_select_menubutton_var.set(maps.map_list[0])
+        self.map_select_menubutton_var.set(map_class.map_list[0])
         self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
@@ -157,7 +157,7 @@ class Map_Select(tk.Frame):
             self.settings["map"] = new_map
             self.map_select_menubutton_var.set(new_map)
             self.update_map()
-        for map in maps.map_list:
+        for map in map_class.map_list:
             self.map_select_menu.add_command(label=map, command=lambda map=map: update_map_menu(map))
         
         self.map_select_menubutton.pack(side="left")
@@ -265,6 +265,6 @@ class Map_Select(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        self.map_display = maps.Map(self.content_frame_left, self.settings, self.settings["map"])
+        self.map_display = map_class.Map(self.content_frame_left, self.settings, self.settings["map"])
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)

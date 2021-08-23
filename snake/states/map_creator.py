@@ -46,7 +46,7 @@
 
 import tkinter as tk
 import sys
-from snake.global_helpers import maps, assets
+from snake.global_helpers import map_class, assets
 
 class Map_Creator(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu):
@@ -110,7 +110,7 @@ class Map_Creator(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.map_display = maps.Map(self.content_frame_left, self.settings, "plain")
+        self.map_display = map_class.Map(self.content_frame_left, self.settings, "plain")
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -194,6 +194,6 @@ class Map_Creator(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        self.map_display = maps.Map(self.content_frame_left, self.settings, "plain")
+        self.map_display = map_class.Map(self.content_frame_left, self.settings, "plain")
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)

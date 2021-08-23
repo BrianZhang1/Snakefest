@@ -20,7 +20,7 @@
 
 import tkinter as tk
 from snake.states.game_classes import snake, apple
-from snake.global_helpers import assets, coord_converter, maps
+from snake.global_helpers import assets, coord_converter, map_class
 import random
 
 class Game(tk.Frame):
@@ -36,7 +36,7 @@ class Game(tk.Frame):
         self.settings = settings
 
         # Create Canvas
-        self.map = maps.Map(self, self.settings, self.settings["map"])
+        self.map = map_class.Map(self, self.settings, self.settings["map"])
         self.map.render()
         self.map.pack(side=tk.BOTTOM)
 
