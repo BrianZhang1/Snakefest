@@ -7,11 +7,11 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg5"
-   sodipodi:docname="start_new_game_button.svg"
+   sodipodi:docname="map_creator_button.svg"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
    inkscape:export-filename="C:\Users\brian\Desktop\start_new_game.png"
-   inkscape:export-xdpi="142.20374"
-   inkscape:export-ydpi="142.20374"
+   inkscape:export-xdpi="196.63437"
+   inkscape:export-ydpi="196.63437"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -42,23 +42,26 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ff9955;stroke-width:0.228171"
+       style="fill:#ff9955;stroke-width:0.207435"
        id="rect31"
-       width="125.03187"
+       width="103.339"
        height="34.906372"
-       x="42.484066"
+       x="53.330681"
        y="131.04681"
-       ry="2.0533178" />
+       ry="2.0533178"
+       inkscape:export-filename="C:\Users\brian\Documents\Projects\Snakefest\snake\assets\map_creator_button.png"
+       inkscape:export-xdpi="196.63437"
+       inkscape:export-ydpi="196.63437" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;line-height:1.25;font-family:QuickType;-inkscape-font-specification:QuickType;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="51.001614"
-       y="153.71931"
+       x="64.434036"
+       y="152.40674"
        id="text1589"><tspan
          sodipodi:role="line"
          id="tspan1587"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:QuickType;-inkscape-font-specification:QuickType;stroke-width:0.264583"
-         x="51.001614"
-         y="153.71931">Start New Game</tspan></text>
+         x="64.434036"
+         y="152.40674">Map Creator</tspan></text>
   </g>
 </svg>

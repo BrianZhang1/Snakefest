@@ -60,3 +60,6 @@ barrier_tile_display = load_image("snake/assets/barrier_tile.png", int(TILE_LENG
 
 start_new_game_button = load_image("snake/assets/start_new_game_button.png", 100)
 start_new_game_button_highlighted = load_image("snake/assets/start_new_game_button_highlighted.png", 100)
+
+map_creator_button = load_image("snake/assets/map_creator_button.png", 100)
+map_creator_button_highlighted = load_image("snake/assets/map_creator_button_highlighted.png", 100)

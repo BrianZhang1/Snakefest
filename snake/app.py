@@ -20,8 +20,9 @@
 import tkinter as tk
 root = tk.Tk()
 root.geometry("1280x720")
+root.resizable(False, False)
 
-from snake.states import game, main_menu, map_select
+from snake.states import game, main_menu, map_select, map_creator
 import json
 
 class App():
@@ -63,14 +64,17 @@ class App():
             self.map_select.destroy()
             del self.map_select
         
+        elif self.state == "map_creator":
+            self.map_creator.destroy()
+            del self.map_creator
+        
         self.state = None
 
     def load_main_menu(self):
         self.clear_state()
 
         self.state = "main_menu"
-        self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select)
-        self.main_menu.pack(expand=True)
+        self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select, self.load_map_creator)
 
     def load_new_game(self, settings):
         self.clear_state()
@@ -90,4 +94,10 @@ class App():
 
         self.state = "map_select"
         self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings)
+    
+    def load_map_creator(self):
+        self.clear_state()
+
+        self.state = "map_creator"
+        self.map_creator = map_creator.Map_Creator(self.root, self.load_new_game, self.load_main_menu)
 
