@@ -24,23 +24,23 @@ from snake.global_helpers import assets, coord_converter, map_class
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, settings):
+    def __init__(self, master, play_again, load_main_menu, map_array, land_tiles, speed_modifier):
         super().__init__(master)
         self.master = master
-        self.load_new_game = load_new_game
+        self.play_again = play_again
         self.load_main_menu = load_main_menu
+        self.map_array = map_array
+        self.speed_modifier = speed_modifier
         self.bind("<Key>", self.key_handler)
         self.started = False
         self.converter = coord_converter.Coord_Converter()
 
-        self.settings = settings
-
-        # Create Canvas
-        self.map = map_class.Map(self, self.settings, self.settings["map"])
+        # Create Map
+        self.map = map_class.Map(self, map_array, land_tiles)
         self.map.render()
         self.map.place(anchor="center", relx=0.5, rely=0.5)
 
-        self.snake = snake.Snake(self.map, self.settings, self.map.array)
+        self.snake = snake.Snake(self.map, self.map.array)
 
         # WASD TO START label
         self.wasd_to_start_label = tk.Label(self, image=assets.wasd_to_start_label)
@@ -109,7 +109,7 @@ class Game(tk.Frame):
             self.score_label_text.set("Score: " + str(len(self.snake.body)))
 
         # Loop
-        self.after(int(120/self.settings["speed_modifier"]), self.update_snake)
+        self.after(int(120/self.speed_modifier), self.update_snake)
     
     def create_new_apple(self):
         # Choose one of the land tiles to spawn an apple on
@@ -138,7 +138,7 @@ class Game(tk.Frame):
             self.final_score_label = tk.Label(self.death_frame, textvariable=final_score_label_text, font="Times 22", bg=bg_color)
 
             self.play_again_button = tk.Label(self.death_frame, image=assets.play_again_button, bg=bg_color)
-            self.play_again_button.bind("<Button-1>", lambda _: self.load_new_game(self.settings))
+            self.play_again_button.bind("<Button-1>", lambda _: self.play_again())
             self.play_again_button.bind("<Enter>", lambda _: 
                 self.play_again_button.configure(image=assets.play_again_button_highlighted))
             self.play_again_button.bind("<Leave>", lambda _: 

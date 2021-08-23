@@ -46,11 +46,14 @@
 
 import tkinter as tk
 import sys
-from snake.global_helpers import assets, map_class
+from snake.global_helpers import assets, map_class, maps
 
 class Map_Select(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, settings):
+    def __init__(self, master, load_new_game, load_main_menu, settings, play_again=False):
         super().__init__(master)
+
+        self.load_new_game = load_new_game
+        self.load_main_menu = load_main_menu
 
         # Limits for settings
         self.min_map_rows = 1
@@ -60,46 +63,27 @@ class Map_Select(tk.Frame):
         self.max_speed_modifier = 2
         self.min_speed_modifier = 0.5
 
-        # Validation functions for settings
-        def validate_map(map):
-            if map in map_class.map_list:
-                return True
-            return False
 
-        def validate_rows(rows):
-            try:
-                num = int(rows)
-            except ValueError:
-                return False
-            if self.min_map_rows <= num <= self.max_map_rows:
-                return True
-            return False
-
-        def validate_columns(columns):
-            try:
-                num = int(columns)
-            except ValueError:
-                return False
-            if self.min_map_columns <= num <= self.max_map_columns:
-                return True
-            return False
-        
-        def validate_speed_modifier(speed_modifier):
-            try:
-                num = float(speed_modifier)
-            except ValueError:
-                return False
-            if self.min_speed_modifier <= num <= self.max_speed_modifier:
-                return True
-            return False
-
-        if validate_columns(settings["columns"]) and validate_rows(settings["rows"]) and validate_speed_modifier(settings["speed_modifier"]) and validate_map(settings["map"]):
+        if self.validate_columns(settings["columns"]) and self.validate_rows(settings["rows"]) and self.validate_speed_modifier(settings["speed_modifier"]) and self.validate_map(settings["map"]):
             self.settings = settings
         else:
-            print("map_select data validation: invalid data")
+            print("map_select: invalid settings")
             sys.exit()
 
+        if not play_again:
+            self.render()
+        else:
+            map_generation_return_value = None
+            if self.settings["map"] == "default":
+                map_generation_return_value = maps.generate_default(self.settings["rows"], self.settings["columns"])
+            elif self.settings["map"] == "plain":
+                map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+            map_generation_array = map_generation_return_value[0]
+            map_generation_land = map_generation_return_value[1]
+            self.destroy()
+            self.load_new_game(map_generation_array, map_generation_land, self.settings["speed_modifier"], settings=self.settings, play_again=True)
 
+    def render(self):
         # Header frame
         self.header_frame_bg = "lavender"
         self.header_frame = tk.Frame(self, bg=self.header_frame_bg)
@@ -108,7 +92,7 @@ class Map_Select(tk.Frame):
         self.title_label = tk.Label(self.header_frame, text="Map Selection", font="Arial, 25", bg=self.header_frame_bg)
         self.title_label.pack(anchor="nw", side="top", padx=50, pady=(30, 15))
 
-        self.main_menu_button = tk.Button(self.header_frame, text="<- Back to Main Menu", command=load_main_menu)
+        self.main_menu_button = tk.Button(self.header_frame, text="<- Back to Main Menu", command=self.load_main_menu)
         self.main_menu_button.pack(anchor="nw", side="top", padx=50, pady=(0, 30))
 
         # Content frame
@@ -123,7 +107,15 @@ class Map_Select(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.map_display = map_class.Map(self.content_frame_left, self.settings, self.settings["map"])
+        # Generate display map
+        map_generation_return_value = None
+        if self.settings["map"] == "default":
+            map_generation_return_value = maps.generate_default(self.settings["rows"], self.settings["columns"])
+        elif self.settings["map"] == "plain":
+            map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        map_generation_array = map_generation_return_value[0]
+        map_generation_land = map_generation_return_value[1]
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -186,7 +178,7 @@ class Map_Select(tk.Frame):
         self.row_select_entry.insert(tk.END, str(self.settings["rows"]))
         self.row_select_entry.pack(side="left", padx=(0, 15))
         def set_rows(rows):
-            if validate_rows(rows):
+            if self.validate_rows(rows):
                 self.settings["rows"] = int(rows)
                 self.update_map()
         self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
@@ -208,7 +200,7 @@ class Map_Select(tk.Frame):
         self.column_select_entry.insert(tk.END, str(self.settings["columns"]))
         self.column_select_entry.pack(side="left", padx=(0, 15))
         def set_columns(columns):
-            if validate_columns(columns):
+            if self.validate_columns(columns):
                 self.settings["columns"] = int(columns)
                 self.update_map()
         self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
@@ -244,7 +236,7 @@ class Map_Select(tk.Frame):
         self.speed_modifier_entry.insert(tk.END, str(self.settings["speed_modifier"]))
         self.speed_modifier_entry.pack(side="left", padx=(0, 15))
         def set_speed_modifier(speed_modifier):
-            if validate_speed_modifier(speed_modifier):
+            if self.validate_speed_modifier(speed_modifier):
                 num = float(speed_modifier)
                 self.settings["speed_modifier"] = num
                 self.speed_modifier_current_label_var.set("Current speed modifier: " + str(num))
@@ -255,7 +247,7 @@ class Map_Select(tk.Frame):
         # Play button
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
-            command=lambda: load_new_game(self.settings))
+            command=lambda: self.load_new_game(self.map_display.array, self.map_display.land, self.settings["speed_modifier"], settings=self.settings))
         self.play_button.pack(anchor="se", padx=50, pady=30)
 
 
@@ -265,6 +257,46 @@ class Map_Select(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        self.map_display = map_class.Map(self.content_frame_left, self.settings, self.settings["map"])
+        map_generation_return_value = None
+        if self.settings["map"] == "default":
+            map_generation_return_value = maps.generate_default(self.settings["rows"], self.settings["columns"])
+        elif self.settings["map"] == "plain":
+            map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        map_generation_array = map_generation_return_value[0]
+        map_generation_land = map_generation_return_value[1]
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
+
+    # Validation functions for settings
+    def validate_map(self, map):
+        if map in map_class.map_list:
+            return True
+        return False
+
+    def validate_rows(self, rows):
+        try:
+            num = int(rows)
+        except ValueError:
+            return False
+        if self.min_map_rows <= num <= self.max_map_rows:
+            return True
+        return False
+
+    def validate_columns(self, columns):
+        try:
+            num = int(columns)
+        except ValueError:
+            return False
+        if self.min_map_columns <= num <= self.max_map_columns:
+            return True
+        return False
+    
+    def validate_speed_modifier(self, speed_modifier):
+        try:
+            num = float(speed_modifier)
+        except ValueError:
+            return False
+        if self.min_speed_modifier <= num <= self.max_speed_modifier:
+            return True
+        return False

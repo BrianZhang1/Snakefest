@@ -76,22 +76,32 @@ class App():
         self.state = "main_menu"
         self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select, self.load_map_creator)
 
-    def load_new_game(self, settings):
-        self.clear_state()
+    def load_new_game(self, map_array, land_tiles, speed_modifier, settings=None, play_again=False):
+        if not play_again:
+            self.clear_state()
 
-        self.settings = settings
-        with open("snake/data.txt", "w") as file:
-            data = {"settings": settings}
-            json.dump(data, file, indent=self.DATA_INDENT)
+        if settings != None:
+            self.settings = settings
+            with open("snake/data.txt", "w") as file:
+                data = {"settings": settings}
+                json.dump(data, file, indent=self.DATA_INDENT)
 
         self.state = "game"
-        self.game = game.Game(self.root, self.load_new_game, self.load_main_menu, settings)
+        self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, land_tiles, speed_modifier)
 
     def load_map_select(self):
         self.clear_state()
 
         self.state = "map_select"
         self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings)
+    
+    # Loads map select with play again parameter
+    def play_again(self):
+        self.clear_state()
+
+        self.state = "map_select"
+        map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, play_again=True)
+
     
     def load_map_creator(self):
         self.clear_state()

@@ -21,12 +21,13 @@
 from snake.global_helpers import assets, coord_converter
 
 class Snake():
-    def __init__(self, canvas, settings, tile_array):
+    def __init__(self, canvas, map_array):
         self.canvas = canvas
-        self.settings = settings
-        self.tile_array = tile_array
+        self.rows = len(map_array)
+        self.columns = len(map_array[0])
+        self.map_array = map_array
         self.converter = coord_converter.Coord_Converter()
-        self.snake_pos = (int(settings["columns"]/2), int(settings["rows"]/2))         # (column, row)/(x, y)
+        self.snake_pos = (int(self.columns/2), int(self.rows/2))         # (column, row)/(x, y)
 
         inital_coords = self.converter.to_raw(self.snake_pos)
 
@@ -81,15 +82,15 @@ class Snake():
     # Check bounds. If out of bounds, teleport to opposite side.
     def check_bounds(self):
         if self.snake_pos[0] < 0:
-            new_x = self.settings["columns"] - 1
+            new_x = self.columns - 1
             new_y = self.snake_pos[1]
-        elif self.snake_pos[0] > self.settings["columns"] - 1:
+        elif self.snake_pos[0] > self.columns - 1:
             new_x = 0
             new_y = self.snake_pos[1]
         elif self.snake_pos[1] < 0:
             new_x = self.snake_pos[0]
-            new_y = self.settings["rows"] - 1
-        elif self.snake_pos[1] > self.settings["rows"] - 1:
+            new_y = self.rows - 1
+        elif self.snake_pos[1] > self.rows - 1:
             new_x = self.snake_pos[0]
             new_y = 0
         else:
@@ -107,13 +108,13 @@ class Snake():
             # Delete from last tile
             last_snake_part = self.body[self.body_last_index]
             last_snake_part_position = self.converter.to_coord(self.canvas.coords(last_snake_part.id))
-            last_snake_part_tile = self.tile_array[last_snake_part_position[1]][last_snake_part_position[0]]
+            last_snake_part_tile = self.map_array[last_snake_part_position[1]][last_snake_part_position[0]]
             last_snake_part_index = last_snake_part_tile.is_holding(Snake_Part)
             last_snake_part_tile.drop(last_snake_part_index)
 
             # Spawn on new tile
             new_tile_coords = self.previous_moves[0]
-            new_tile = self.tile_array[new_tile_coords[1]][new_tile_coords[0]]
+            new_tile = self.map_array[new_tile_coords[1]][new_tile_coords[0]]
             new_tile.holding.append(last_snake_part)
             new_tile.render()
 
@@ -136,7 +137,7 @@ class Snake():
         else:
             self.body.append(new_snake_part)
             self.body_last_index = 0
-        tile = self.tile_array[coords[1]][coords[0]]
+        tile = self.map_array[coords[1]][coords[0]]
         tile.holding.append(new_snake_part)
         tile.render()
         

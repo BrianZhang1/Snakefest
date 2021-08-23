@@ -19,22 +19,17 @@
 # the map is comprised of many Tile objects.
 
 import tkinter as tk
-from snake.global_helpers import assets, coord_converter
+from snake.global_helpers import assets
 
 map_list = ["default", "plain"]
 
-
 class Map(tk.Canvas):
-    def __init__(self, master, map_settings, map_type):
+    def __init__(self, master, map_array, land_tiles):
         super().__init__(master)
-        self.array = None
-        self.land = None
-        self.rows = map_settings["rows"]
-        self.columns = map_settings["columns"]
-        if map_type == "default":
-            self.generate_default()
-        elif map_type == "plain":
-            self.generate_plain()
+        self.array = map_array
+        self.land = land_tiles
+        self.rows = len(map_array)
+        self.columns = len(map_array[0])
 
     def render(self, display=False):
         size_modifier = 1
@@ -47,93 +42,5 @@ class Map(tk.Canvas):
 
         for row in self.array:
             for tile in row:
+                tile.set_canvas(self)
                 tile.render(display=display)
-
-    def generate_default(self):
-        map = []
-        land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
-        for row_num in range(self.rows):
-            row = []
-            for column_num in range(self.columns):
-                if row_num == 0 or row_num == self.rows - 1 or column_num == 0 or column_num == self.columns - 1:
-                    tile = Tile((column_num, row_num), "barrier", self)
-                    row.append(tile)
-                else:
-                    tile = Tile((column_num, row_num), "land", self)
-                    row.append(tile)
-                    land_tiles.append(tile)
-
-            map.append(row)
-
-        self.array = map
-        self.land = land_tiles
-
-    def generate_plain(self):
-        map = []
-        land_tiles = []     # Store land tiles so program can randomly choose one to place apple on
-        for row_num in range(self.rows):
-            row = []
-            for column_num in range(self.columns):
-                tile = Tile((column_num, row_num), "land", self)
-                row.append(tile)
-                land_tiles.append(tile)
-
-            map.append(row)
-        
-        self.array = map
-        self.land = land_tiles
-
-class Tile():
-    def __init__(self, position, type, canvas):
-        self.canvas = canvas
-        self.position = position
-        self.type = type
-        self.holding = []
-        self.rendered = False
-        self.id = None
-        self.converter = coord_converter.Coord_Converter()
-    
-    # Returns index if holding, and None if not holding
-    def is_holding(self, query):
-        index = 0
-        for item in self.holding:
-            if type(item) == query:
-                return index
-            index += 1
-
-        return None
-    
-    # Renders tile
-    def render(self, display=False):
-        if not self.rendered:
-            tile_coords = None
-            land_tile = None
-            barrier_tile = None
-            if not display:
-                tile_coords = self.converter.to_raw(self.position)
-                land_tile = assets.land_tile
-                barrier_tile = assets.barrier_tile
-            else:
-                display_converter = coord_converter.Coord_Converter(display=True)
-                tile_coords = display_converter.to_raw(self.position)
-                land_tile = assets.land_tile_display
-                barrier_tile = assets.barrier_tile_display
-
-
-            if self.type == "land":
-                self.id = self.canvas.create_image(tile_coords, image=land_tile)
-            elif self.type == "barrier":
-                self.id = self.canvas.create_image(tile_coords, image=barrier_tile)
-            
-            self.rendered = True
-        elif self.rendered and not display:
-            for item in self.holding:
-                item.render(self.position)
-    
-    # Removes item from holding and deletes on canvas
-    def drop(self, item_index):
-        item = self.holding[item_index]
-        if item.rendered:
-            self.canvas.delete(item.id)
-            item.rendered = False
-        self.holding.pop(item_index)
