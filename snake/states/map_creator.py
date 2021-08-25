@@ -48,8 +48,9 @@ import tkinter as tk
 from snake.global_helpers import map_class, assets, maps
 
 class Map_Creator(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu):
+    def __init__(self, master, load_new_game, load_main_menu, save_map):
         super().__init__(master)
+        self.save_map = save_map
 
         self.rows = 15
         self.columns = 15
@@ -206,12 +207,17 @@ class Map_Creator(tk.Frame):
         self.tile_select_barrier.bind("<Button-1>", lambda _: set_current_tile_type("barrier"))
         self.tile_select_barrier.pack(side="left")
         
+        # Save button
+        self.save_button = tk.Button(
+            self.content_frame_right_bottom, text="Save ->", font="Arial, 16", bg="green2", 
+            command=lambda: self.save_map(self.map_info))
+        self.save_button.pack(side="right", anchor="e", padx=(30, 50), pady=30)
 
         # Preview button
         self.preview_button = tk.Button(
-            self.content_frame_right_bottom, text="Preview ->", font="Arial, 16", bg="green2", 
+            self.content_frame_right_bottom, text="Preview", font="Arial, 14", bg="paleturquoise1", 
             command=lambda: load_new_game(self.map_display.array, 1))
-        self.preview_button.pack(anchor="se", padx=50, pady=30)
+        self.preview_button.pack(side="right", anchor="e", padx=(50, 0), pady=30)
 
 
         self.pack(expand=True, fill="both")
@@ -229,4 +235,3 @@ class Map_Creator(tk.Frame):
         tile = self.map_display.array[pos[1]][pos[0]]
         tile.type = self.current_tile_type
         tile.render_type(display=True)
-

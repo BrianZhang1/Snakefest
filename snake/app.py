@@ -55,10 +55,7 @@ class App():
                 }
                 self.data = {
                     "settings": settings,
-                    "maps": {
-                        "default": {
-                        }
-                    }
+                    "maps": []
                 }
                 json.dump(self.data, file, indent=self.DATA_INDENT)
 
@@ -93,8 +90,8 @@ class App():
             self.clear_state()
 
         with open("snake/data.txt", "w") as file:
-            data = {"settings": self.settings}
-            json.dump(data, file, indent=self.DATA_INDENT)
+            self.data["settings"] = self.settings
+            json.dump(self.data, file, indent=self.DATA_INDENT)
 
         self.state = "game"
         self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
@@ -116,5 +113,23 @@ class App():
         self.clear_state()
 
         self.state = "map_creator"
-        self.map_creator = map_creator.Map_Creator(self.root, self.load_new_game, self.load_main_menu)
+        self.map_creator = map_creator.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map)
 
+    def save_map(self, map_info):
+        # Jsonify map
+        tile_array = map_info["array"]
+        jsonified_tile_array = []
+        for row in tile_array:
+            new_row = []
+            for tile in row:
+                new_row.append(tile.get_info())
+            jsonified_tile_array.append(new_row)
+        
+        jsonified_map = map_info
+        jsonified_map["array"] = jsonified_tile_array
+
+        self.data["maps"].append(jsonified_map)
+        with open("data.txt", "w") as file:
+            json.dump(self.data, file)
+
+        self.load_main_menu()

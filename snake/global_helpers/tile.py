@@ -75,3 +75,13 @@ class Tile():
             self.canvas.delete(item.id)
             item.rendered = False
         self.holding.pop(item_index)
+
+    # Returns important tile data in record form
+    def get_info(self):
+        info = {
+            "type": self.type,
+            "position": self.position,
+            "holding": self.holding
+        }
+
+        return info
