@@ -129,7 +129,7 @@ class App():
         jsonified_map["array"] = jsonified_tile_array
 
         self.data["maps"].append(jsonified_map)
-        with open("data.txt", "w") as file:
-            json.dump(self.data, file)
+        with open("snake/data.txt", "w") as file:
+            json.dump(self.data, file, indent=self.DATA_INDENT)
 
         self.load_main_menu()
