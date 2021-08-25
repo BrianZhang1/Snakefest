@@ -214,7 +214,7 @@ class Map_Select(tk.Frame):
         self.speed_modifier_limit_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_limit_label_var)
         self.speed_modifier_limit_label.pack(side="top")
         self.speed_modifier_current_label_var = tk.StringVar()
-        self.speed_modifier_current_label_var.set("Current speed modifier: " + str(self.settings["speed_modifier"]))
+        self.speed_modifier_current_label_var.set("Current speed modifier: " + str(float(self.settings["speed_modifier"])))
         self.speed_modifier_current_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_current_label_var)
         self.speed_modifier_current_label.pack(side="top")
         self.speed_modifier_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, text="Speed Modifier:")
@@ -230,7 +230,7 @@ class Map_Select(tk.Frame):
         validate_speed_modifer_command = self.register(validate_speed_modifer_entry)
         self.speed_modifier_entry = tk.Entry(self.speed_modifier_wrapper, validate="key", width=3, 
             validatecommand=(validate_speed_modifer_command, "%P"))
-        self.speed_modifier_entry.insert(tk.END, str(self.settings["speed_modifier"]))
+        self.speed_modifier_entry.insert(tk.END, str(float(self.settings["speed_modifier"])))
         self.speed_modifier_entry.pack(side="left", padx=(0, 15))
         def set_speed_modifier(speed_modifier):
             if self.validate_speed_modifier(speed_modifier):
