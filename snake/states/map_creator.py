@@ -96,7 +96,9 @@ class Map_Creator(tk.Frame):
         self.header_frame = tk.Frame(self, bg=self.header_frame_bg)
         self.header_frame.pack(side="top", expand=True, fill="both")
 
-        self.title_label = tk.Label(self.header_frame, text="Map Selection", font="Arial, 25", bg=self.header_frame_bg)
+        self.title_label_var = tk.StringVar()
+        self.title_label_var.set(self.map_info["name"])
+        self.title_label = tk.Label(self.header_frame, textvariable=self.title_label_var, font="Arial, 25", bg=self.header_frame_bg)
         self.title_label.pack(anchor="nw", side="top", padx=50, pady=(30, 15))
 
         self.main_menu_button = tk.Button(self.header_frame, text="<- Back to Main Menu", command=load_main_menu)
@@ -139,6 +141,21 @@ class Map_Creator(tk.Frame):
         self.control_panel_frame_bg = "gray80"
         self.control_panel_frame = tk.Frame(self.content_frame_right_top, bg=self.control_panel_frame_bg)
         self.control_panel_frame.pack(expand=True, fill="both")
+
+        # Map Title Entry
+        self.title_set_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.title_set_wrapper.pack(pady=(20, 0))
+        self.title_set_label = tk.Label(self.title_set_wrapper, text="Title:", bg=self.control_panel_frame_bg)
+        self.title_set_label.pack(side="left", padx=(0, 10))
+        self.title_set_entry = tk.Entry(self.title_set_wrapper, width=20)
+        self.title_set_entry.pack(side="left", padx=(0, 5))
+        def set_title(title):
+            if 0 < len(title) <= 20:
+                self.title_label_var.set(title)
+                self.map_info["name"] = title
+        self.title_set_button = tk.Button(self.title_set_wrapper, text="Set",
+            command=lambda: set_title(self.title_set_entry.get()))
+        self.title_set_button.pack(side="left")
 
         # Row/Column Select
         self.row_column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
