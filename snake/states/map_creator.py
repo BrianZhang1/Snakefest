@@ -53,12 +53,13 @@ class Map_Creator(tk.Frame):
 
         DEFAULT_SETTINGS = {
             "name": "Untitled Map",
-            "rows": 15,
-            "columns": 15,
-            "map": []
+            "array": []
         }
 
         self.settings = DEFAULT_SETTINGS
+
+        # Current selected tile for editor
+        self.current_tile_type = "land"
 
         # Limits for settings
         self.min_map_rows = 1
@@ -110,12 +111,18 @@ class Map_Creator(tk.Frame):
         self.content_frame_left.pack(side="left")
 
         # Generate display map
-        map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        map_generation_return_value = maps.generate_plain(15, 15)
         map_generation_array = map_generation_return_value[0]
         map_generation_land = map_generation_return_value[1]
         self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
+
+        # Clicking tile on display map updates it
+        for row in self.map_display.array:
+            for tile in row:
+                pos = tile.position
+                self.map_display.tag_bind(tile.id, "<Button-1>", lambda _, pos=pos: self.update_tile(pos))
 
         # Content frame right
         self.content_frame_right_bg = "gray70"
@@ -156,7 +163,7 @@ class Map_Creator(tk.Frame):
         validate_row_column_command = self.register(validate_rows_columns_entry)
         self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
-        self.row_select_entry.insert(tk.END, str(self.settings["rows"]))
+        self.row_select_entry.insert(tk.END, str(len(self.map_display.array)))
         self.row_select_entry.pack(side="left", padx=(0, 15))
         def set_rows(rows):
             if validate_rows(rows):
@@ -173,7 +180,7 @@ class Map_Creator(tk.Frame):
         self.column_select_label.pack(side="left")
         self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
-        self.column_select_entry.insert(tk.END, str(self.settings["columns"]))
+        self.column_select_entry.insert(tk.END, str(len(self.map_display.array[0])))
         self.column_select_entry.pack(side="left", padx=(0, 15))
         def set_columns(columns):
             if validate_columns(columns):
@@ -184,13 +191,21 @@ class Map_Creator(tk.Frame):
         self.column_select_set_button.pack(side="left")
 
         # Tile Selection Area
-        self.tile_select_frame = tk.Frame(self.control_panel_frame)
-        self.tile_select_frame.pack()
-        self.tile_select_label = tk.Label(self.tile_select_frame, text="Tiles")
-        self.tile_select_label.pack()
-        self.tile_select_buttons = tk.Frame(self.tile_select_frame)
-        self.tile_select_buttons.pack()
-
+        self.tile_select_frame = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.tile_select_frame.pack(fill="x", padx=10, pady=10)
+        self.tile_select_label = tk.Label(self.tile_select_frame, text="Tiles", bg=self.control_panel_frame_bg)
+        self.tile_select_label.pack(anchor="nw")
+        self.tile_select_buttons = tk.Frame(self.tile_select_frame, bg=self.control_panel_frame_bg)
+        self.tile_select_buttons.pack(fill="x", pady=10)
+        def set_current_tile_type(type):
+            self.current_tile_type = type
+        self.tile_select_land = tk.Label(self.tile_select_buttons, image=assets.land_tile_button, bg=self.control_panel_frame_bg)
+        self.tile_select_land.bind("<Button-1>", lambda _: set_current_tile_type("land"))
+        self.tile_select_land.pack(side="left")
+        self.tile_select_barrier = tk.Label(self.tile_select_buttons, image=assets.barrier_tile_button, bg=self.control_panel_frame_bg)
+        self.tile_select_barrier.bind("<Button-1>", lambda _: set_current_tile_type("barrier"))
+        self.tile_select_barrier.pack(side="left")
+        
 
         # Play button
         self.play_button = tk.Button(
@@ -211,3 +226,8 @@ class Map_Creator(tk.Frame):
         self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
+
+    def update_tile(self, pos):
+        tile = self.map_display.array[pos[1]][pos[0]]
+        tile.type = self.current_tile_type
+        tile.render_type(display=True)

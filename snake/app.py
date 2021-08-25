@@ -33,24 +33,35 @@ class App():
         self.DATA_INDENT = 4
         self.map_list = ["default", "plain"]
 
-        # Load settings from data.txt. Validation is done in map select
+        self.load_data()
+        self.settings = self.data["settings"]
+
+        self.load_main_menu()
+        root.mainloop()
+
+    # Load data from data.txt. Validation is done in map select
+    def load_data(self):
+        self.data = None
         try:
             with open("snake/data.txt") as file:
-                data = json.load(file)
-                self.settings = data["settings"]
+                self.data = json.load(file)
         except FileNotFoundError:
             with open("snake/data.txt", "w") as file:
-                self.settings = {
+                settings = {
                     "rows": 15,
                     "columns": 15,
                     "map": "default",
                     "speed_modifier": 1
                 }
-                data = {"settings": self.settings}
-                json.dump(data, file, indent=self.DATA_INDENT)
+                self.data = {
+                    "settings": settings,
+                    "maps": {
+                        "default": {
+                        }
+                    }
+                }
+                json.dump(self.data, file, indent=self.DATA_INDENT)
 
-        self.load_main_menu()
-        root.mainloop()
 
     def clear_state(self):
         if self.state == "game":
@@ -101,7 +112,6 @@ class App():
 
         self.state = "map_select"
         map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, self.map_list, play_again=True)
-
     
     def load_map_creator(self):
         self.clear_state()
