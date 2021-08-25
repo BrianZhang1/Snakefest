@@ -51,14 +51,17 @@ class Map_Creator(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu):
         super().__init__(master)
 
-        DEFAULT_SETTINGS = {
+        self.rows = 15
+        self.columns = 15
+
+        DEFAULT_MAP_INFO = {
             "name": "Untitled Map",
-            "array": []
+            "array": maps.generate_plain(self.rows, self.columns)
         }
 
-        self.settings = DEFAULT_SETTINGS
+        self.map_info = DEFAULT_MAP_INFO
 
-        # Current selected tile for editor
+        # Current selected tile for map editor
         self.current_tile_type = "land"
 
         # Limits for settings
@@ -111,10 +114,7 @@ class Map_Creator(tk.Frame):
         self.content_frame_left.pack(side="left")
 
         # Generate display map
-        map_generation_return_value = maps.generate_plain(15, 15)
-        map_generation_array = map_generation_return_value[0]
-        map_generation_land = map_generation_return_value[1]
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
+        self.map_display = map_class.Map(self.content_frame_left, self.map_info["array"])
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -167,7 +167,7 @@ class Map_Creator(tk.Frame):
         self.row_select_entry.pack(side="left", padx=(0, 15))
         def set_rows(rows):
             if validate_rows(rows):
-                self.settings["rows"] = int(rows)
+                self.rows = int(rows)
                 self.set_map()
         self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
             command=lambda: set_rows(self.row_select_entry.get()))
@@ -184,7 +184,7 @@ class Map_Creator(tk.Frame):
         self.column_select_entry.pack(side="left", padx=(0, 15))
         def set_columns(columns):
             if validate_columns(columns):
-                self.settings["columns"] = int(columns)
+                self.columns = int(columns)
                 self.set_map()
         self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
             command=lambda: set_columns(self.column_select_entry.get()))
@@ -207,11 +207,11 @@ class Map_Creator(tk.Frame):
         self.tile_select_barrier.pack(side="left")
         
 
-        # Play button
-        self.play_button = tk.Button(
-            self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
-            command=lambda: load_new_game(self.settings))
-        self.play_button.pack(anchor="se", padx=50, pady=30)
+        # Preview button
+        self.preview_button = tk.Button(
+            self.content_frame_right_bottom, text="Preview ->", font="Arial, 16", bg="green2", 
+            command=lambda: load_new_game(self.map_display.array, 1))
+        self.preview_button.pack(anchor="se", padx=50, pady=30)
 
 
         self.pack(expand=True, fill="both")
@@ -220,10 +220,8 @@ class Map_Creator(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
-        map_generation_array = map_generation_return_value[0]
-        map_generation_land = map_generation_return_value[1]
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
+        map_generation_array = maps.generate_plain(self.rows, self.columns)
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -231,3 +229,4 @@ class Map_Creator(tk.Frame):
         tile = self.map_display.array[pos[1]][pos[0]]
         tile.type = self.current_tile_type
         tile.render_type(display=True)
+

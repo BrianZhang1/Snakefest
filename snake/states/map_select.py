@@ -74,15 +74,13 @@ class Map_Select(tk.Frame):
         if not play_again:
             self.render()
         else:
-            map_generation_return_value = None
+            map_generation_array = None
             if self.settings["map"] == "default":
-                map_generation_return_value = maps.generate_default(self.settings["rows"], self.settings["columns"])
+                map_generation_array = maps.generate_default(self.settings["rows"], self.settings["columns"])
             elif self.settings["map"] == "plain":
-                map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
-            map_generation_array = map_generation_return_value[0]
-            map_generation_land = map_generation_return_value[1]
+                map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
             self.destroy()
-            self.load_new_game(map_generation_array, map_generation_land, self.settings["speed_modifier"], settings=self.settings, play_again=True)
+            self.load_new_game(map_generation_array, self.settings["speed_modifier"], settings=self.settings, play_again=True)
 
     def render(self):
         # Header frame
@@ -109,14 +107,12 @@ class Map_Select(tk.Frame):
         self.content_frame_left.pack(side="left")
 
         # Generate display map
-        map_generation_return_value = None
+        map_generation_array = None
         if self.settings["map"] == "default":
-            map_generation_return_value = maps.generate_default(self.settings["rows"], self.settings["columns"])
+            map_generation_array = maps.generate_default(self.settings["rows"], self.settings["columns"])
         elif self.settings["map"] == "plain":
-            map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
-        map_generation_array = map_generation_return_value[0]
-        map_generation_land = map_generation_return_value[1]
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
+            map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -248,7 +244,7 @@ class Map_Select(tk.Frame):
         # Play button
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
-            command=lambda: self.load_new_game(self.map_display.array, self.map_display.land, self.settings["speed_modifier"], settings=self.settings))
+            command=lambda: self.load_new_game(self.map_display.array, self.settings["speed_modifier"], settings=self.settings))
         self.play_button.pack(anchor="se", padx=50, pady=30)
 
 
@@ -258,14 +254,12 @@ class Map_Select(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        map_generation_return_value = None
+        map_generation_array = None
         if self.settings["map"] == "default":
-            map_generation_return_value = maps.generate_default(self.settings["rows"], self.settings["columns"])
+            map_generation_array = maps.generate_default(self.settings["rows"], self.settings["columns"])
         elif self.settings["map"] == "plain":
-            map_generation_return_value = maps.generate_plain(self.settings["rows"], self.settings["columns"])
-        map_generation_array = map_generation_return_value[0]
-        map_generation_land = map_generation_return_value[1]
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array, map_generation_land)
+            map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
+        self.map_display = map_class.Map(self.content_frame_left, map_generation_array)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 

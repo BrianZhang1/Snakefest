@@ -24,7 +24,7 @@ from snake.global_helpers import assets, coord_converter, map_class
 import random
 
 class Game(tk.Frame):
-    def __init__(self, master, play_again, load_main_menu, map_array, land_tiles, speed_modifier):
+    def __init__(self, master, play_again, load_main_menu, map_array, speed_modifier):
         super().__init__(master)
         self.master = master
         self.play_again = play_again
@@ -35,8 +35,16 @@ class Game(tk.Frame):
         self.started = False
         self.converter = coord_converter.Coord_Converter()
 
+
+        # Find all land tiles in map
+        self.land_tiles = []
+        for row in map_array:
+            for tile in row:
+                if tile.type == "land":
+                    self.land_tiles.append(tile)
+
         # Create Map
-        self.map = map_class.Map(self, map_array, land_tiles)
+        self.map = map_class.Map(self, map_array)
         self.map.render()
         self.map.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -113,7 +121,7 @@ class Game(tk.Frame):
     
     def create_new_apple(self):
         # Choose one of the land tiles to spawn an apple on
-        land_tiles = self.map.land
+        land_tiles = self.land_tiles
         random_tile_index = random.randint(0, len(land_tiles)-1)
         random_tile = land_tiles[random_tile_index]
 

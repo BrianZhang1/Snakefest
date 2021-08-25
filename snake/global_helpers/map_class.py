@@ -22,10 +22,9 @@ import tkinter as tk
 from snake.global_helpers import assets
 
 class Map(tk.Canvas):
-    def __init__(self, master, map_array, land_tiles):
+    def __init__(self, master, map_array):
         super().__init__(master)
         self.array = map_array
-        self.land = land_tiles
         self.rows = len(map_array)
         self.columns = len(map_array[0])
 

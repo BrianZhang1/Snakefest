@@ -88,7 +88,7 @@ class App():
         self.state = "main_menu"
         self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select, self.load_map_creator)
 
-    def load_new_game(self, map_array, land_tiles, speed_modifier, settings=None, play_again=False):
+    def load_new_game(self, map_array, speed_modifier, settings=None, play_again=False):
         if not play_again:
             self.clear_state()
 
@@ -98,7 +98,7 @@ class App():
                 json.dump(data, file, indent=self.DATA_INDENT)
 
         self.state = "game"
-        self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, land_tiles, speed_modifier)
+        self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
 
     def load_map_select(self):
         self.clear_state()
