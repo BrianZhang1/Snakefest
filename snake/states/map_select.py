@@ -80,7 +80,7 @@ class Map_Select(tk.Frame):
             elif self.settings["map"] == "plain":
                 map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
             self.destroy()
-            self.load_new_game(map_generation_array, self.settings["speed_modifier"], settings=self.settings, play_again=True)
+            self.load_new_game(map_generation_array, self.settings["speed_modifier"], play_again=True)
 
     def render(self):
         # Header frame
@@ -244,7 +244,7 @@ class Map_Select(tk.Frame):
         # Play button
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
-            command=lambda: self.load_new_game(self.map_display.array, self.settings["speed_modifier"], settings=self.settings))
+            command=lambda: self.load_new_game(self.map_display.array, self.settings["speed_modifier"]))
         self.play_button.pack(anchor="se", padx=50, pady=30)
 
 
