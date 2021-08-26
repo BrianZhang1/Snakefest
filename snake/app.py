@@ -23,7 +23,7 @@ root.geometry("1280x720")
 root.resizable(False, False)
 
 from snake.states import game, main_menu, map_select, map_creator
-import json, sys
+import json, copy
 
 class App():
     def __init__(self):
@@ -86,11 +86,7 @@ class App():
         map_array = None
         for map in self.data["maps"]:
             if map["name"] == map_name:
-                map_array = map["array"]
-        
-        if map_array == None:
-            print("Error loading game, map array for specified map could not be found.")
-            sys.exit()
+                map_array = copy.deepcopy(map["array"])
 
         self.state = "game"
         self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
