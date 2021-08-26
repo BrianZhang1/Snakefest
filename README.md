@@ -5,6 +5,7 @@
 The best python snake with map editing (and soon, creation/random generation) and lots of customization!  
 Feel free to make changes and forks as it is allowed under COPYING.  
 
+Note: The wiki is outdated! The information is probably wrong.  
 The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly explains the structure of the project and roles of all files/directories.  
 
 ## Instructions to play 
@@ -20,9 +21,8 @@ The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly expl
 
 * Add ice tiles which you can't turn on
 * Snake skins, hats, aesthetics
-* Add map with lots of barriers dotted throughout the map
 * Add highscore
-* Map creator
+* Map creator preview
 
 ## Copying
 
