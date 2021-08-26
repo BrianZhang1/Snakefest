@@ -243,10 +243,18 @@ class Map_Creator(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        map_generation_array = maps.generate_plain(self.rows, self.columns)
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array)
+        self.map_info["array"] = maps.generate_plain(self.rows, self.columns)
+
+        # Generate display map
+        self.map_display = map_class.Map(self.content_frame_left, self.map_info["array"])
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
+
+        # Clicking tile on display map updates it
+        for row in self.map_display.array:
+            for tile in row:
+                pos = tile.position
+                self.map_display.tag_bind(tile.id, "<Button-1>", lambda _, pos=pos: self.update_tile(pos))
 
     def update_tile(self, pos):
         tile = self.map_display.array[pos[1]][pos[0]]
