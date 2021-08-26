@@ -119,7 +119,8 @@ class Map_Creator(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.set_map("Plain - Medium")
+        # Generate display map
+        self.resize_map()
 
         # Content frame right
         self.content_frame_right_bg = "gray70"
@@ -142,6 +143,7 @@ class Map_Creator(tk.Frame):
         self.title_set_label = tk.Label(self.title_set_wrapper, text="Title:", bg=self.control_panel_frame_bg)
         self.title_set_label.pack(side="left", padx=(0, 10))
         self.title_set_entry = tk.Entry(self.title_set_wrapper, width=20)
+        self.title_set_entry.insert(tk.END, self.map_info["name"])
         self.title_set_entry.pack(side="left", padx=(0, 5))
         def set_title(title):
             if 0 < len(title) <= 20:
@@ -157,7 +159,6 @@ class Map_Creator(tk.Frame):
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Base Map:", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
-        self.map_select_menubutton_var.set("Plain - Medium")
         self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
@@ -289,10 +290,16 @@ class Map_Creator(tk.Frame):
         self.generate_display_map()
 
     def resize_map(self):
-        self.map_display.destroy()
-        del self.map_display
+        try:
+            self.map_display.destroy()
+            del self.map_display
+        except AttributeError:
+            pass
 
-        bordered = self.bordered_checkbutton_var.get()
+        try:
+            bordered = self.bordered_checkbutton_var.get()
+        except AttributeError:
+            bordered = 0
         map = None
         if not bordered:
             # Generate plain map with rows and columns
@@ -336,7 +343,10 @@ class Map_Creator(tk.Frame):
             sys.exit()
 
         # Clear base map select
-        self.map_select_menubutton_var.set("")
+        try:
+            self.map_select_menubutton_var.set("")
+        except AttributeError:
+            pass
 
         self.generate_display_map()
     
