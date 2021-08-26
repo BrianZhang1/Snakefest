@@ -177,11 +177,7 @@ class Map_Creator(tk.Frame):
             text="Warning: resizing map results in a map reset", bg=self.control_panel_frame_bg, fg="red")
         self.row_column_select_warning_label.pack()
         
-        # Row select
-        self.row_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
-        self.row_select_wrapper.pack(padx=20)
-        self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
-        self.row_select_label.pack(side="left", padx=(0, 20))
+        # On keypress input validation for row and column entries
         def validate_rows_columns_entry(input):
             if input == "":
                 return True
@@ -191,17 +187,16 @@ class Map_Creator(tk.Frame):
                 return False
             return True
         validate_row_column_command = self.register(validate_rows_columns_entry)
+
+        # Row select
+        self.row_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
+        self.row_select_wrapper.pack(padx=20)
+        self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
+        self.row_select_label.pack(side="left", padx=(0, 20))
         self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
         self.row_select_entry.insert(tk.END, str(len(self.map_display.array)))
         self.row_select_entry.pack(side="left", padx=(0, 15))
-        def set_rows(rows):
-            if validate_rows(rows):
-                self.rows = int(rows)
-                self.resize_map()
-        self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
-            command=lambda: set_rows(self.row_select_entry.get()))
-        self.row_select_set_button.pack(side="left")
 
         # Column select
         self.column_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
@@ -212,13 +207,6 @@ class Map_Creator(tk.Frame):
             validatecommand=(validate_row_column_command, "%P"))
         self.column_select_entry.insert(tk.END, str(len(self.map_display.array[0])))
         self.column_select_entry.pack(side="left", padx=(0, 15))
-        def set_columns(columns):
-            if validate_columns(columns):
-                self.columns = int(columns)
-                self.resize_map()
-        self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
-            command=lambda: set_columns(self.column_select_entry.get()))
-        self.column_select_set_button.pack(side="left")
 
         # Bordered checkbutton
         self.bordered_checkbutton_var = tk.IntVar()
@@ -226,6 +214,18 @@ class Map_Creator(tk.Frame):
         self.bordered_checkbutton = tk.Checkbutton(self.map_resize_wrapper, text="Bordered", 
             variable=self.bordered_checkbutton_var, bg=self.control_panel_frame_bg)
         self.bordered_checkbutton.pack()
+
+        # Resize map button, validation happens here
+        def validate_resize_map():
+            rows = self.row_select_entry.get()
+            columns = self.column_select_entry.get()
+            if validate_rows(rows) and validate_columns(columns):
+                self.rows = int(rows)
+                self.columns = int(columns)
+                self.resize_map()
+
+        self.resize_map_button = tk.Button(self.map_resize_wrapper, text="Resize Map", font="Arial, 10", command=validate_resize_map)
+        self.resize_map_button.pack()
 
         # Tile Selection Area
         self.tile_select_frame = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
@@ -276,6 +276,15 @@ class Map_Creator(tk.Frame):
         else:
             print("map_creator set_map: base map does not exist in map list")
             sys.exit()
+
+        # Set row and column entries
+        try:
+            self.row_select_entry.delete(0, tk.END)
+            self.column_select_entry.delete(0, tk.END)
+            self.row_select_entry.insert(tk.END, str(len(self.map_info["array"])))
+            self.column_select_entry.insert(tk.END, str(len(self.map_info["array"][0])))
+        except AttributeError:
+            pass
         
         self.generate_display_map()
 
@@ -325,6 +334,9 @@ class Map_Creator(tk.Frame):
         else:
             print("map_creator resize_map(): map did not generate")
             sys.exit()
+
+        # Clear base map select
+        self.map_select_menubutton_var.set("")
 
         self.generate_display_map()
     
