@@ -46,18 +46,10 @@ class App():
             with open("snake/data.txt") as file:
                 self.data = json.load(file)
         except FileNotFoundError:
-            with open("snake/data.txt", "w") as file:
-                settings = {
-                    "rows": 15,
-                    "columns": 15,
-                    "map": "default",
-                    "speed_modifier": 1
-                }
-                self.data = {
-                    "settings": settings,
-                    "maps": []
-                }
-                json.dump(self.data, file, indent=self.DATA_INDENT)
+            with open("snake/default_data.txt") as default_file:
+                with open ("snake/data.txt", "w") as file:
+                    self.data = json.load(default_file)
+                    json.dump(self.data, file, indent=self.DATA_INDENT)
 
 
     def clear_state(self):
