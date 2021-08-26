@@ -17,12 +17,14 @@ The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly expl
 
 3. Run `python start_app.py`.
 
-## TODO Ideas
+## TODO
 
 * Add ice tiles which you can't turn on
 * Snake skins, hats, aesthetics
 * Add highscore
 * Map creator preview
+* Limits for map creator fields
+* Deleting and editing maps
 
 ## Copying
 
