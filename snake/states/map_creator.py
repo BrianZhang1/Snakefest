@@ -234,7 +234,8 @@ class Map_Creator(tk.Frame):
         self.preview_button = tk.Button(
             self.content_frame_right_bottom, text="Preview", font="Arial, 14", bg="paleturquoise1", 
             command=lambda: load_new_game(self.map_display.array, 1))
-        self.preview_button.pack(side="right", anchor="e", padx=(50, 0), pady=30)
+        # Don't pack since it isn't finished yet
+        #self.preview_button.pack(side="right", anchor="e", padx=(50, 0), pady=30)
 
 
         self.pack(expand=True, fill="both")
