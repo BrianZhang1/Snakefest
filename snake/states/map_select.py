@@ -49,12 +49,19 @@ import sys
 from snake.global_helpers import assets, map_class, maps
 
 class Map_Select(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, settings, map_list, play_again=False):
+    def __init__(self, master, load_new_game, load_main_menu, data, play_again=False):
         super().__init__(master)
 
         self.load_new_game = load_new_game
         self.load_main_menu = load_main_menu
-        self.map_list = map_list
+        self.data = data
+
+        self.map_list = []
+        for map in self.data["maps"]:
+            self.map_list.append(map["name"])
+        
+        self.map = self.data["settings"]["map"]
+        self.speed_modifier = self.data["settings"]["speed_modifier"]
 
         # Limits for settings
         self.min_map_rows = 1
@@ -65,22 +72,11 @@ class Map_Select(tk.Frame):
         self.min_speed_modifier = 0.5
 
 
-        if self.validate_columns(settings["columns"]) and self.validate_rows(settings["rows"]) and self.validate_speed_modifier(settings["speed_modifier"]) and self.validate_map(settings["map"]):
-            self.settings = settings
-        else:
-            print("map_select: invalid settings")
-            sys.exit()
-
         if not play_again:
             self.render()
         else:
-            map_generation_array = None
-            if self.settings["map"] == "default":
-                map_generation_array = maps.generate_default(self.settings["rows"], self.settings["columns"])
-            elif self.settings["map"] == "plain":
-                map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
             self.destroy()
-            self.load_new_game(map_generation_array, self.settings["speed_modifier"], play_again=True)
+            self.load_new_game(self.map, self.speed_modifier, play_again=True)
 
     def render(self):
         # Header frame
@@ -107,12 +103,8 @@ class Map_Select(tk.Frame):
         self.content_frame_left.pack(side="left")
 
         # Generate display map
-        map_generation_array = None
-        if self.settings["map"] == "default":
-            map_generation_array = maps.generate_default(self.settings["rows"], self.settings["columns"])
-        elif self.settings["map"] == "plain":
-            map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array)
+        initial_map_array = self.get_map_array(self.map)
+        self.map_display = map_class.Map(self.content_frame_left, initial_map_array)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -137,73 +129,19 @@ class Map_Select(tk.Frame):
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Select Map: ", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
-        self.map_select_menubutton_var.set(self.settings["map"])
+        self.map_select_menubutton_var.set(self.map)
         self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
         self.map_select_menubutton.configure(menu=self.map_select_menu)
         def update_map_menu(new_map):
-            self.settings["map"] = new_map
+            self.map = new_map
             self.map_select_menubutton_var.set(new_map)
             self.update_map()
         for map in self.map_list:
             self.map_select_menu.add_command(label=map, command=lambda map=map: update_map_menu(map))
         
         self.map_select_menubutton.pack(side="left")
-
-        # Row select
-        self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.row_select_wrapper.pack(pady=10, padx=20)
-        self.row_limit_label_var = tk.StringVar()
-        self.row_limit_label_var.set(
-            "Minimum row value is " + str(self.min_map_rows) + "\nMaximum row value is " + str(self.max_map_rows))
-        self.row_limit_label = tk.Label(self.row_select_wrapper, bg=self.control_panel_frame_bg, textvariable=self.row_limit_label_var)
-        self.row_limit_label.pack(side="top")
-        self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
-        self.row_select_label.pack(side="left", padx=(0, 20))
-        def validate_rows_columns_entry(input):
-            if input == "":
-                return True
-            try:
-                int(input)
-            except ValueError:
-                return False
-            return True
-        validate_row_column_command = self.register(validate_rows_columns_entry)
-        self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
-            validatecommand=(validate_row_column_command, "%P"))
-        self.row_select_entry.insert(tk.END, str(self.settings["rows"]))
-        self.row_select_entry.pack(side="left", padx=(0, 15))
-        def set_rows(rows):
-            if self.validate_rows(rows):
-                self.settings["rows"] = int(rows)
-                self.update_map()
-        self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
-            command=lambda: set_rows(self.row_select_entry.get()))
-        self.row_select_set_button.pack(side="left")
-
-        # Column select
-        self.column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.column_select_wrapper.pack(pady=10, padx=20)
-        self.column_limit_label_var = tk.StringVar()
-        self.column_limit_label_var.set(
-            "Minimum column value is " + str(self.min_map_columns) + "\nMaximum column value is " + str(self.max_map_columns))
-        self.column_limit_label = tk.Label(self.column_select_wrapper, bg=self.control_panel_frame_bg, textvariable=self.column_limit_label_var)
-        self.column_limit_label.pack(side="top")
-        self.column_select_label = tk.Label(self.column_select_wrapper, text="# of Columns: ", bg=self.control_panel_frame_bg)
-        self.column_select_label.pack(side="left")
-        self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
-            validatecommand=(validate_row_column_command, "%P"))
-        self.column_select_entry.insert(tk.END, str(self.settings["columns"]))
-        self.column_select_entry.pack(side="left", padx=(0, 15))
-        def set_columns(columns):
-            if self.validate_columns(columns):
-                self.settings["columns"] = int(columns)
-                self.update_map()
-        self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
-            command=lambda: set_columns(self.column_select_entry.get()))
-        self.column_select_set_button.pack(side="left")
-
 
         # Speed modifier
         self.speed_modifier_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
@@ -214,7 +152,7 @@ class Map_Select(tk.Frame):
         self.speed_modifier_limit_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_limit_label_var)
         self.speed_modifier_limit_label.pack(side="top")
         self.speed_modifier_current_label_var = tk.StringVar()
-        self.speed_modifier_current_label_var.set("Current speed modifier: " + str(float(self.settings["speed_modifier"])))
+        self.speed_modifier_current_label_var.set("Current speed modifier: " + str(float(self.speed_modifier)))
         self.speed_modifier_current_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, textvariable=self.speed_modifier_current_label_var)
         self.speed_modifier_current_label.pack(side="top")
         self.speed_modifier_label = tk.Label(self.speed_modifier_wrapper, bg=self.control_panel_frame_bg, text="Speed Modifier:")
@@ -230,12 +168,12 @@ class Map_Select(tk.Frame):
         validate_speed_modifer_command = self.register(validate_speed_modifer_entry)
         self.speed_modifier_entry = tk.Entry(self.speed_modifier_wrapper, validate="key", width=3, 
             validatecommand=(validate_speed_modifer_command, "%P"))
-        self.speed_modifier_entry.insert(tk.END, str(float(self.settings["speed_modifier"])))
+        self.speed_modifier_entry.insert(tk.END, str(float(self.speed_modifier)))
         self.speed_modifier_entry.pack(side="left", padx=(0, 15))
         def set_speed_modifier(speed_modifier):
             if self.validate_speed_modifier(speed_modifier):
                 num = float(speed_modifier)
-                self.settings["speed_modifier"] = num
+                self.speed_modifier = num
                 self.speed_modifier_current_label_var.set("Current speed modifier: " + str(num))
         self.speed_modifier_set_button = tk.Button(self.speed_modifier_wrapper, text="Set",
             command=lambda: set_speed_modifier(self.speed_modifier_entry.get()))
@@ -244,7 +182,7 @@ class Map_Select(tk.Frame):
         # Play button
         self.play_button = tk.Button(
             self.content_frame_right_bottom, text="Play ->", font="Arial, 16", bg="green2", 
-            command=lambda: self.load_new_game(self.map_display.array, self.settings["speed_modifier"]))
+            command=lambda: self.load_new_game(self.map, self.speed_modifier))
         self.play_button.pack(anchor="se", padx=50, pady=30)
 
 
@@ -254,12 +192,8 @@ class Map_Select(tk.Frame):
         self.map_display.destroy()
         del self.map_display
 
-        map_generation_array = None
-        if self.settings["map"] == "default":
-            map_generation_array = maps.generate_default(self.settings["rows"], self.settings["columns"])
-        elif self.settings["map"] == "plain":
-            map_generation_array = maps.generate_plain(self.settings["rows"], self.settings["columns"])
-        self.map_display = map_class.Map(self.content_frame_left, map_generation_array)
+        new_map_array = self.get_map_array(self.map)
+        self.map_display = map_class.Map(self.content_frame_left, new_map_array)
         self.map_display.render(display=True)
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
@@ -295,3 +229,18 @@ class Map_Select(tk.Frame):
         if self.min_speed_modifier <= num <= self.max_speed_modifier:
             return True
         return False
+
+    def get_map_array(self, name):
+        # Verify map exists
+        if not name in self.map_list:
+            return False
+
+        # Search for map
+        for map in self.data["maps"]:
+            if map["name"] == name:
+                return map["array"]
+        
+        # Some error occured, map exists but not found in data
+        print("Map exists but wasn't found in data")
+        sys.exit()
+    

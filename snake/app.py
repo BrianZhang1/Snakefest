@@ -23,17 +23,14 @@ root.geometry("1280x720")
 root.resizable(False, False)
 
 from snake.states import game, main_menu, map_select, map_creator
-import json
+import json, sys
 
 class App():
     def __init__(self):
         self.root = root
         self.state = None
 
-        self.map_list = ["default", "plain"]
-
         self.load_data()
-        self.settings = self.data["settings"]
 
         self.load_main_menu()
         root.mainloop()
@@ -76,13 +73,24 @@ class App():
         self.state = "main_menu"
         self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select, self.load_map_creator)
 
-    def load_new_game(self, map_array, speed_modifier, play_again=False):
+    def load_new_game(self, map_name, speed_modifier, play_again=False):
         if not play_again:
             self.clear_state()
 
         with open("snake/data.txt", "w") as file:
-            self.data["settings"] = self.settings
+            self.data["settings"]["map"] = map_name
+            self.data["settings"]["speed_modifier"] = speed_modifier
             json.dump(self.data, file)
+        
+        # Find map array in data
+        map_array = None
+        for map in self.data["maps"]:
+            if map["name"] == map_name:
+                map_array = map["array"]
+        
+        if map_array == None:
+            print("Error loading game, map array for specified map could not be found.")
+            sys.exit()
 
         self.state = "game"
         self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
@@ -91,14 +99,14 @@ class App():
         self.clear_state()
 
         self.state = "map_select"
-        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, self.map_list)
+        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.data)
     
     # Loads map select with play again parameter
     def play_again(self):
         self.clear_state()
 
         self.state = "map_select"
-        map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.settings, self.map_list, play_again=True)
+        map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.data, play_again=True)
     
     def load_map_creator(self):
         self.clear_state()

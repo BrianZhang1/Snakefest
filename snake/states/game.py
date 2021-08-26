@@ -35,18 +35,17 @@ class Game(tk.Frame):
         self.started = False
         self.converter = coord_converter.Coord_Converter()
 
+        # Create Map
+        self.map = map_class.Map(self, self.map_array)
+        self.map.render()
+        self.map.place(anchor="center", relx=0.5, rely=0.5)
 
         # Find all land tiles in map
         self.land_tiles = []
-        for row in map_array:
+        for row in self.map.array:
             for tile in row:
                 if tile.type == "land":
                     self.land_tiles.append(tile)
-
-        # Create Map
-        self.map = map_class.Map(self, map_array)
-        self.map.render()
-        self.map.place(anchor="center", relx=0.5, rely=0.5)
 
         self.snake = snake.Snake(self.map, self.map.array)
 

@@ -4,11 +4,12 @@
 from snake.global_helpers import coord_converter, assets
 
 class Tile():
-    def __init__(self, position, type):
+    def __init__(self, info):
+        self.type = info["type"]
+        self.position = info["position"]
+        self.holding = info["holding"]
+
         self.canvas = None
-        self.position = position
-        self.type = type
-        self.holding = []
         self.rendered = False
         self.id = None
         self.converter = coord_converter.Coord_Converter()

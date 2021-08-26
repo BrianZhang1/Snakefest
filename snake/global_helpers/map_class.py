@@ -19,14 +19,21 @@
 # the map is comprised of many Tile objects.
 
 import tkinter as tk
-from snake.global_helpers import assets
+from snake.global_helpers import assets, tile
 
 class Map(tk.Canvas):
     def __init__(self, master, map_array):
         super().__init__(master)
-        self.array = map_array
         self.rows = len(map_array)
         self.columns = len(map_array[0])
+
+        self.array = []
+        for row in map_array:
+            new_row = []
+            for tile_info in row:
+                new_tile = tile.Tile(tile_info)
+                new_row.append(new_tile)
+            self.array.append(new_row)
 
     def render(self, display=False):
         size_modifier = 1
