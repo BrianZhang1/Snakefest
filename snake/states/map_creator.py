@@ -258,6 +258,11 @@ class Map_Creator(tk.Frame):
                 self.map_display.tag_bind(tile.id, "<Button-1>", lambda _, pos=pos: self.update_tile(pos))
 
     def update_tile(self, pos):
-        tile = self.map_display.array[pos[1]][pos[0]]
-        tile.type = self.current_tile_type
-        tile.render_type(display=True)
+        # Update in map_info
+        tile = self.map_info["array"][pos[1]][pos[0]]
+        tile["type"] = self.current_tile_type
+
+        # Update in actual map and render
+        tile_object = self.map_display.array[pos[1]][pos[0]]
+        tile_object.type = self.current_tile_type
+        tile_object.render_type(display=True)
