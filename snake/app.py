@@ -108,7 +108,7 @@ class App():
         self.clear_state()
 
         self.state = "map_creator"
-        self.map_creator = map_creator.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map)
+        self.map_creator = map_creator.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map, self.data["maps"])
 
     def save_map(self, map_info):
         self.data["maps"].append(map_info)

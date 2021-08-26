@@ -46,11 +46,13 @@
 
 import tkinter as tk
 from snake.global_helpers import map_class, assets, maps
+import copy, sys
 
 class Map_Creator(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, save_map):
+    def __init__(self, master, load_new_game, load_main_menu, save_map, map_list):
         super().__init__(master)
         self.save_map = save_map
+        self.map_list = map_list
 
         self.rows = 15
         self.columns = 15
@@ -116,16 +118,7 @@ class Map_Creator(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        # Generate display map
-        self.map_display = map_class.Map(self.content_frame_left, self.map_info["array"])
-        self.map_display.render(display=True)
-        self.map_display.place(anchor="center", relx=0.5, rely=0.5)
-
-        # Clicking tile on display map updates it
-        for row in self.map_display.array:
-            for tile in row:
-                pos = tile.position
-                self.map_display.tag_bind(tile.id, "<Button-1>", lambda _, pos=pos: self.update_tile(pos))
+        self.generate_display_map()
 
         # Content frame right
         self.content_frame_right_bg = "gray70"
@@ -157,6 +150,23 @@ class Map_Creator(tk.Frame):
             command=lambda: set_title(self.title_set_entry.get()))
         self.title_set_button.pack(side="left")
 
+        # Base select
+        self.map_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.map_select_wrapper.pack(pady=20, padx=20)
+        self.map_select_label = tk.Label(self.map_select_wrapper, text="Base Map:", bg=self.control_panel_frame_bg)
+        self.map_select_label.pack(side="left")
+        self.map_select_menubutton_var = tk.StringVar()
+        self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
+            indicatoron=True)
+        self.map_select_menu = tk.Menu(self.map_select_menubutton)
+        self.map_select_menubutton.configure(menu=self.map_select_menu)
+        def update_map_menu(new_map):
+            self.map_select_menubutton_var.set(new_map)
+            self.set_map(new_map)
+        for map in self.map_list:
+            self.map_select_menu.add_command(label=map["name"], command=lambda map_name=map["name"]: update_map_menu(map_name))
+        self.map_select_menubutton.pack(side="left")
+
         # Row/Column Select
         self.row_column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.row_column_select_wrapper.pack(pady=(20, 0))
@@ -186,7 +196,7 @@ class Map_Creator(tk.Frame):
         def set_rows(rows):
             if validate_rows(rows):
                 self.rows = int(rows)
-                self.set_map()
+                self.set_map_rows_columns()
         self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
             command=lambda: set_rows(self.row_select_entry.get()))
         self.row_select_set_button.pack(side="left")
@@ -203,7 +213,7 @@ class Map_Creator(tk.Frame):
         def set_columns(columns):
             if validate_columns(columns):
                 self.columns = int(columns)
-                self.set_map()
+                self.set_map_rows_columns()
         self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
             command=lambda: set_columns(self.column_select_entry.get()))
         self.column_select_set_button.pack(side="left")
@@ -240,12 +250,32 @@ class Map_Creator(tk.Frame):
 
         self.pack(expand=True, fill="both")
     
-    def set_map(self):
+    def set_map(self, base_map):
+        self.map_display.destroy()
+        del self.map_display
+
+        new_map_array = None
+        for map in self.map_list:
+            if map["name"] == base_map:
+                new_map_array = copy.deepcopy(map["array"])
+        
+        if new_map_array:
+            self.map_info["array"] = new_map_array
+        else:
+            print("map_creator set_map: base map does not exist in map list")
+            sys.exit()
+        
+        self.generate_display_map()
+
+    def set_map_rows_columns(self):
         self.map_display.destroy()
         del self.map_display
 
         self.map_info["array"] = maps.generate_plain(self.rows, self.columns)
 
+        self.generate_display_map()
+    
+    def generate_display_map(self):
         # Generate display map
         self.map_display = map_class.Map(self.content_frame_left, self.map_info["array"])
         self.map_display.render(display=True)
