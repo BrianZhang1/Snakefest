@@ -66,20 +66,26 @@ class Game(tk.Frame):
     # Input Handler
     def key_handler(self, event):
         if not self.started:
+            def start_game():
+                self.started = True
+                self.wasd_to_start_label.destroy()
+                del self.wasd_to_start_label
+                self.create_new_apple()
+                self.update_snake()
+
             if event.char == 'w':
                 self.snake.new_direction = 'n'
+                start_game()
             elif event.char == 'a':
                 self.snake.new_direction = 'w'
+                start_game()
             elif event.char == 's':
                 self.snake.new_direction = 's'
+                start_game()
             elif event.char == 'd':
                 self.snake.new_direction = 'e'
+                start_game()
 
-            self.started = True
-            self.wasd_to_start_label.destroy()
-            del self.wasd_to_start_label
-            self.create_new_apple()
-            self.update_snake()
             
         elif self.started:
             if event.char == 'w' and self.snake.direction != 's':
