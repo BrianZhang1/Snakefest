@@ -30,7 +30,6 @@ class App():
         self.root = root
         self.state = None
 
-        self.DATA_INDENT = 4
         self.map_list = ["default", "plain"]
 
         self.load_data()
@@ -49,7 +48,7 @@ class App():
             with open("snake/default_data.txt") as default_file:
                 with open ("snake/data.txt", "w") as file:
                     self.data = json.load(default_file)
-                    json.dump(self.data, file, indent=self.DATA_INDENT)
+                    json.dump(self.data, file)
 
 
     def clear_state(self):
@@ -83,7 +82,7 @@ class App():
 
         with open("snake/data.txt", "w") as file:
             self.data["settings"] = self.settings
-            json.dump(self.data, file, indent=self.DATA_INDENT)
+            json.dump(self.data, file)
 
         self.state = "game"
         self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
@@ -122,6 +121,6 @@ class App():
 
         self.data["maps"].append(jsonified_map)
         with open("snake/data.txt", "w") as file:
-            json.dump(self.data, file, indent=self.DATA_INDENT)
+            json.dump(self.data, file)
 
         self.load_main_menu()
