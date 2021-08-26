@@ -45,7 +45,7 @@
 
 
 import tkinter as tk
-from snake.global_helpers import map_class, assets, maps
+from snake.global_helpers import map_class, assets
 import copy, sys
 
 class Map_Creator(tk.Frame):
@@ -57,15 +57,16 @@ class Map_Creator(tk.Frame):
         self.rows = 15
         self.columns = 15
 
+        # Array is set during creation of display map
         DEFAULT_MAP_INFO = {
             "name": "Untitled Map",
-            "array": maps.generate_plain(self.rows, self.columns)
+            "array": None
         }
 
         self.map_info = DEFAULT_MAP_INFO
 
-        # Current selected tile for map editor
-        self.current_tile_type = "land"
+        self.current_tile_type = "land" # Current selected tile for map editor
+        self.bordered = False           # Whether maps are bordered during row/column set
 
         # Limits for settings
         self.min_map_rows = 1
@@ -118,7 +119,7 @@ class Map_Creator(tk.Frame):
             width=content_frame_left_width, height=content_frame_left_height)
         self.content_frame_left.pack(side="left")
 
-        self.generate_display_map()
+        self.set_map("Plain - Medium")
 
         # Content frame right
         self.content_frame_right_bg = "gray70"
@@ -156,6 +157,7 @@ class Map_Creator(tk.Frame):
         self.map_select_label = tk.Label(self.map_select_wrapper, text="Base Map:", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
+        self.map_select_menubutton_var.set("Plain - Medium")
         self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
@@ -167,16 +169,16 @@ class Map_Creator(tk.Frame):
             self.map_select_menu.add_command(label=map["name"], command=lambda map_name=map["name"]: update_map_menu(map_name))
         self.map_select_menubutton.pack(side="left")
 
-        # Row/Column Select
-        self.row_column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.row_column_select_wrapper.pack(pady=(20, 0))
+        # Map Resize Wrapper
+        self.map_resize_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.map_resize_wrapper.pack(pady=(20, 0))
 
-        self.row_column_select_warning_label = tk.Label(self.row_column_select_wrapper, 
+        self.row_column_select_warning_label = tk.Label(self.map_resize_wrapper, 
             text="Warning: resizing map results in a map reset", bg=self.control_panel_frame_bg, fg="red")
         self.row_column_select_warning_label.pack()
         
         # Row select
-        self.row_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.row_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
         self.row_select_wrapper.pack(padx=20)
         self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
         self.row_select_label.pack(side="left", padx=(0, 20))
@@ -196,13 +198,13 @@ class Map_Creator(tk.Frame):
         def set_rows(rows):
             if validate_rows(rows):
                 self.rows = int(rows)
-                self.set_map_rows_columns()
+                self.resize_map()
         self.row_select_set_button = tk.Button(self.row_select_wrapper, text="Set",
             command=lambda: set_rows(self.row_select_entry.get()))
         self.row_select_set_button.pack(side="left")
 
         # Column select
-        self.column_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.column_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
         self.column_select_wrapper.pack(pady=0, padx=20)
         self.column_select_label = tk.Label(self.column_select_wrapper, text="# of Columns: ", bg=self.control_panel_frame_bg)
         self.column_select_label.pack(side="left")
@@ -213,10 +215,17 @@ class Map_Creator(tk.Frame):
         def set_columns(columns):
             if validate_columns(columns):
                 self.columns = int(columns)
-                self.set_map_rows_columns()
+                self.resize_map()
         self.column_select_set_button = tk.Button(self.column_select_wrapper, text="Set",
             command=lambda: set_columns(self.column_select_entry.get()))
         self.column_select_set_button.pack(side="left")
+
+        # Bordered checkbutton
+        self.bordered_checkbutton_var = tk.IntVar()
+        self.bordered_checkbutton_var.set(0)
+        self.bordered_checkbutton = tk.Checkbutton(self.map_resize_wrapper, text="Bordered", 
+            variable=self.bordered_checkbutton_var, bg=self.control_panel_frame_bg)
+        self.bordered_checkbutton.pack()
 
         # Tile Selection Area
         self.tile_select_frame = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
@@ -251,8 +260,11 @@ class Map_Creator(tk.Frame):
         self.pack(expand=True, fill="both")
     
     def set_map(self, base_map):
-        self.map_display.destroy()
-        del self.map_display
+        try:
+            self.map_display.destroy()
+            del self.map_display
+        except AttributeError:
+            pass
 
         new_map_array = None
         for map in self.map_list:
@@ -267,11 +279,52 @@ class Map_Creator(tk.Frame):
         
         self.generate_display_map()
 
-    def set_map_rows_columns(self):
+    def resize_map(self):
         self.map_display.destroy()
         del self.map_display
 
-        self.map_info["array"] = maps.generate_plain(self.rows, self.columns)
+        bordered = self.bordered_checkbutton_var.get()
+        map = None
+        if not bordered:
+            # Generate plain map with rows and columns
+            map = []
+            for row_num in range(self.rows):
+                row = []
+                for column_num in range(self.columns):
+                    tile_info = {
+                        "type": "land",
+                        "position": (column_num, row_num),
+                        "holding": []
+                    }
+                    row.append(tile_info)
+                map.append(row)
+        else:
+            # Generate bordered map with rows and columns
+            map = []
+            for row_num in range(self.rows):
+                row = []
+                for column_num in range(self.columns):
+                    if row_num == 0 or row_num == self.rows - 1 or column_num == 0 or column_num == self.columns - 1:
+                        tile_info = {
+                            "type": "barrier",
+                            "position": (column_num, row_num),
+                            "holding": []
+                        }
+                        row.append(tile_info)
+                    else:
+                        tile_info = {
+                            "type": "land",
+                            "position": (column_num, row_num),
+                            "holding": []
+                        }
+                        row.append(tile_info)
+                map.append(row)
+
+        if map:
+            self.map_info["array"] = map
+        else:
+            print("map_creator resize_map(): map did not generate")
+            sys.exit()
 
         self.generate_display_map()
     

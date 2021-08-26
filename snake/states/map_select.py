@@ -46,7 +46,7 @@
 
 import tkinter as tk
 import sys
-from snake.global_helpers import assets, map_class, maps
+from snake.global_helpers import assets, map_class
 
 class Map_Select(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu, data, play_again=False):
