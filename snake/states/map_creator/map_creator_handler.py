@@ -229,11 +229,11 @@ class Map_Creator(tk.Frame):
         self.resize_map_button.pack()
 
         # Tile Selection Area
-        self.tile_select_frame = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
-        self.tile_select_frame.pack(fill="x", padx=10, pady=10)
-        self.tile_select_label = tk.Label(self.tile_select_frame, text="Tiles", bg=self.control_panel_frame_bg)
+        self.tile_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
+        self.tile_select_wrapper.pack(fill="x", padx=10, pady=10)
+        self.tile_select_label = tk.Label(self.tile_select_wrapper, text="Tiles", bg=self.control_panel_frame_bg)
         self.tile_select_label.pack(anchor="nw")
-        self.tile_select_buttons = tk.Frame(self.tile_select_frame, bg=self.control_panel_frame_bg)
+        self.tile_select_buttons = tk.Frame(self.tile_select_wrapper, bg=self.control_panel_frame_bg)
         self.tile_select_buttons.pack(fill="x", pady=10)
         def set_current_tile_type(type):
             self.current_tile_type = type
