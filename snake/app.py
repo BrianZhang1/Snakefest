@@ -22,6 +22,7 @@ root = tk.Tk()
 root.geometry("1280x720")
 root.resizable(False, False)
 
+# Import all the screens
 from snake.states.game import game_handler
 from snake.states.main_menu import main_menu_handler
 from snake.states.map_creator import map_creator_handler
