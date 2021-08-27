@@ -2,12 +2,11 @@
 
 ## About
 
-The best python snake with map editing (and soon, creation/random generation) and lots of customization!  
+The **BEST** python snake with fun gameplay, custom map creation, and maybe soon to be dungeon crawling!
+
+If this is your first look at the project and you want to learn more behind the scenes about the project, please check out the [Project Explanation](https://github.com/BrianZhang1/Snakefest/wiki/Project-Explanation) in the wiki!
+
 Feel free to make changes and forks as it is allowed under COPYING.  
-
-Note: The wiki is outdated! The information is probably wrong.  
-The [Snakefest Wiki](https://github.com/BrianZhang1/Snakefest/wiki) roughly explains the structure of the project and roles of all files/directories.  
-
 ## Instructions to play 
 
 ### Installation
