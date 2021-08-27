@@ -22,7 +22,10 @@ root = tk.Tk()
 root.geometry("1280x720")
 root.resizable(False, False)
 
-from snake.states import game, main_menu, map_select, map_creator
+from snake.states.game import game_handler
+from snake.states.main_menu import main_menu_handler
+from snake.states.map_creator import map_creator_handler
+from snake.states.map_select import map_select_handler
 import json, copy
 
 class App():
@@ -71,7 +74,7 @@ class App():
         self.clear_state()
 
         self.state = "main_menu"
-        self.main_menu = main_menu.Main_Menu(self.root, self.load_map_select, self.load_map_creator)
+        self.main_menu = main_menu_handler.Main_Menu(self.root, self.load_map_select, self.load_map_creator)
 
     def load_new_game(self, map_name, speed_modifier, play_again=False):
         if not play_again:
@@ -89,26 +92,26 @@ class App():
                 map_array = copy.deepcopy(map["array"])
 
         self.state = "game"
-        self.game = game.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
+        self.game = game_handler.Game(self.root, self.play_again, self.load_main_menu, map_array, speed_modifier)
 
     def load_map_select(self):
         self.clear_state()
 
         self.state = "map_select"
-        self.map_select = map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.data)
+        self.map_select = map_select_handler.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.data)
     
     # Loads map select with play again parameter
     def play_again(self):
         self.clear_state()
 
         self.state = "map_select"
-        map_select.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.data, play_again=True)
+        map_select_handler.Map_Select(self.root, self.load_new_game, self.load_main_menu, self.data, play_again=True)
     
     def load_map_creator(self):
         self.clear_state()
 
         self.state = "map_creator"
-        self.map_creator = map_creator.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map, self.data["maps"])
+        self.map_creator = map_creator_handler.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map, self.data["maps"])
 
     def save_map(self, map_info):
         self.data["maps"].append(map_info)
