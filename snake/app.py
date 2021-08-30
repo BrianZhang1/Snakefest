@@ -115,6 +115,11 @@ class App():
         self.map_creator = map_creator_handler.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map, self.delete_map, self.data["maps"])
 
     def save_map(self, map_info):
+        # Make sure map name is unique
+        for map in self.data["maps"]:
+            if map["name"] == map_info["name"]:
+                return False
+
         self.data["maps"].append(map_info)
         with open("snake/data.txt", "w") as file:
             json.dump(self.data, file)

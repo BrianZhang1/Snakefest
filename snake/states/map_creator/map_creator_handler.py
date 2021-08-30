@@ -271,7 +271,7 @@ class Map_Creator(tk.Frame):
         # Save button
         self.save_button = tk.Button(
             self.content_frame_right_bottom, text="Save ->", font="Arial, 16", bg="green2", 
-            command=lambda: self.save_map(self.map_info))
+            command=self.save_map_handler)
         self.save_button.pack(side="right", anchor="e", padx=(30, 50), pady=30)
 
         # Preview button
@@ -398,3 +398,8 @@ class Map_Creator(tk.Frame):
         tile_object = self.map_display.array[pos[1]][pos[0]]
         tile_object.type = self.current_tile_type
         tile_object.render_type()
+    
+    def save_map_handler(self):
+        successful = self.save_map(self.map_info)
+        if successful == False:
+            self.setting_error_label_var.set("Map name already exists!")
