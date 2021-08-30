@@ -18,7 +18,7 @@
 # It manages movement, growth, and rendering of snake.
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
-from snake.global_helpers import assets, coord_converter
+from snake.global_helpers import assets
 
 class Snake():
     def __init__(self, canvas, map_array):
@@ -26,7 +26,6 @@ class Snake():
         self.rows = len(map_array)
         self.columns = len(map_array[0])
         self.map_array = map_array
-        self.converter = coord_converter.Coord_Converter()
         self.snake_pos = (int(self.columns/2), int(self.rows/2))         # (column, row)/(x, y)
 
         self.direction = 's'      # north, east, south, west

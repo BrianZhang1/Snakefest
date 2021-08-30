@@ -20,7 +20,7 @@
 # The map is comprised of many Tile objects.
 
 import tkinter as tk
-from snake.global_helpers import assets, coord_converter
+from snake.global_helpers import assets
 
 class Map(tk.Canvas):
     def __init__(self, master, map_array, display=False):
@@ -72,7 +72,6 @@ class Tile():
         self.raw_position = self.get_raw_position()
         self.rendered = False
         self.id = None
-        self.converter = coord_converter.Coord_Converter()
 
 
     # Returns index if holding, and None if not holding
