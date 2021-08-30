@@ -19,6 +19,7 @@
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
 from snake.global_helpers import assets, coord_converter
+from snake.states.game.snake_part import Snake_Part
 
 class Snake():
     def __init__(self, canvas, map_array):
@@ -141,18 +142,4 @@ class Snake():
         tile.holding.append(new_snake_part)
         tile.render()
         
-class Snake_Part():
-    def __init__(self, canvas):
-        self.canvas = canvas
-        self.rendered = False
-        self.id = None
-        self.converter = coord_converter.Coord_Converter()
-
-    def render(self, position):
-        raw_position = self.converter.to_raw(position)
-        if not self.rendered:
-            self.id = self.canvas.create_image(raw_position, image=assets.snake_body_sprite)
-            self.rendered = True
-        else:
-            self.canvas.coords(self.id, raw_position)
     
