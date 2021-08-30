@@ -193,11 +193,13 @@ class Map_Creator(tk.Frame):
         self.row_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
         self.row_select_wrapper.pack(padx=20)
         self.row_select_label = tk.Label(self.row_select_wrapper, text="# of Rows: ", bg=self.control_panel_frame_bg)
-        self.row_select_label.pack(side="left", padx=(0, 20))
+        self.row_select_label.pack(side="left", padx=(0, 5))
         self.row_select_entry = tk.Entry(self.row_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
         self.row_select_entry.insert(tk.END, str(len(self.map_display.array)))
-        self.row_select_entry.pack(side="left", padx=(0, 15))
+        self.row_select_entry.pack(side="left", padx=(0, 20))
+        self.row_select_limit_label = tk.Label(self.row_select_wrapper, text="0 < rows < 21", bg=self.control_panel_frame_bg)
+        self.row_select_limit_label.pack(side="left")
 
         # Column select
         self.column_select_wrapper = tk.Frame(self.map_resize_wrapper, bg=self.control_panel_frame_bg)
@@ -207,7 +209,9 @@ class Map_Creator(tk.Frame):
         self.column_select_entry = tk.Entry(self.column_select_wrapper, validate="key", width=3, 
             validatecommand=(validate_row_column_command, "%P"))
         self.column_select_entry.insert(tk.END, str(len(self.map_display.array[0])))
-        self.column_select_entry.pack(side="left", padx=(0, 15))
+        self.column_select_entry.pack(side="left", padx=(5, 20))
+        self.column_select_limit_label = tk.Label(self.column_select_wrapper, text="0 < columns < 36", bg=self.control_panel_frame_bg)
+        self.column_select_limit_label.pack(side="left")
 
         # Bordered checkbutton
         self.bordered_checkbutton_var = tk.IntVar()
