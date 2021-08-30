@@ -107,18 +107,16 @@ class Snake():
         # Move last snake body part to front of snake body.
         if len(self.body) > 0:
             # Delete from last tile
-            last_snake_part = self.body[self.body_last_index]
-            last_snake_part_position = self.converter.to_coord(self.canvas.coords(last_snake_part.id))
+            last_snake_part_position = self.body[self.body_last_index]
             last_snake_part_tile = self.map_array[last_snake_part_position[1]][last_snake_part_position[0]]
-            last_snake_part_index = last_snake_part_tile.is_holding(Snake_Part)
-            last_snake_part_tile.drop(last_snake_part_index)
+            last_snake_part_tile.drop("snake_part")
 
             # Spawn on new tile
             new_tile_coords = self.previous_moves[0]
             new_tile = self.map_array[new_tile_coords[1]][new_tile_coords[0]]
-            new_tile.holding.append(last_snake_part)
-            new_tile.render()
+            new_tile.pick_up("snake_part")
 
+            self.body[self.body_last_index] = new_tile_coords
             
             if self.body_last_index == 0:
                 self.body_last_index = len(self.body) - 1
@@ -131,15 +129,13 @@ class Snake():
         # body_last is the index of the last snake part in the body.
         # A new snake part is inserted after the last snake part, and becomes the last snake part.
         coords = self.previous_moves[len(self.body)]
-        new_snake_part = Snake_Part(self.canvas)
         if self.body_last_index != None:
-            self.body.insert(self.body_last_index+1, new_snake_part)
+            self.body.insert(self.body_last_index+1, coords)
             self.body_last_index += 1
         else:
-            self.body.append(new_snake_part)
+            self.body.append(coords)
             self.body_last_index = 0
         tile = self.map_array[coords[1]][coords[0]]
-        tile.holding.append(new_snake_part)
-        tile.render()
+        tile.pick_up("snake_part")
         
     

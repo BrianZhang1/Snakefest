@@ -107,16 +107,16 @@ class Game(tk.Frame):
         tile = self.map.array[snake_row][snake_column]
 
         # Check if snake hit barrier tile
-        if tile.type == "barrier" or tile.is_holding(snake.Snake_Part) != None:
+        if tile.type == "barrier" or tile.is_holding("snake_part") != None:
             self.snake_death_handler()
             return
 
         self.snake.draw_snake()
 
         # Checking if snake hit apple
-        apple_index = tile.is_holding(apple.Apple)
+        apple_index = tile.is_holding("apple")
         if apple_index != None:
-            tile.drop(apple_index)
+            tile.drop("apple")
             self.create_new_apple()
             self.snake.create_new_body()
             self.score_label_text.set("Score: " + str(len(self.snake.body)))
@@ -129,11 +129,7 @@ class Game(tk.Frame):
         land_tiles = self.land_tiles
         random_tile_index = random.randint(0, len(land_tiles)-1)
         random_tile = land_tiles[random_tile_index]
-
-        # Create apple and assign to chosen tile
-        new_apple = apple.Apple(self.map)
-        random_tile.holding.append(new_apple)
-        random_tile.render()
+        random_tile.pick_up("apple")
 
     def snake_death_handler(self, is_first_call=True):
 

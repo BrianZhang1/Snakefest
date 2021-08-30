@@ -370,4 +370,4 @@ class Map_Creator(tk.Frame):
         # Update in actual map and render
         tile_object = self.map_display.array[pos[1]][pos[0]]
         tile_object.type = self.current_tile_type
-        tile_object.render_type(display=True)
+        tile_object.render_type()
