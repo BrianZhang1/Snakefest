@@ -104,8 +104,8 @@ class Map_Select(tk.Frame):
 
         # Generate display map
         initial_map_array = self.get_map_array(self.map)
-        self.map_display = map_class.Map(self.content_frame_left, initial_map_array)
-        self.map_display.render(display=True)
+        self.map_display = map_class.Map(self.content_frame_left, initial_map_array, display=True)
+        self.map_display.render()
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
         # Content frame right
@@ -193,8 +193,8 @@ class Map_Select(tk.Frame):
         del self.map_display
 
         new_map_array = self.get_map_array(self.map)
-        self.map_display = map_class.Map(self.content_frame_left, new_map_array)
-        self.map_display.render(display=True)
+        self.map_display = map_class.Map(self.content_frame_left, new_map_array, display=True)
+        self.map_display.render()
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
     # Validation functions for settings

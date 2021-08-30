@@ -352,8 +352,8 @@ class Map_Creator(tk.Frame):
     
     def generate_display_map(self):
         # Generate display map
-        self.map_display = map_class.Map(self.content_frame_left, self.map_info["array"])
-        self.map_display.render(display=True)
+        self.map_display = map_class.Map(self.content_frame_left, self.map_info["array"], display=True)
+        self.map_display.render()
         self.map_display.place(anchor="center", relx=0.5, rely=0.5)
 
         # Clicking tile on display map updates it

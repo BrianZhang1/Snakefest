@@ -23,22 +23,23 @@ import tkinter as tk
 from snake.global_helpers import assets, coord_converter
 
 class Map(tk.Canvas):
-    def __init__(self, master, map_array):
+    def __init__(self, master, map_array, display=False):
         super().__init__(master)
         self.rows = len(map_array)
         self.columns = len(map_array[0])
+        self.display = display
 
         self.array = []
         for row in map_array:
             new_row = []
             for tile_info in row:
-                new_tile = Tile(tile_info)
+                new_tile = Tile(tile_info, self, display=self.display)
                 new_row.append(new_tile)
             self.array.append(new_row)
 
-    def render(self, display=False):
+    def render(self):
         size_modifier = 1
-        if display:
+        if self.display:
             size_modifier = assets.DISPLAY_SHRINK
 
         canvas_width = assets.TILE_LENGTH * self.columns * size_modifier
@@ -47,27 +48,23 @@ class Map(tk.Canvas):
 
         for row in self.array:
             for tile in row:
-                tile.set_canvas(self)
-                tile.render(display=display)
+                tile.render()
 
 
 
 # Map are made of Tile objects
 class Tile():
-    def __init__(self, info):
+    def __init__(self, info, canvas, display):
         self.type = info["type"]
         self.position = info["position"]
         self.holding = info["holding"]
+        self.canvas = canvas
+        self.display = display
 
-        self.canvas = None
         self.rendered = False
         self.id = None
         self.converter = coord_converter.Coord_Converter()
 
-    def set_canvas(self, canvas):
-        self.rendered = False
-        self.canvas = canvas
-    
     # Returns index if holding, and None if not holding
     def is_holding(self, query):
         index = 0
@@ -79,12 +76,12 @@ class Tile():
         return None
     
     # Renders tile
-    def render(self, display=False):
+    def render(self):
         if not self.rendered:
             tile_coords = None
             land_tile = None
             barrier_tile = None
-            if not display:
+            if not self.display:
                 tile_coords = self.converter.to_raw(self.position)
                 land_tile = assets.land_tile
                 barrier_tile = assets.barrier_tile
@@ -100,13 +97,13 @@ class Tile():
                 self.id = self.canvas.create_image(tile_coords, image=barrier_tile)
             
             self.rendered = True
-        elif self.rendered and not display:
+        elif self.rendered and not self.display:
             for item in self.holding:
                 item.render(self.position)
             
     # Only renders tile type
-    def render_type(self, display=False):
-        if not display:
+    def render_type(self):
+        if not self.display:
             land_tile = assets.land_tile
             barrier_tile = assets.barrier_tile
         else:
