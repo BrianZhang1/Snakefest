@@ -49,9 +49,10 @@ from snake.global_helpers import map_class, assets
 import copy, sys
 
 class Map_Creator(tk.Frame):
-    def __init__(self, master, load_new_game, load_main_menu, save_map, map_list):
+    def __init__(self, master, load_new_game, load_main_menu, save_map, delete_map, map_list):
         super().__init__(master)
         self.save_map = save_map
+        self.delete_map = delete_map
         self.map_list = map_list
 
         self.rows = 15
@@ -65,6 +66,7 @@ class Map_Creator(tk.Frame):
 
         self.map_info = DEFAULT_MAP_INFO
 
+        self.current_base_map = None    # Current map used as base map
         self.current_tile_type = "land" # Current selected tile for map editor
         self.bordered = False           # Whether maps are bordered during row/column set
 
@@ -156,10 +158,12 @@ class Map_Creator(tk.Frame):
         # Base select
         self.map_select_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.map_select_wrapper.pack(pady=20, padx=20)
-        self.map_select_label = tk.Label(self.map_select_wrapper, text="Base Map:", bg=self.control_panel_frame_bg)
+        self.map_select_menu_wrapper = tk.Frame(self.map_select_wrapper, bg=self.control_panel_frame_bg)
+        self.map_select_menu_wrapper.pack()
+        self.map_select_label = tk.Label(self.map_select_menu_wrapper, text="Base Map:", bg=self.control_panel_frame_bg)
         self.map_select_label.pack(side="left")
         self.map_select_menubutton_var = tk.StringVar()
-        self.map_select_menubutton = tk.Menubutton(self.map_select_wrapper, textvariable=self.map_select_menubutton_var, 
+        self.map_select_menubutton = tk.Menubutton(self.map_select_menu_wrapper, textvariable=self.map_select_menubutton_var, 
             indicatoron=True)
         self.map_select_menu = tk.Menu(self.map_select_menubutton)
         self.map_select_menubutton.configure(menu=self.map_select_menu)
@@ -169,6 +173,9 @@ class Map_Creator(tk.Frame):
         for map in self.map_list:
             self.map_select_menu.add_command(label=map["name"], command=lambda map_name=map["name"]: update_map_menu(map_name))
         self.map_select_menubutton.pack(side="left")
+
+        self.map_delete_button = tk.Button(self.map_select_wrapper, text="Delete Map", 
+        command=lambda: self.delete_map(self.current_base_map))
 
         # Map Resize Wrapper
         self.map_resize_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
@@ -277,7 +284,7 @@ class Map_Creator(tk.Frame):
 
         self.pack(expand=True, fill="both")
     
-    def set_map(self, base_map):
+    def set_map(self, base_map_name):
         try:
             self.map_display.destroy()
             del self.map_display
@@ -286,11 +293,13 @@ class Map_Creator(tk.Frame):
 
         new_map_array = None
         for map in self.map_list:
-            if map["name"] == base_map:
+            if map["name"] == base_map_name:
                 new_map_array = copy.deepcopy(map["array"])
         
         if new_map_array:
+            self.current_base_map = base_map_name
             self.map_info["array"] = new_map_array
+            self.map_delete_button.pack(pady=10)
         else:
             print("map_creator set_map: base map does not exist in map list")
             sys.exit()
@@ -364,6 +373,7 @@ class Map_Creator(tk.Frame):
             self.map_select_menubutton_var.set("")
         except AttributeError:
             pass
+        self.current_base_map = None
 
         self.generate_display_map()
     

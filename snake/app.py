@@ -112,7 +112,7 @@ class App():
         self.clear_state()
 
         self.state = "map_creator"
-        self.map_creator = map_creator_handler.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map, self.data["maps"])
+        self.map_creator = map_creator_handler.Map_Creator(self.root, self.load_new_game, self.load_main_menu, self.save_map, self.delete_map, self.data["maps"])
 
     def save_map(self, map_info):
         self.data["maps"].append(map_info)
@@ -120,3 +120,22 @@ class App():
             json.dump(self.data, file)
 
         self.load_main_menu()
+
+    def delete_map(self, map_name):
+        map_index = 0
+        for map in self.data["maps"]:
+            if map["name"] == map_name:
+                self.data["maps"].pop(map_index)
+                break
+            map_index += 1
+            if map_index == len(self.data["maps"]):
+                return False
+        
+        if self.data["settings"]["map"] == map_name:
+            self.data["settings"]["map"] = self.data["maps"][0]["name"]
+            
+        with open("snake/data.txt", "w") as file:
+            json.dump(self.data, file)
+
+        self.load_main_menu()
+        return True
