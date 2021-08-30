@@ -224,10 +224,18 @@ class Map_Creator(tk.Frame):
         def validate_resize_map():
             rows = self.row_select_entry.get()
             columns = self.column_select_entry.get()
-            if validate_rows(rows) and validate_columns(columns):
-                self.rows = int(rows)
-                self.columns = int(columns)
-                self.resize_map()
+            if not validate_rows(rows):
+                self.setting_error_label_var.set("Invalid number of rows!")
+                return
+            elif not validate_columns(columns):
+                self.setting_error_label_var.set("Invalid number of columns!")
+                return
+            
+            # Rows and Columns must be valid, resize map
+            self.setting_error_label_var.set("")
+            self.rows = int(rows)
+            self.columns = int(columns)
+            self.resize_map()
 
         self.resize_map_button = tk.Button(self.map_resize_wrapper, text="Resize Map", font="Arial, 10", command=validate_resize_map)
         self.resize_map_button.pack()
@@ -247,6 +255,11 @@ class Map_Creator(tk.Frame):
         self.tile_select_barrier = tk.Label(self.tile_select_buttons, image=assets.barrier_tile_button, bg=self.control_panel_frame_bg)
         self.tile_select_barrier.bind("<Button-1>", lambda _: set_current_tile_type("barrier"))
         self.tile_select_barrier.pack(side="left")
+
+        self.setting_error_label_var = tk.StringVar()
+        self.setting_error_label = tk.Label(self.control_panel_frame, fg="red", bg=self.control_panel_frame_bg, 
+            textvariable=self.setting_error_label_var, font="Arial, 12")
+        self.setting_error_label.pack(side="bottom")
         
         # Save button
         self.save_button = tk.Button(
