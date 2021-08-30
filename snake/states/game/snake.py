@@ -19,7 +19,6 @@
 # It does not manage collisions of the snake with other objects, those are managed in game.py
 
 from snake.global_helpers import assets, coord_converter
-from snake.states.game.snake_part import Snake_Part
 
 class Snake():
     def __init__(self, canvas, map_array):

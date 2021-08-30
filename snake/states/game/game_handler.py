@@ -19,8 +19,8 @@
 # all classes that help game.py can be found under the snake/game_classes directory
 
 import tkinter as tk
-from snake.states.game import snake, apple
-from snake.global_helpers import assets, coord_converter, map_class
+from snake.states.game import snake
+from snake.global_helpers import assets, map_class
 import random
 
 class Game(tk.Frame):
@@ -33,7 +33,6 @@ class Game(tk.Frame):
         self.speed_modifier = speed_modifier
         self.bind("<Key>", self.key_handler)
         self.started = False
-        self.converter = coord_converter.Coord_Converter()
 
         # Create Map
         self.map = map_class.Map(self, self.map_array)

@@ -20,9 +20,7 @@
 # The map is comprised of many Tile objects.
 
 import tkinter as tk
-from tkinter.constants import W
 from snake.global_helpers import assets, coord_converter
-from snake.states.game import apple, snake_part
 
 class Map(tk.Canvas):
     def __init__(self, master, map_array, display=False):
