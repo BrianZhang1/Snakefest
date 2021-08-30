@@ -126,6 +126,27 @@ class Snake():
 
 
 
+    # Turns snake right before it dies
+    def turn_snake(self):
+
+        # Determine snake image based on direction
+        snake_head_image = None
+        if self.direction == 'w':
+            snake_head_image = assets.snake_head_left
+        elif self.direction == 'e':
+            snake_head_image = assets.snake_head_right
+        elif self.direction == 's':
+            snake_head_image = assets.snake_head_down
+        elif self.direction == 'n':
+            snake_head_image = assets.snake_head_up
+
+        # Find snake_head and turn it
+        current_tile = self.map_array[self.previous_moves[0][1]][self.previous_moves[0][0]]
+        for item in current_tile.holding:
+            if item["name"] == "snake_head":
+                self.canvas.itemconfigure(item["render_id"], image=snake_head_image)
+
+
     def create_new_body(self):
         # body_last is the index of the last snake part in the body.
         # A new snake part is inserted after the last snake part, and becomes the last snake part.

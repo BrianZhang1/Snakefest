@@ -107,6 +107,7 @@ class Game(tk.Frame):
 
         # Check if snake hit barrier tile
         if tile.type == "barrier" or tile.is_holding("snake_part") != None:
+            self.snake.turn_snake()
             self.snake_death_handler()
             return
 
