@@ -101,13 +101,8 @@ class Tile():
     # Renders items in self.holding
     def render_holding(self):
         for item in self.holding:
-            if item["name"] == "apple" and item["render_id"] == None:
-                item["render_id"] = self.canvas.create_image(self.raw_position, image=assets.apple_sprite)
-            elif item["name"] == "snake_part":
-                if item["render_id"] == None:
-                    item["render_id"] = self.canvas.create_image(self.raw_position, image=assets.snake_body_sprite)
-                else:
-                    self.canvas.coords(item["render_id"], self.raw_position)
+            if item["render_id"] == None:
+                item["render_id"] = self.canvas.create_image(self.raw_position, image=item["image"])
 
             
     # Renders tile type
@@ -148,10 +143,11 @@ class Tile():
     
 
     # Adds item to holding and renders on canvas
-    def pick_up(self, item_name):
+    def pick_up(self, item_name, image):
 
         self.holding.append({
             "name": item_name,
+            "image": image,
             "render_id": None
         })
         self.render_holding()

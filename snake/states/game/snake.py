@@ -29,20 +29,12 @@ class Snake():
         self.converter = coord_converter.Coord_Converter()
         self.snake_pos = (int(self.columns/2), int(self.rows/2))         # (column, row)/(x, y)
 
-        inital_coords = self.converter.to_raw(self.snake_pos)
-
         self.direction = 's'      # north, east, south, west
-        self.new_direction = 's'
+        self.new_direction = self.direction
 
-        initial_image = assets.snake_head_down
-        if self.direction == 'w':
-            initial_image = assets.snake_head_left
-        elif self.direction == 'n':
-            initial_image = assets.snake_head_up
-        elif self.direction == 'e':
-            initial_image = assets.snake_head_right
+        initial_tile = map_array[self.snake_pos[1]][self.snake_pos[0]]
+        initial_tile.pick_up("snake_head", assets.snake_head_down)
 
-        self.snake_head = self.canvas.create_image(inital_coords, image=initial_image)
         self.previous_moves = []
         self.body = []
         # Index (in self.body) of the last body part of the snake
@@ -58,22 +50,18 @@ class Snake():
             self.direction = 'w'
             new_x = self.snake_pos[0] - 1
             new_y = self.snake_pos[1]
-            self.canvas.itemconfig(self.snake_head, image=assets.snake_head_left)
         elif self.new_direction == 'e':
             self.direction = 'e'
             new_x = self.snake_pos[0] + 1
             new_y = self.snake_pos[1]
-            self.canvas.itemconfig(self.snake_head, image=assets.snake_head_right)
         elif self.new_direction == 's':
             self.direction = 's'
             new_x = self.snake_pos[0]
             new_y = self.snake_pos[1] + 1
-            self.canvas.itemconfig(self.snake_head, image=assets.snake_head_down)
         elif self.new_direction == 'n':
             self.direction = 'n'
             new_x = self.snake_pos[0]
             new_y = self.snake_pos[1] - 1
-            self.canvas.itemconfig(self.snake_head, image=assets.snake_head_up)
         self.snake_pos = (new_x, new_y)
 
         self.check_bounds()
@@ -100,8 +88,23 @@ class Snake():
     
     # Doesn't actually redraw, it just changes coords.
     def draw_snake(self):
-        # Draw snake head
-        self.canvas.coords(self.snake_head, self.converter.to_raw(self.snake_pos))
+
+        # Determine snake image based on direction
+        snake_head_image = None
+        if self.direction == 'w':
+            snake_head_image = assets.snake_head_left
+        elif self.direction == 'e':
+            snake_head_image = assets.snake_head_right
+        elif self.direction == 's':
+            snake_head_image = assets.snake_head_down
+        elif self.direction == 'n':
+            snake_head_image = assets.snake_head_up
+
+        # Drop previous snake head an draw new
+        previous_snake_head_tile = self.map_array[self.previous_moves[0][1]][self.previous_moves[0][0]]
+        previous_snake_head_tile.drop("snake_head")
+        new_snake_head_tile = self.map_array[self.snake_pos[1]][self.snake_pos[0]]
+        new_snake_head_tile.pick_up("snake_head", snake_head_image)
 
         # Move last snake body part to front of snake body.
         if len(self.body) > 0:
@@ -113,7 +116,7 @@ class Snake():
             # Spawn on new tile
             new_tile_coords = self.previous_moves[0]
             new_tile = self.map_array[new_tile_coords[1]][new_tile_coords[0]]
-            new_tile.pick_up("snake_part")
+            new_tile.pick_up("snake_part", assets.snake_body_sprite)
 
             self.body[self.body_last_index] = new_tile_coords
             
@@ -135,6 +138,6 @@ class Snake():
             self.body.append(coords)
             self.body_last_index = 0
         tile = self.map_array[coords[1]][coords[0]]
-        tile.pick_up("snake_part")
+        tile.pick_up("snake_part", assets.snake_body_sprite)
         
     
