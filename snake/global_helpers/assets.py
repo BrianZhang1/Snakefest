@@ -23,7 +23,7 @@ SCREEN_GEOMETRY = (1280, 720)
 TILE_LENGTH = 32
 SNAKE_HEAD_LENGTH = 24
 DISPLAY_SHRINK = 3/4        # ratio to shrink when displaying in map select
-TILE_BUTTON_LENGTH = 15     # length of tile buttons in map creator
+TILE_BUTTON_LENGTH = 20     # length of tile buttons in map creator
 
 def load_image(path, height):
     raw_image = Image.open(path)
