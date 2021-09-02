@@ -113,6 +113,11 @@ class Game(tk.Frame):
 
         self.snake.draw_snake()
 
+        if tile.type == "ice":
+            self.snake.set_slippery(True)
+        else:
+            self.snake.set_slippery(False)
+
         # Checking if snake hit apple
         apple_index = tile.is_holding("apple")
         if apple_index != None:

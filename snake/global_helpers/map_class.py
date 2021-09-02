@@ -110,20 +110,26 @@ class Tile():
         if not self.display:
             land_tile = assets.land_tile
             barrier_tile = assets.barrier_tile
+            ice_tile = assets.ice_tile
         else:
             land_tile = assets.land_tile_display
             barrier_tile = assets.barrier_tile_display
+            ice_tile = assets.ice_tile_display
 
         if self.id == None:
             if self.type == "land":
                 self.id = self.canvas.create_image(self.raw_position, image=land_tile)
             elif self.type == "barrier":
                 self.id = self.canvas.create_image(self.raw_position, image=barrier_tile)
+            elif self.type == "ice":
+                self.id = self.canvas.create_image(self.raw_position, image=ice_tile)
         else:
             if self.type == "land":
                 self.canvas.itemconfigure(self.id, image=land_tile)
             elif self.type == "barrier":
                 self.canvas.itemconfigure(self.id, image=barrier_tile)
+            elif self.type == "ice":
+                self.canvas.itemconfigure(self.id, image=ice_tile)
 
     
     # Removes item from holding and deletes on canvas

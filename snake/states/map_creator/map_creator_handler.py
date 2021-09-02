@@ -280,6 +280,9 @@ class Map_Creator(tk.Frame):
         self.tile_select_barrier = tk.Label(self.tile_select_buttons, image=assets.barrier_tile_button, bg=self.control_panel_frame_bg)
         self.tile_select_barrier.bind("<Button-1>", lambda _: set_current_tile_type("barrier"))
         self.tile_select_barrier.pack(side="left")
+        self.tile_select_ice = tk.Label(self.tile_select_buttons, image=assets.ice_tile_button, bg=self.control_panel_frame_bg)
+        self.tile_select_ice.bind("<Button-1>", lambda _: set_current_tile_type("ice"))
+        self.tile_select_ice.pack(side="left")
 
         self.setting_error_label_var = tk.StringVar()
         self.setting_error_label = tk.Label(self.control_panel_frame, fg="red", bg=self.control_panel_frame_bg, 

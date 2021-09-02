@@ -41,9 +41,7 @@ snake_head_up = load_image("snake/assets/snake_head_up.png", SNAKE_HEAD_LENGTH)
 snake_head_down = load_image("snake/assets/snake_head_down.png", SNAKE_HEAD_LENGTH)
 snake_head_left = load_image("snake/assets/snake_head_left.png", SNAKE_HEAD_LENGTH)
 snake_head_right = load_image("snake/assets/snake_head_right.png", SNAKE_HEAD_LENGTH)
-
-snake_body_sprite = Image.open("snake/assets/snake_body.png").resize((SNAKE_HEAD_LENGTH, SNAKE_HEAD_LENGTH))
-snake_body_sprite = ImageTk.PhotoImage(snake_body_sprite)
+snake_body_sprite = load_image("snake/assets/snake_body.png", SNAKE_HEAD_LENGTH)
 
 wasd_to_start_label = load_image("snake/assets/wasd_to_start_label.png", 50)
 you_died_label = load_image("snake/assets/you_died_label.png", 50)
@@ -55,11 +53,15 @@ main_menu_button_highlighted = load_image("snake/assets/main_menu_button_highlig
 
 land_tile = load_image("snake/assets/land_tile.png", TILE_LENGTH)
 barrier_tile = load_image("snake/assets/barrier_tile.png", TILE_LENGTH)
+ice_tile = load_image("snake/assets/ice_tile.png", TILE_LENGTH)
 
 land_tile_display = load_image("snake/assets/land_tile.png", int(TILE_LENGTH*DISPLAY_SHRINK))
 barrier_tile_display = load_image("snake/assets/barrier_tile.png", int(TILE_LENGTH*DISPLAY_SHRINK))
+ice_tile_display = load_image("snake/assets/ice_tile.png", int(TILE_LENGTH*DISPLAY_SHRINK))
+
 land_tile_button = load_image("snake/assets/land_tile.png", TILE_BUTTON_LENGTH)
 barrier_tile_button = load_image("snake/assets/barrier_tile.png", TILE_BUTTON_LENGTH)
+ice_tile_button = load_image("snake/assets/ice_tile.png", TILE_BUTTON_LENGTH)
 
 start_new_game_button = load_image("snake/assets/start_new_game_button.png", 100)
 start_new_game_button_highlighted = load_image("snake/assets/start_new_game_button_highlighted.png", 100)

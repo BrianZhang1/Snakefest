@@ -34,33 +34,51 @@ class Snake():
         initial_tile = map_array[self.snake_pos[1]][self.snake_pos[0]]
         initial_tile.pick_up("snake_head", assets.snake_head_down)
 
+        self.slippery = False
         self.previous_moves = []
         self.body = []
-        # Index (in self.body) of the last body part of the snake
-        self.body_last_index = None
+        self.body_last_index = None     # Index (in self.body) of the last body part of the snake
 
     def update_position(self):
         self.previous_moves.insert(0, self.snake_pos)
         if len(self.previous_moves) - len(self.body) > 1:
             self.previous_moves.pop()
 
-        # Move one tile in the direction the snake faces
-        if self.new_direction == 'w':
-            self.direction = 'w'
-            new_x = self.snake_pos[0] - 1
-            new_y = self.snake_pos[1]
-        elif self.new_direction == 'e':
-            self.direction = 'e'
-            new_x = self.snake_pos[0] + 1
-            new_y = self.snake_pos[1]
-        elif self.new_direction == 's':
-            self.direction = 's'
-            new_x = self.snake_pos[0]
-            new_y = self.snake_pos[1] + 1
-        elif self.new_direction == 'n':
-            self.direction = 'n'
-            new_x = self.snake_pos[0]
-            new_y = self.snake_pos[1] - 1
+        if not self.slippery:
+            # Change direction and move one tile in the direction the snake faces
+            if self.new_direction == 'w':
+                self.direction = 'w'
+                new_x = self.snake_pos[0] - 1
+                new_y = self.snake_pos[1]
+            elif self.new_direction == 'e':
+                self.direction = 'e'
+                new_x = self.snake_pos[0] + 1
+                new_y = self.snake_pos[1]
+            elif self.new_direction == 's':
+                self.direction = 's'
+                new_x = self.snake_pos[0]
+                new_y = self.snake_pos[1] + 1
+            elif self.new_direction == 'n':
+                self.direction = 'n'
+                new_x = self.snake_pos[0]
+                new_y = self.snake_pos[1] - 1
+        else:
+            if self.direction == 'w':
+                self.new_direction = 'w'
+                new_x = self.snake_pos[0] - 1
+                new_y = self.snake_pos[1]
+            elif self.direction == 'e':
+                self.new_direction = 'e'
+                new_x = self.snake_pos[0] + 1
+                new_y = self.snake_pos[1]
+            elif self.direction == 's':
+                self.new_direction = 's'
+                new_x = self.snake_pos[0]
+                new_y = self.snake_pos[1] + 1
+            elif self.direction == 'n':
+                self.new_direction = 'n'
+                new_x = self.snake_pos[0]
+                new_y = self.snake_pos[1] - 1
         self.snake_pos = (new_x, new_y)
 
         self.check_bounds()
@@ -159,5 +177,10 @@ class Snake():
             self.body_last_index = 0
         tile = self.map_array[coords[1]][coords[0]]
         tile.pick_up("snake_part", assets.snake_body_sprite)
-        
+    
+    def set_slippery(self, mode):
+        if mode == True:
+            self.slippery = True
+        if mode == False:
+            self.slippery = False
     
