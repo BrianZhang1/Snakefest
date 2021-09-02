@@ -142,5 +142,5 @@ class App():
         with open("snake/data.txt", "w") as file:
             json.dump(self.data, file)
 
-        self.load_main_menu()
+        self.load_map_creator()
         return True
