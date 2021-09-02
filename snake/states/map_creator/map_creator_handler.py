@@ -174,8 +174,26 @@ class Map_Creator(tk.Frame):
             self.map_select_menu.add_command(label=map["name"], command=lambda map_name=map["name"]: update_map_menu(map_name))
         self.map_select_menubutton.pack(side="left")
 
-        self.map_delete_button = tk.Button(self.map_select_wrapper, text="Delete Map", 
-        command=lambda: self.delete_map(self.current_base_map))
+        # Map delete button/confirm yes no button
+        self.map_delete_wrapper = tk.Frame(self.map_select_wrapper, bg=self.control_panel_frame_bg)
+        self.map_delete_wrapper.pack(pady=(10, 0))
+        def confirm_delete_map():
+            self.map_delete_button.pack_forget()
+            self.map_delete_confirm_wrapper.pack()
+        self.map_delete_button = tk.Button(self.map_delete_wrapper, text="Delete Map", 
+            command=confirm_delete_map)
+        self.map_delete_confirm_wrapper = tk.Frame(self.map_delete_wrapper, bg=self.control_panel_frame_bg)
+        self.map_delete_confirm_label = tk.Label(self.map_delete_confirm_wrapper, text="Are you sure?", bg=self.control_panel_frame_bg)
+        self.map_delete_confirm_label.pack(side="left", padx=(0, 10))
+        self.map_delete_confirm_yes = tk.Button(self.map_delete_confirm_wrapper, text="Yes", 
+            command=lambda: self.delete_map(self.current_base_map))
+        self.map_delete_confirm_yes.pack(padx=(0, 5), side="left")
+        def cancel_delete_map():
+            self.map_delete_confirm_wrapper.pack_forget()
+            self.map_delete_button.pack()
+        self.map_delete_confirm_no = tk.Button(self.map_delete_confirm_wrapper, text="No", 
+            command=cancel_delete_map)
+        self.map_delete_confirm_no.pack(side="left")
 
         # Map Resize Wrapper
         self.map_resize_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
@@ -299,7 +317,7 @@ class Map_Creator(tk.Frame):
         if new_map_array:
             self.current_base_map = base_map_name
             self.map_info["array"] = new_map_array
-            self.map_delete_button.pack(pady=10)
+            self.map_delete_button.pack()
         else:
             print("map_creator set_map: base map does not exist in map list")
             sys.exit()
