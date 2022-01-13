@@ -200,10 +200,6 @@ class Map_Creator(tk.Frame):
         # Map Resize Wrapper
         self.map_resize_wrapper = tk.Frame(self.control_panel_frame, bg=self.control_panel_frame_bg)
         self.map_resize_wrapper.pack(pady=(20, 0))
-
-        self.row_column_select_warning_label = tk.Label(self.map_resize_wrapper, 
-            text="Warning: resizing map results in a map reset", bg=self.control_panel_frame_bg, fg="red")
-        self.row_column_select_warning_label.pack()
         
         # On keypress input validation for row and column entries
         def validate_rows_columns_entry(input):
@@ -264,7 +260,7 @@ class Map_Creator(tk.Frame):
             self.columns = int(columns)
             self.resize_map()
 
-        self.resize_map_button = tk.Button(self.map_resize_wrapper, text="Resize Map", font="Arial, 10", command=validate_resize_map)
+        self.resize_map_button = tk.Button(self.map_resize_wrapper, text="Generate Map", font="Arial, 10", command=validate_resize_map)
         self.resize_map_button.pack()
 
         # Tile Selection Area
@@ -391,12 +387,22 @@ class Map_Creator(tk.Frame):
             print("map_creator resize_map(): map did not generate")
             sys.exit()
 
-        # Clear base map select
+        # Clear base map select and Delete Map buttons
         try:
             self.map_select_menubutton_var.set("")
         except AttributeError:
             pass
         self.current_base_map = None
+
+        try:
+            self.map_delete_button.pack_forget()
+        except AttributeError:
+            pass
+
+        try:
+            self.map_delete_confirm_wrapper.pack_forget()
+        except AttributeError:
+            pass
 
         self.generate_display_map()
     

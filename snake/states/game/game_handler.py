@@ -135,6 +135,9 @@ class Game(tk.Frame):
         land_tiles = self.land_tiles
         random_tile_index = random.randint(0, len(land_tiles)-1)
         random_tile = land_tiles[random_tile_index]
+        while random_tile.is_holding("snake_part"):
+            random_tile_index = random.randint(0, len(land_tiles)-1)
+            random_tile = land_tiles[random_tile_index]
         random_tile.pick_up("apple", assets.apple_sprite)
 
     def snake_death_handler(self, is_first_call=True):
