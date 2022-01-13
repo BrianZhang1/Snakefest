@@ -44,9 +44,11 @@
 #               play_button
 
 
+import copy
+import sys
 import tkinter as tk
+
 from snake.global_helpers import map_class, assets
-import copy, sys
 
 class Map_Creator(tk.Frame):
     def __init__(self, master, load_new_game, load_main_menu, save_map, delete_map, map_list):

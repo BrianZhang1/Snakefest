@@ -17,22 +17,25 @@
 # app.py manages the entire app from the highest level.
 # It manages the tkinter event loop and different pages (swapping between main menu, game, etc.)
 
+import json
+import copy
 import tkinter as tk
+
 root = tk.Tk()
 root.geometry("1280x720")
 root.resizable(False, False)
 
-# Import all the screens
+# Import all the screens (each screen has its own object)
 from snake.states.game import game_handler
 from snake.states.main_menu import main_menu_handler
 from snake.states.map_creator import map_creator_handler
 from snake.states.map_select import map_select_handler
-import json, copy
 
 class App():
     def __init__(self):
         self.root = root
         self.state = None
+        self.data = None
 
         self.load_data()
 
@@ -41,7 +44,6 @@ class App():
 
     # Load data from data.txt. Validation is done in map select
     def load_data(self):
-        self.data = None
         try:
             with open("snake/data.txt") as file:
                 self.data = json.load(file)
@@ -51,7 +53,7 @@ class App():
                     self.data = json.load(default_file)
                     json.dump(self.data, file)
 
-
+    # Destroys state object for current state so that a new one can be selected.
     def clear_state(self):
         if self.state == "game":
             self.game.destroy()

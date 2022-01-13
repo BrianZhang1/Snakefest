@@ -18,10 +18,11 @@
 # It does not include, for example, the main menu or tile rendering.
 # all classes that help game.py can be found under the snake/game_classes directory
 
+import random
 import tkinter as tk
+
 from snake.states.game import snake
 from snake.global_helpers import assets, map_class
-import random
 
 class Game(tk.Frame):
     def __init__(self, master, play_again, load_main_menu, map_array, speed_modifier):

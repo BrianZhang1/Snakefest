@@ -20,6 +20,7 @@
 # The map is comprised of many Tile objects.
 
 import tkinter as tk
+
 from snake.global_helpers import assets
 
 class Map(tk.Canvas):
@@ -52,7 +53,7 @@ class Map(tk.Canvas):
 
 
 
-# Map are made of Tile objects
+# Maps are arrays of Tile objects
 class Tile():
     def __init__(self, info, canvas, display):
 

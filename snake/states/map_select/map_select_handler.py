@@ -44,8 +44,9 @@
 #               play_button
 
 
-import tkinter as tk
 import sys
+import tkinter as tk
+
 from snake.global_helpers import assets, map_class
 
 class Map_Select(tk.Frame):
