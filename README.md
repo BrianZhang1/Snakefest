@@ -19,7 +19,7 @@ Feel free to make changes and forks as it is allowed under COPYING.
 2. Install requirements by running `pip install -r requirements.txt`.  
     * Creating a virtual environment at this stage is optional.  
 
-3. Run `python start_app.py`.
+3. Run `python snakefest.py`.
 
 ### Gameplay
 
